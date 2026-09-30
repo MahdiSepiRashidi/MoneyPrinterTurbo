@@ -1,0 +1,135 @@
+# Plan: Farsi Instagram Reel Agent (from intent.md 2026-09-29)
+**Source spec:** intent/2026-09-29-ig-reel-agent/spec.md (2026-09-29, approved; §-references below point to this in-repo file)
+**Status:** draft
+**Plan version:** 4
+
+## Config key contract (defines everything below; add to `config.example.toml`, expose in `app/config/config.py`)
+- New `[supervisor]` section (supervisor-only; never read by MPT pipeline code):
+  `enabled=true`, `telegram_bot_token`, `telegram_chat_id`, `tts_voice="fa-IR-DilaraNeural"`,
+  `candidates_llm_ranking=false`, `candidates_count=5`, `pick_deadline_weekday="18:00"`,
+  `pick_deadline_friday="12:00"`, `post_time_weekday="20:00"`, `post_time_friday="14:00"`,
+  `meta_access_token`, `meta_ig_user_id`, `meta_schedule=true`, `meta_graph_version="19.0"`,
+  `video_url_provider="r2"` (+ `r2_bucket`, `r2_access_key`, `r2_secret_key`, `r2_endpoint`),
+  `clip_max_downloads=10000`, `bgm_moods=["calm","motivational","reflective","hopeful"]`, `bgm_volume=0.2`, `retry_backoff_seconds="30,120,600"`,
+  `poll_interval_seconds=30`.
+- `[app]` additions: `agnes_api_key`, `agnes_base_url`, `agnes_model_name` (auto-derived
+  `{provider}_{suffix}` convention, `app/models/llm_provider.py:81`), `llm_fallback_provider`
+  (any registered provider id — its model/base_url/api_key come from that provider's own
+  `{provider}_model_name/{provider}_base_url/{provider}_api_key` keys or its registry
+  defaults; no separate fallback-model key), and optional `video_crf`, `video_max_bitrate`,
+  `video_max_bytes` (left empty in `config.example.toml` = zero MPT behavior change; the
+  supervisor's production `config.toml` sets 22 / "4.5M" / 50331648).
+- `[supervisor]` is registered in `app/config/config.py` (exposed like the other sections,
+  `config.py:556-575`) and added to the `save_config()` section whitelist
+  (`config.py:500-510`), so bot `refresh-token` writes (R-6) persist atomically.
+- All secrets live only in local `config.toml` (never committed; NFR-5).
+
+## Resolve first
+- [ ] R-1 · OQ-1 (TTS): adopt free **Edge-TTS `fa-IR-DilaraNeural`** (in catalog `app/services/data/azure_voices.json:643`, no key; provider switch later = change `tts_voice` config, voice-name prefix dispatch `app/services/voice.py:593-714`). Unblocks FR-6, FR-17.
+- [ ] R-2 · OQ-9 / Concern #9: **rule-based normalizer + validator** in `supervisor/farsi_norm.py` (required-ZWNJ word list, harakat check on ambiguous-token list, punctuation-density bounds); LLM-only diacritics rejected (unverified, non-deterministic, untestable); optional model-based post-step behind config flag later. Unblocks FR-17, FR-4.
+- [ ] R-3 · OQ-2 (font): add **Vazirmatn (OFL)** TTFs to `resource/fonts/`; supervisor sets `params.font_name="Vazirmatn-Regular.ttf"` (fonts must live there — `app/services/video.py:1381` resolves only within `resource/fonts`). Unblocks FR-9.
+- [ ] R-4 · Concern #1: POC P-1a against the Meta app: does `publish_time` on A2 work for this access tier? If no → `meta_schedule=false` (build 19:55/13:55 Tehran, post immediately). `supervisor/meta_poster.py` supports both, selected by config. Unblocks FR-11.
+- [ ] R-5 · Concern #2: Meta app review / business verification for `ig_user_reels` is external — start the review early; until it clears, the FR-12 manual-post path is the daily operating mode. Ops task, no code gate.
+- [ ] R-6 · OQ-7: Graph errors 190/1/200 → run `post_status: failed` + Telegram alert; bot command `refresh-token <token>` writes `[supervisor] meta_access_token` via `save_config()` (`app/config/config.py:483`) then retries. Unblocks FR-11, FR-13.
+- [ ] R-7 · OQ-8 / Concern #5: Meta egress uses the existing `[proxy]` config; a paid stable non-Iran relay is a documented NFR-1 exception. Telegram `getUpdates`/`sendMessage`/`sendVideo` egress also honors `[proxy]` when set (operator may sit behind the same restricted network). Ops decision. Unblocks FR-11, FR-15.
+- [ ] R-8 · OQ-5 / Concern #6: skip Google Colab for v1 — hosted free LLM provider only. Scope trim, no code.
+- [ ] R-9 · New: Meta A1 needs a public HTTPS `video_url` for the MP4. Candidates: free static storage with signed URLs (R2, default per config contract) vs. self-hosted static nginx (dev only). Decide at P-1b; `supervisor/meta_poster.py::upload_mp4()` hides the provider behind `video_url_provider` config. For `r2`: S3-compatible signed PUT via `requests` with hand-rolled SigV4 (no new deps), then expose the object via a public-bucket or short-lived signed GET URL to Meta. FR-11 blocked on this POC.
+- [ ] R-10 · New: two distinct execution paths, both in-process, no agent framework:
+  - **Media stages** are driven via MPT's per-stage functions (module-level, verified): `generate_audio(task_id, params, ...) -> (audio_file, audio_duration, sub_maker)` all-None on failure (L482; duration is the *measured* file duration, L552-566); `generate_subtitle(task_id, params, script, sub_maker, audio_file) -> str|""` (L580); `get_video_materials(task_id, params, terms, audio_duration) -> list[str]|None` (L648; local branch returns local file paths, L666-667); `generate_final_videos(task_id, params, downloaded_videos, audio_file, subtitle_path, audio_duration) -> (final_paths, combined_paths, warnings)` (L899, L1045). These cover FR-6 (TTS), FR-8 (local assemble), FR-7 (BGM mix), FR-9 (encode). Supervisor uses a synthetic `task_id = f"sup-{date}-{uuid4().hex[:8]}"` (stage functions patch MPT state directly; not registered in any task manager).
+  - **Text/LLM stages are NOT MPT pipeline stages** — MPT's `generate_script`/`generate_terms` scrub `*`,`#`,`[..]`,`(..)` (`app/services/llm.py:770-789`), which would corrupt the skill's JSON (hashtags, arrays). So FR-1 ingest, FR-2 ranking, FR-4+FR-10 Farsi script/caption/hashtags, and FR-8 term-gen + clip-ranking all run through a new supervisor-owned client `supervisor/llm.py` that wraps the **raw** `app.services.llm._generate_response(prompt, app_config)` (`llm.py:257` — un-scrubbed, returns the full string). FR-14's provider fallback applies inside `supervisor/llm.py` (see FR-14 task), not by re-using MPT's scrubbed functions.
+  - Rejected `task.start(stop_at=...)` (L1748): monolithic run cannot host the FR-5 approval gate, and MPT has no stage-resume. Unblocks FR-4–FR-9.
+- [ ] R-11 · New: FR-1 "idempotent re-run" requires **deterministic card ids** — `sha1(f"{book}|{claim}|{quote}".encode()).hexdigest()[:32]` formatted uuid-style (spec's `uuid PK` means the format, not randomness). Re-ingest upserts, never duplicates. Unblocks FR-1.
+- [ ] R-12 · Spec OQ (ranking): default **uniform random** pick of 5 unused cards; LLM ranking only when `candidates_llm_ranking=true` (then ranking fails → random, never block the day, spec §6 B). Unblocks FR-2.
+- [ ] R-13 · OQ-3/OQ-4 (landing page, handle): out of build scope; CTA copy is fixed in the skill ("link in bio" with no live link yet is acceptable). No tasks.
+
+## Data model (store: `supervisor/store.py`, JSON files under `storage/`, created with `mkdir -p` at startup; atomic write = temp+rename; file lock per store)
+- `idea_cards.json` — IdeaCard: `{id(32-hex), book, claim, quote, example, status: unused|picked|used|needs_review, picked_date, run_id}`.
+- `daily_runs.json` — DailyRun: `{run_id, date_tehran, candidate_card_ids[5], picked_card_id, picked_by: operator|fallback, hook_type, script_status: pending|approved|rejected|needs_review, narration_file, video_file, caption, hashtags[], post_status: not_scheduled|scheduled|posted|failed|manual, scheduled_time_tehran, checkpoint: cards_picked|script_approved|video_built|posting|posted, retry_count, last_error}`. One run per Tehran date (unique).
+- `clip_usage.json` — `{pexels_asset_id, used_date, run_id}`; prune rows >30 days on every write (FR-8 dedup source).
+- `hook_rotation.json` — `{date_tehran, hook_type, opening_line}`; keep last 7; supplies `recent_hooks` to FR-4.
+- `music_usage.json` — `{pexels_audio_track_id, used_date}`; FR-7 "not reused on the next day".
+
+## Features
+
+### Epic A — Foundation
+- **FR-14** — Pluggable config-driven LLM, `agnes-3.0-flash` default + cheap fallback
+  - [ ] Register `LLMProviderSpec("agnes", "Agnes", adapter="openai_compatible", default_model="agnes-3.0-flash", ...)` in `LLM_PROVIDER_REGISTRY` (`app/models/llm_provider.py:195`, mirror the openrouter entry at L386; constructor is positional `provider_id, default_label` — L39-40). Verify agnes is OpenAI-compatible at build time; if not, add a custom adapter in `llm.py` (risk RK-1).
+  - [ ] Add the config keys from the contract; MPT-side fallback hook: in `app/services/llm.py`, when a primary provider's retry loop in `generate_script` (L791) / `generate_terms` (L909) / `generate_social_metadata` (L1195) returns empty, build a modified runtime config `dict(config.app, llm_provider=llm_fallback_provider)` (provider is read from `app_config["llm_provider"]`, `llm.py:262-266`; the fallback's model/base_url/api_key resolve from that provider's own `{provider}_*` keys or registry defaults) and do **one** re-attempt of the same call. Keep the existing empty/None return contract (no new exception — `task.py` empty-checks at L306-308/L336-342 already mark the stage failed); the supervisor's FR-13 layer is what escalates. (The supervisor's own text-LLM stages get the identical fallback inside `supervisor/llm.py` — separate task above.)
+  - [ ] Test `test/services/test_llm.py`: primary-exhausted → fallback fires once; provider switch requires no code change (config only).
+- **Data model** — `supervisor/store.py` + the five JSON stores above; unit tests in `test/supervisor/test_store.py` (upsert idempotency, 30-day prune, atomic write, locking).
+- **supervisor/llm.py (text-LLM client)** — the supervisor's LLM path (R-10)
+  - [ ] New `supervisor/llm.py`: `complete(system, user) -> str` wrapping `app.services.llm._generate_response(prompt, app_config)` (`llm.py:257`, raw/un-scrubbed); provider read from `[app].llm_provider` (`agnes`), and on primary exhaustion do **one** fallback re-attempt with `{**app_config, "llm_provider": cfg.llm_fallback_provider}` (fallback model/base_url/key resolve from that provider's own `{provider}_*` keys or registry defaults). Keep the raw-string contract; no scrubbing. Used by FR-1, FR-2, FR-4, FR-8, FR-10.
+  - [ ] Test `test/supervisor/test_llm.py`: primary-exhausted → fallback fires once; provider switch is config-only; `_generate_response` is called (not `generate_script`), so JSON/`#` survive.
+- **FR-13** — Retry/backoff → cheap-model fallback → alert only on missed day → resume-from-checkpoint
+  - [ ] `supervisor/flow.py`: every stage runs through one wrapper — 3 attempts with backoff `30s,120s,600s` (config `retry_backoff_seconds`), LLM stages then try the FR-14 fallback, then mark `DailyRun.last_error` and advance `checkpoint` only on success. Telegram "day missed" alert fires only when a failure passes the post time.
+  - [ ] `supervisor/__main__.py` command `resume <run_id>`: load the run, continue at `checkpoint` via R-10 stage functions (checkpoint granularity = per-stage enum; `resume` re-runs the current stage, not a sub-step).
+
+### Epic B — Content
+- **FR-1** — Book → idea cards, one-time LLM pass, idempotent
+  - [ ] `supervisor/ingest.py`: split book text into ~3000-char chunks (500-char overlap); per chunk one LLM call via `supervisor/llm.py` (system = "Extract atomic idea cards. Each = one claim + supporting quote + concrete example. Output a JSON array only. Do not invent content." + 2 few-shot cards; user = chunk). Parse strict JSON array; each card validated (`claim`, `quote`, `example` all non-empty after trim — language-agnostic, cards may be in the book's language since FR-4 translates to Farsi); guardrail violation → `status: needs_review`; deterministic id per R-11; upsert. Malformed chunk: reject + log, never persist.
+  - [ ] `python -m supervisor ingest-books <file>` (FR-1 acceptance command) in `supervisor/__main__.py`.
+- **FR-2** — 08:00 Tehran: 5 unused cards via Telegram; reply 1–5 locks pick
+  - [ ] `supervisor/daily.py` + scheduler (`supervisor/scheduler.py`: in-process 30 s tick loop comparing `supervisor/config.py::now_tehran()` — `zoneinfo.ZoneInfo("Asia/Tehran")`, independent of container `TZ` env — against due jobs; no APScheduler/cron dep). 08:00 job: pick 5 unused cards (R-12 random, or LLM ranking via `supervisor/llm.py` when flagged: system "Return the 5 unused card ids most relevant + diverse for today. JSON array of ids only.", user = ids + last-7 topics; fail → random), create the `DailyRun`, store `candidate_card_ids`, and mark all 5 candidates `status: picked` + `picked_date` + `run_id` (so they are excluded from future days' pools; the 4 unpicked stay `picked` but unreferenced and are released to `unused` at day end unless posted — see FR-5). Send numbered cards (Farsi copy) via `supervisor/telegram_bot.py`; bot reply `1`–`5` → `picked_card_id` set, `picked_by: operator`, `checkpoint: cards_picked`.
+  - [ ] Empty state: <5 unused → send however many exist + "ingest more books" warning (spec §5).
+- **FR-3** — Fallback pick: deadline job at `pick_deadline_weekday` 18:00 / `pick_deadline_friday` 12:00 Tehran (**Friday 12:00 replaces 18:00 that day — it never fires twice**); random pick from the day's 5, `picked_by: fallback`, proceed to FR-4.
+- **FR-4** — Farsi script via `skills/meta-safe-farsi-reel-script`, TTS-ready, self-check routing
+  - [ ] `supervisor/scriptgen.py` (LLM call via `supervisor/llm.py`, raw/un-scrubbed so the skill's JSON survives): system prompt = full `skills/meta-safe-farsi-reel-script/SKILL.md` body + appended TTS-ready instructions ("emit TTS-ready Farsi: correct harakat on ambiguous words, correct ZWNJ, prosody punctuation" + 1 TTS-ready few-shot sample, spec §6 C — the sample is a Farsi constant the implementer authors in `supervisor/scriptgen.py` at build time: one ~40-word TTS-ready Farsi paragraph with correct ZWNJ/harakat, no external file); user = picked card + rotated `hook_type` + `recent_hooks` (last 7 from `hook_rotation.json`). Parse + validate the single JSON object (status ∈ {ok,needs_review}, 150–220 Farsi words, `hook_type` matches the rotated value, `self_check.flags` empty when `passed:true`); then run FR-17 validator. `needs_review`/validator-fail → `script_status: needs_review`, Telegram review flow (`review <text>` command edits script), **never auto-post**.
+  - [ ] Hook rotation (in `daily.py`): choose `hook_type` not used in `hook_rotation.json` last-7 window and not the same type as the previous 2 days; with <4 days of history apply the rules to what exists; deterministic random among the allowed types, seeded by the Tehran date.
+- **FR-5** — Approval gate (text only)
+  - [ ] `supervisor/telegram_bot.py` handlers `approve` / `rewrite` / `reject`: `approve` → `checkpoint: script_approved`, flow.py continues past the gate (no video before approval — media stages after terms only start on this event); `rewrite` → one re-generation (spec §6 C "at most 1 rewrite"); `reject` → run marked `rejected`/failed (day-missed alert path) and the picked card is released back to `status: unused` (re-entering the pool), while the 4 other candidates are also released to `unused` at day end. Card lifecycle (in `supervisor/store.py` + `daily.py`): `unused → picked` (08:00 selection) → `used` (only when the reel is posted or manually ack'd, FR-11/FR-12); a `reject` or day-missed failure returns the day's picked card + the 4 candidates to `unused`.
+- **FR-10** — Caption + 3–5 Farsi-first hashtags + one soft CTA
+  - [ ] `supervisor/scriptgen.py` validates the skill output `caption_farsi` (1–2 lines, no verbatim narration, exactly one follow+bio CTA) and `hashtags` (3–5, Farsi-first); store on `DailyRun.caption/hashtags`.
+- **FR-17** — TTS-ready normalization + validator
+  - [ ] `supervisor/farsi_norm.py` per R-2: `normalize(text) -> str` (join required-ZWNJ words, insert harakat from the ambiguous-token list, clamp punctuation density) + `validate(text) -> flags` (required-ZWNJ joined ✓, ambiguous tokens diacritized ✓, punctuation density in range ✓). Called on script + caption before TTS; non-empty flags → `needs_review`.
+  - [ ] Test `test/supervisor/test_farsi_norm.py` with a Farsi fixture corpus (`test/resources/farsi/`): ZWNJ in/out, diacritics in/out, punctuation-density boundaries.
+
+### Epic C — Media
+- **FR-6** — Farsi TTS, pluggable provider
+  - [ ] `supervisor/flow.py` builds `VideoParams` with `voice_name = cfg.tts_voice` (default R-1) + `video_aspect` portrait (9:16 → 1080×1920 already default, `app/models/schema.py:39-46`); after `generate_audio`, gate on its **returned `audio_duration`** (measured file duration, `task.py:566`) ∈ [60, 90] s. Recovery if out of range: adjust `voice_rate` (0.9–1.1) and re-run TTS up to 2 times; still out → regenerate the script at a closer word-count target (FR-4, 150–220 words ↔ 60–90 s), which **re-enters the FR-5 approval gate** (new script must be re-approved by the operator); still out → day-missed alert (FR-13). Provider switch = config-only (R-1).
+- **FR-7** — Daily Pexels BGM, no track reuse next day
+  - [ ] `supervisor/bgm_pexels.py`: pick the day's mood deterministically from `bgm_moods` (config list, index = Tehran day-of-week — spec §6 says BGM is a deterministic fetch, **no AI**; daily variety via rotation) then `GET https://api.pexels.com/audio/search?query=<mood>&per_page=10` with header `Authorization: <key>` from `pexels_api_keys` (contract in spec §4 C1; verify response fields `tracks[].id/url/duration` + CC0 license at P-1c); pick first track whose id is not in `music_usage.json` yesterday; download MP3 into **`storage/bgm/`** (the user-upload dir returned by `bgm.uploaded_bgm_dir()`, whitelisted by `resolve_bgm_file`, `app/services/bgm.py:90,360,387`; write final filename directly — names starting `.bgm-upload-` are rejected); set `params.bgm_type="custom"`, `bgm_file=<path>`, `bgm_volume=cfg.bgm_volume` — existing mix path `app/services/video.py:1602-1639`, **no bgm.py changes**; log track id. Fallback: built-in pool `resource/songs/` (29 files) if Pexels Audio unavailable.
+- **FR-8** — Semantically-fit Pexels footage, 30-day dedup, staple suppression
+  - [ ] `app/services/material.py`: extend `search_videos_pexels` (L338, `source_info` built L409-426) to capture the Pexels `download_count` field into `source_info["downloads"]` (verify the live API field name at build time; it is not currently extracted — Pexels search returns per-video download stats).
+  - [ ] `supervisor/clip_rank.py`: derive English Pexels scene terms from the Farsi script/idea-card via `supervisor/llm.py` (system "List 3–6 short English stock-footage search phrases that match this scene. JSON array of strings only."); per term call `search_videos_pexels`; LLM-rank candidates vs the terms via `supervisor/llm.py` (system "Rank these stock clips against the scene terms. Reply with a JSON array of up to N asset ids, best first. No other text."; user = terms + JSON list of `{asset_id, title, description, duration, downloads}`; no few-shot, spec §6 D); drop ids in `clip_usage.json` last 30 days; drop/suppress clips with `downloads >= clip_max_downloads`; download the selected clips into MPT's local-materials dir (`utils.storage_dir("local_videos", create=True)`, `app/utils/utils.py:93`) — NOT the task dir, because `video_source="local"` resolves every clip via `file_security.resolve_path_within_directory` inside that dir (`app/services/video.py:1724,1731`); set `params.video_source="local"` + `params.video_materials=[MaterialInfo(url=<path-in-local_videos>, provider="pexels", source_info={"asset_id":..., "downloads":...})]` (`MaterialInfo`, `app/models/schema.py:81-88`; local branch `task.py:655-667` returns `material.url`); write used asset ids to `clip_usage.json`. LLM fail → keyword match (existing MPT behavior) with dedup still enforced.
+- **FR-9** — 1080×1920, 60–90 s, burned Farsi subs, CRF 22–23 cap 4.5 Mbps, ≤48 MB
+  - [ ] R-3: add Vazirmatn TTFs to `resource/fonts/`; supervisor passes `font_name`.
+  - [ ] `app/services/video.py`: read `[app] video_crf/video_max_bitrate/video_max_bytes`. Inject the caps **only at the final encode**, not the shared helper's other callers: pass `ffmpeg_params=["-crf", str(video_crf), "-maxrate", video_max_bitrate, "-bufsize", "9M"]` from the final `write_videofile` call site in `generate_video` (the `L1654`-area final write, `video.py:1602-1666`), leaving the temp per-clip encodes (`video.py:1000`) and the recursive fallback (`video.py:440`) on encoder defaults. Post-encode, in the same final-write path: if `os.path.getsize(final) > video_max_bytes`, re-encode that one file once with `-crf <crf+2> -maxrate <bitrate>` via raw ffmpeg; still over → log + return a warning (flow.py surfaces it). (P-2 verifies the moviepy 2.2.1 kwarg name — `ffmpeg_params` vs `ffmpeg_parameters` — before wiring.)
+
+### Epic D — Post, operator surface, ship
+- **FR-11** — Post via official Meta Graph API on schedule (20:00 weekday / 14:00 Friday Tehran)
+  - [ ] `supervisor/meta_poster.py`: `upload_mp4(path) -> public_url` via `video_url_provider` (R-9); build every Graph endpoint from `meta_graph_version` (config, default "19.0") + `meta_ig_user_id` — never hardcode the version. The reel `caption` field is `DailyRun.caption` + newline + `" ".join(DailyRun.hashtags)` (Meta Graph has no separate hashtag field for Reels — hashtags ride inline in the caption, FR-10). A1 `POST /graph/<v>/{ig_user_id}/media` `{"media_type":"REELS","video_url":url,"caption":<caption+hashtags>}` → container id; A2 `POST /graph/<v>/{container}/published_media` with `publish_time` (unix ts, Tehran clock) when `meta_schedule=true` (R-4 POC result) else at build-then-post time; A3 poll `GET /graph/<v>/{media}?fields=status_code` until `posted` → mark the picked card `status: used`. Retries with backoff; error 190/1/200 → R-6 flow. Official endpoints only, `[proxy]` honored (R-7).
+- **FR-12** — Manual fallback on post failure
+  - [ ] `supervisor/flow.py` after retries: `supervisor/telegram_bot.py::send_video` (POST `sendVideo`, file <48 MB) with caption = `DailyRun.caption` + `" ".join(hashtags)`; `post_status: manual`; bot command `ack-post` records the operator's manual result and marks the picked card `status: used`.
+- **FR-15** — Telegram bot is the sole operator surface
+  - [ ] `supervisor/telegram_bot.py`: long-poll `getUpdates` (timeout 50 s, loop per `poll_interval_seconds`; on 429 sleep `retry_after`). Command map: `1`–`5` pick · `approve`/`rewrite`/`reject` · `review <text>` · `ack-post` · `resume <run_id>` · `refresh-token <token>`; all replies Farsi; every operator action in spec §5 is completable here.
+- **FR-16** — One Docker image: pipeline + supervisor + bot
+  - [ ] `supervisor/__main__.py` command `serve`: starts scheduler (daily jobs: 08:00 pick; deadlines 18:00/12:00; build-then-post 19:55/13:55 or post-then-20:00/14:00 per R-4) + bot poll loop + on-start resume of any non-terminal `DailyRun` from `daily_runs.json` (NFR-8).
+  - [ ] `docker-compose.yml`: add `supervisor` service on the existing image (`command: ["python3","-m","supervisor","serve"]`, `environment: TZ=Asia/Tehran`, bind-mount `./`); `Dockerfile`: `ENV TZ=Asia/Tehran`. No new deps (requests/loguru already in `requirements.txt`).
+  - [ ] `pyproject.toml`: add `"supervisor"` to coverage `source` (L64); new tests live in `test/supervisor/test_<domain>.py` mirroring `test/services/` conventions.
+
+## Order of work
+1. R-1…R-13 (all decision items, zero code) → config contract → data model + `supervisor/` skeleton (`store.py`, `config.py`, `__main__.py`).
+2. FR-14 (registry entry + config keys + MPT-side fallback hook + tests) + `supervisor/llm.py` text-LLM client (with its own fallback) + tests.
+3. R-2 → FR-17 (`farsi_norm.py` + fixture tests) — needed by FR-4.
+4. Epic B: FR-1 → FR-2/FR-3 → FR-4 → FR-5 → FR-10 (Telegram handlers land alongside each).
+5. R-1, R-3 → Epic C: FR-6 → FR-7 → FR-8 → FR-9 (FR-9 is the riskiest code step — P-2 attached).
+6. P-1a + P-1b (Meta, external) → R-4/R-9 decisions → FR-11 → FR-12 → R-5 tracking.
+7. FR-13 (retry/backoff/resume wrapper over the whole flow) → FR-15 polish → FR-16 Docker/compose/coverage.
+8. F-1 flow test; `graphify update .` (graphify-out/ exists; incremental AST update).
+
+## Risks
+- Meta app review blocks `ig_user_reels` (Concern #2) → FR-12 manual fallback keeps cadence; start review at step 6.
+- `publish_time` unsupported on app tier (Concern #1) → R-4 POC decides; immediate-post fallback is spec-sanctioned.
+- agnes-3.0-flash Farsi/ZWNJ quality (Concern #3) → cheap-model fallback + `needs_review` gate; monitor first weeks.
+- agnes endpoint not OpenAI-compatible (RK-1) → custom adapter in `llm.py`; decision made at FR-14 build time.
+- Pexels Audio availability/CC0/variety unconfirmed (Concern #8) → P-1c before FR-7; fallback: `resource/songs` pool.
+- MoviePy 2.2.1 CRF/bitrate plumbing (P-2) → if `ffmpeg_parameters` leaks into the concat path, scope it to the final `generate_video` call only; rejected raw-ffmpeg rework of `video.py` (invasive, breaks existing paths).
+- Public URL host for Meta upload (R-9) may not be free → if R2-free-tier fails, self-hosted static nginx (dev) or accept a paid exception like the R-7 relay; manual path carries the day.
+- In-process stage driving (R-10) couples supervisor to `task.py` signatures → they are module-level and stable; F-1 exercises the chain; breakage is caught by `test/services/test_task.py` (existing) + F-1.
+- Demotion risk post-launch (Concern #7/OQ-6) → Insights monitoring 2–4 weeks, no code.
+- Edge-TTS Farsi quality unverified (Concern #4) → replaceable via `tts_voice` config (R-1); audition later.
+
+## Proof
+- P-1 (Meta/external POC, `python -m supervisor meta-poc`): (a) A1+A2 with a 5 s test reel — does `publish_time` work on this app tier? (R-4); (b) upload a test MP4 to the chosen `video_url_provider` and confirm Meta accepts the URL as `video_url` (R-9); (c) Pexels Audio C1: endpoint reachable with existing key, `tracks[]` shape + CC0 license metadata (Concern #8). All three must pass before FR-11 build.
+- P-2 (encode POC): in `test/supervisor/`, encode a sample 60–90 s 1080×1920 reel through the new FR-9 `ffmpeg_parameters` path; assert file ≤48 MB and bitrate ≤4.5 Mbps; run before finishing FR-9.
+- F-1 (flow test): `test/supervisor/test_daily_flow.py` — patch module-level callables only: all supervisor LLM calls via `supervisor/llm.py` (`complete`, one stub), Pexels via `bgm_pexels`/`clip_rank` callables, Meta via `meta_poster`, Telegram via `telegram_bot`; MPT media stages via the `app.services.task` functions named in R-10; Farsi fixtures in `test/resources/farsi/`. Drive: ingest → 08:00 pick → script + validator → approve → build → post; assert: final MP4 9:16 and ≤48 MB, `DailyRun.checkpoint/post_status` values, picked card `used` + 4 candidates released, `clip_usage.json` write, `music_usage.json` no-reuse. Run: `uv run python -X utf8 -m pytest -q test`.

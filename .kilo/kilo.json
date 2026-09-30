@@ -1,4 +1,5 @@
 {
+  "$schema": "https://app.kilo.ai/config.json",
   "plugin": [
     "file:///D:/MoneyPrinterTurbo/.kilo/plugins/graphify.js"
   ]
