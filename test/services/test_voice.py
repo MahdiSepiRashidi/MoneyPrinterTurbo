@@ -565,7 +565,11 @@ class TestVoiceService(unittest.TestCase):
         with patch("google.genai.Client", _FakeClient), patch.object(
             vs.config,
             "app",
-            dict(vs.config.app, gemini_api_key="test-key"),
+            dict(
+                vs.config.app,
+                gemini_api_key="test-key",
+                gemini_tts_model_name=vs.GEMINI_TTS_DEFAULT_MODEL,
+            ),
         ):
             sub_maker = vs.gemini_tts(
                 text=text,
@@ -584,7 +588,7 @@ class TestVoiceService(unittest.TestCase):
         self.assertEqual(sub_maker.offset[0][0], 0)
         self.assertLess(sub_maker.offset[0][1], sub_maker.offset[1][1])
         self.assertEqual(captured["client_kwargs"], {"api_key": "test-key"})
-        self.assertEqual(captured["model"], "gemini-2.5-flash-preview-tts")
+        self.assertEqual(captured["model"], vs.GEMINI_TTS_DEFAULT_MODEL)
         self.assertEqual(captured["contents"], text)
         self.assertEqual(captured["config"].response_modalities, ["AUDIO"])
         voice_config = captured["config"].speech_config.voice_config
@@ -598,6 +602,78 @@ class TestVoiceService(unittest.TestCase):
         subtitle_content = Path(subtitle_file).read_text(encoding="utf-8")
         self.assertIn("Gemini subtitle generation should work now", subtitle_content)
         self.assertIn("Testing multiple lines", subtitle_content)
+
+    def test_gemini_tts_uses_configured_model_name(self):
+        """gemini_tts_model_name overrides the built-in default model."""
+
+        class _InlineData:
+            def __init__(self, data):
+                self.data = data
+
+        class _Part:
+            def __init__(self, data):
+                self.inline_data = _InlineData(data)
+
+        class _Content:
+            def __init__(self, data):
+                self.parts = [_Part(data)]
+
+        class _Candidate:
+            def __init__(self, data):
+                self.content = _Content(data)
+
+        class _Response:
+            def __init__(self, data):
+                self.candidates = [_Candidate(data)]
+
+        captured = {}
+
+        class _FakeModels:
+            def generate_content(self, **kwargs):
+                captured.update(kwargs)
+                tone = (
+                    AudioSegment.silent(duration=1200)
+                    .set_frame_rate(24000)
+                    .set_channels(1)
+                    .set_sample_width(2)
+                )
+                return _Response(tone.raw_data)
+
+        class _FakeClient:
+            def __init__(self, **kwargs):
+                self.models = _FakeModels()
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc_value, traceback):
+                return False
+
+        temp_root = Path(tempfile.mkdtemp(prefix="gemini-tts-model-"))
+        self.addCleanup(shutil.rmtree, temp_root, True)
+        voice_file = str(temp_root / "tts-gemini-charon.mp3")
+
+        with patch("google.genai.Client", _FakeClient), patch.object(
+            vs.config,
+            "app",
+            dict(
+                vs.config.app,
+                gemini_api_key="test-key",
+                gemini_tts_model_name="gemini-3.8-flash-tts",
+            ),
+        ):
+            sub_maker = vs.gemini_tts(
+                text="Charon model override check.",
+                voice_name="Charon",
+                voice_rate=1.0,
+                voice_file=voice_file,
+            )
+
+        self.assertIsNotNone(sub_maker)
+        self.assertTrue(Path(voice_file).is_file())
+        self.assertEqual(captured["model"], "gemini-3.8-flash-tts")
+        voice_config = captured["config"].speech_config.voice_config
+        self.assertEqual(voice_config.prebuilt_voice_config.voice_name, "Charon")
 
     def test_mimo_tts_uses_openai_compatible_audio_response(self):
         """

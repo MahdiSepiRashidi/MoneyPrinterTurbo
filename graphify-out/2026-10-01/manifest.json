@@ -246,10 +246,10 @@
     "semantic_hash": "df43438edfb5e885e831174af5157196"
   },
   "app/services/voice.py": {
-    "mtime": 1790862564.034171,
-    "seen": 1790862984.6085587,
-    "ast_hash": "1cb7ad46ba85ab1636f55f25e602257c",
-    "semantic_hash": ""
+    "mtime": 1790714173.3795438,
+    "seen": 1790852436.6114721,
+    "ast_hash": "16df8fc1fd8047cf9c78008f1e88b42e",
+    "semantic_hash": "16df8fc1fd8047cf9c78008f1e88b42e"
   },
   "app/services/volcengine_seedance.py": {
     "mtime": 1790714173.3795438,
@@ -594,10 +594,10 @@
     "semantic_hash": "8ca84c03e21b797b6305585b41555ce8"
   },
   "test/services/test_voice.py": {
-    "mtime": 1790862785.479249,
-    "seen": 1790862984.608788,
-    "ast_hash": "b8e674485da96566f4fcc35f97561f83",
-    "semantic_hash": ""
+    "mtime": 1790714174.4022179,
+    "seen": 1790852436.611564,
+    "ast_hash": "2cd833e1e37c2981162a2caa065b67b0",
+    "semantic_hash": "2cd833e1e37c2981162a2caa065b67b0"
   },
   "test/services/test_volcengine_seedance.py": {
     "mtime": 1790714174.4022179,
@@ -1335,12 +1335,6 @@
     "mtime": 1790845792.3925467,
     "seen": 1790852436.611659,
     "ast_hash": "9cd8348f3b448c5993d44da533839e48",
-    "semantic_hash": ""
-  },
-  "r1_tts_azure_test.py": {
-    "mtime": 1790855746.4201498,
-    "seen": 1790862984.6085963,
-    "ast_hash": "6d52e91b85093439ad56f37534be1a02",
     "semantic_hash": ""
   }
 }

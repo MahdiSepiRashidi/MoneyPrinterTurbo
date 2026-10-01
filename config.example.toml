@@ -297,6 +297,11 @@ anthropic_model_name = ""
 gemini_api_key = ""
 gemini_model_name = ""
 
+# Gemini TTS model for the "gemini:" voice provider. Empty uses the built-in
+# default (gemini-2.5-flash-preview-tts). Set it to a newer model such as
+# gemini-3.8-flash-tts when available on your API key.
+# gemini_tts_model_name = ""
+
 # DeepSeek
 # API key: https://platform.deepseek.com/api_keys
 deepseek_api_key = ""
@@ -696,3 +701,17 @@ open_task_folder_on_completion = true
 # subtitle_background_enabled = false
 # subtitle_background_color = "#000000"
 # rounded_subtitle_background = false
+
+# =============================================================================
+# Supervisor / IG Reel Agent 监督器
+# =============================================================================
+# Supervisor-only settings; never read by the MPT pipeline code. This section
+# is exposed to the supervisor (supervisor/config.py) and its Telegram bot.
+
+[supervisor]
+# Default TTS voice for generated reels. R-1 resolution: Gemini 3.8 Flash TTS
+# with the "Charon" prebuilt voice ("gemini:Charon"), selected for Farsi
+# quality. Set app.gemini_tts_model_name to "gemini-3.8-flash-tts" and provide
+# app.gemini_api_key (see [app]) to use it. Fall back to Edge-TTS
+# "fa-IR-DilaraNeural" (free, no key) if Gemini is unavailable.
+tts_voice = "gemini:Charon"

@@ -5,7 +5,8 @@
 
 ## Config key contract (defines everything below; add to `config.example.toml`, expose in `app/config/config.py`)
 - New `[supervisor]` section (supervisor-only; never read by MPT pipeline code):
-  `enabled=true`, `telegram_bot_token`, `telegram_chat_id`, `tts_voice="fa-IR-DilaraNeural"`,
+  `enabled=true`, `telegram_bot_token`, `telegram_chat_id`, `tts_voice="gemini:Charon"` (R-1 resolution:
+  Gemini 3.8 Flash TTS + Charon; Edge-TTS `fa-IR-DilaraNeural` remains the key-free fallback),
   `candidates_llm_ranking=false`, `candidates_count=5`, `pick_deadline_weekday="18:00"`,
   `pick_deadline_friday="12:00"`, `post_time_weekday="20:00"`, `post_time_friday="14:00"`,
   `meta_access_token`, `meta_ig_user_id`, `meta_schedule=true`, `meta_graph_version="19.0"`,
@@ -25,7 +26,7 @@
 - All secrets live only in local `config.toml` (never committed; NFR-5).
 
 ## Resolve first
-- [ ] R-1 · OQ-1 (TTS): adopt free **Edge-TTS `fa-IR-DilaraNeural`** (in catalog `app/services/data/azure_voices.json:643`, no key; provider switch later = change `tts_voice` config, voice-name prefix dispatch `app/services/voice.py:593-714`). Unblocks FR-6, FR-17.
+- [x] R-1 · OQ-1 (TTS): **Resolved 2026-10-01 — Gemini 3.8 Flash TTS + `gemini:Charon`** (auditioned: Edge-TTS `fa-IR-DilaraNeural` flat question intonation; Fish Audio public Farsi voices poor accent; Gemini 3.8 won). MPT: `gemini_tts()` model now config-selectable via `app.gemini_tts_model_name` (default `gemini-2.5-flash-preview-tts`; this deployment sets `gemini-3.8-flash-tts`, `voice.py:1742-1747`); provider switch later stays config-only (`tts_voice` voice-name prefix dispatch `voice.py:593-714`). Free Edge-TTS `fa-IR-DilaraNeural` remains the no-key fallback. Unblocks FR-6, FR-17.
 - [ ] R-2 · OQ-9 / Concern #9: **rule-based normalizer + validator** in `supervisor/farsi_norm.py` (required-ZWNJ word list, harakat check on ambiguous-token list, punctuation-density bounds); LLM-only diacritics rejected (unverified, non-deterministic, untestable); optional model-based post-step behind config flag later. Unblocks FR-17, FR-4.
 - [ ] R-3 · OQ-2 (font): add **Vazirmatn (OFL)** TTFs to `resource/fonts/`; supervisor sets `params.font_name="Vazirmatn-Regular.ttf"` (fonts must live there — `app/services/video.py:1381` resolves only within `resource/fonts`). Unblocks FR-9.
 - [ ] R-4 · Concern #1: POC P-1a against the Meta app: does `publish_time` on A2 work for this access tier? If no → `meta_schedule=false` (build 19:55/13:55 Tehran, post immediately). `supervisor/meta_poster.py` supports both, selected by config. Unblocks FR-11.
@@ -127,7 +128,7 @@
 - Public URL host for Meta upload (R-9) may not be free → if R2-free-tier fails, self-hosted static nginx (dev) or accept a paid exception like the R-7 relay; manual path carries the day.
 - In-process stage driving (R-10) couples supervisor to `task.py` signatures → they are module-level and stable; F-1 exercises the chain; breakage is caught by `test/services/test_task.py` (existing) + F-1.
 - Demotion risk post-launch (Concern #7/OQ-6) → Insights monitoring 2–4 weeks, no code.
-- Edge-TTS Farsi quality unverified (Concern #4) → replaceable via `tts_voice` config (R-1); audition later.
+- Edge-TTS Farsi quality unverified (Concern #4) → **resolved via R-1 (2026-10-01)**: Gemini 3.8 Flash TTS + Charon adopted; `fa-IR-DilaraNeural` kept as key-free fallback via `tts_voice`. New ops note: Gemini TTS egress sends our generated script text to Google (R-7 relay applies; free tier is dev-only, production uses paid Gemini TTS rates).
 
 ## Proof
 - P-1 (Meta/external POC, `python -m supervisor meta-poc`): (a) A1+A2 with a 5 s test reel — does `publish_time` work on this app tier? (R-4); (b) upload a test MP4 to the chosen `video_url_provider` and confirm Meta accepts the URL as `video_url` (R-9); (c) Pexels Audio C1: endpoint reachable with existing key, `tracks[]` shape + CC0 license metadata (Concern #8). All three must pass before FR-11 build.

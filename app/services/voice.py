@@ -75,6 +75,7 @@ GEMINI_TTS_VOICES = (
     ("Sadaltager", "Knowledgeable"),
     ("Sulafat", "Warm"),
 )
+GEMINI_TTS_DEFAULT_MODEL = "gemini-2.5-flash-preview-tts"
 _MINIMAX_TTS_MAX_AUDIO_HEX_CHARS = 100 * 1024 * 1024
 _ELEVENLABS_TTS_MAX_AUDIO_BYTES = 50 * 1024 * 1024
 _ELEVENLABS_TTS_MAX_ERROR_BYTES = 4096
@@ -1719,9 +1720,13 @@ def gemini_tts(
 ) -> Union[SubMaker, None]:
     """
     使用Google Gemini TTS生成语音
-    
+
+    模型从 ``config.app["gemini_tts_model_name"]`` 读取；留空时回退到
+    ``GEMINI_TTS_DEFAULT_MODEL`` (gemini-2.5-flash-preview-tts)，例如可配置
+    为 gemini-3.8-flash-tts。
+
     Args:
-        text: 要转换的文本
+        text: 要转换为语音的文本
         voice_name: 语音名称，如 "Zephyr", "Puck" 等
         voice_rate: 语音速率（当前未使用）
         voice_file: 输出音频文件路径
@@ -1743,7 +1748,11 @@ def gemini_tts(
             logger.error("Gemini API key is not set")
             return None
 
-        logger.info(f"start, voice name: {voice_name}, try: 1")
+        model_name = str(
+            config.app.get("gemini_tts_model_name", "") or ""
+        ).strip() or GEMINI_TTS_DEFAULT_MODEL
+
+        logger.info(f"start, voice name: {voice_name}, model: {model_name}, try: 1")
 
         generation_config = types.GenerateContentConfig(
             response_modalities=["AUDIO"],
@@ -1760,7 +1769,7 @@ def gemini_tts(
         # 请求结束后释放 HTTP 连接，同时保留原有 PCM 转码和字幕时间轴逻辑。
         with genai.Client(api_key=api_key) as client:
             response = client.models.generate_content(
-                model="gemini-2.5-flash-preview-tts",
+                model=model_name,
                 contents=text,
                 config=generation_config,
             )

@@ -1,6 +1,13 @@
 {
   "$schema": "https://app.kilo.ai/config.json",
   "plugin": [
-    "file:///D:/MoneyPrinterTurbo/.kilo/plugins/graphify.js"
-  ]
+    "file:///C:/Projects/MoneyPrinterTurbo/.kilo/plugins/graphify.js"
+  ],
+  "mcp": {
+    "trello": {
+      "type": "remote",
+      "url": "https://mcp.trello.com/v1",
+      "enabled": true
+    }
+  }
 }
