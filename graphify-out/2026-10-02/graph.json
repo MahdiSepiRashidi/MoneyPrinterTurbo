@@ -13092,7 +13092,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 199,
-      "community_name": "upload_config",
+      "community_name": "test_youtube_audience.py",
       "file_type": "code",
       "norm_label": "upload_config()",
       "source_file": "test/services/test_youtube_audience.py",
@@ -17872,7 +17872,7 @@
       "file_type": "code",
       "norm_label": "_banner()",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L55"
+      "source_location": "L52"
     },
     {
       "id": "supervisor_r10_check_load_config_toml",
@@ -17884,7 +17884,7 @@
       "file_type": "code",
       "norm_label": "_load_config_toml()",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L43"
+      "source_location": "L40"
     },
     {
       "id": "supervisor_r10_check_main",
@@ -17896,7 +17896,7 @@
       "file_type": "code",
       "norm_label": "main()",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L86"
+      "source_location": "L83"
     },
     {
       "id": "supervisor_r10_check_make_local_clips",
@@ -17908,7 +17908,7 @@
       "file_type": "code",
       "norm_label": "_make_local_clips()",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L64"
+      "source_location": "L61"
     },
     {
       "id": "supervisor_r10_check_ok",
@@ -17920,7 +17920,7 @@
       "file_type": "code",
       "norm_label": "_ok()",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L59"
+      "source_location": "L56"
     },
     {
       "id": "supervisor_r10_check_probe_aspect",
@@ -17932,7 +17932,7 @@
       "file_type": "code",
       "norm_label": "_probe_aspect()",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L80"
+      "source_location": "L77"
     },
     {
       "id": "test_services_test_voice_testvoiceservice_test_minimax_tts_does_not_leave_invalid_audio_output",
@@ -22963,6 +22963,30 @@
       "source_location": "L346"
     },
     {
+      "id": "test_services_test_kokoro_integration_live_config",
+      "label": "live_config()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "config.py",
+      "file_type": "code",
+      "norm_label": "live_config()",
+      "source_file": "test/services/test_kokoro_integration.py",
+      "source_location": "L20"
+    },
+    {
+      "id": "test_services_test_kokoro_kokoro_config",
+      "label": "kokoro_config()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "config.py",
+      "file_type": "code",
+      "norm_label": "kokoro_config()",
+      "source_file": "test/services/test_kokoro.py",
+      "source_location": "L14"
+    },
+    {
       "id": "test_services_test_webui_headless_task_actions_button_by_key_prefix",
       "label": "_button_by_key_prefix()",
       "_callable": true,
@@ -23047,6 +23071,18 @@
       "source_location": "L17"
     },
     {
+      "id": "test_services_test_webui_ofox_placement_test_ofox_settings_order_and_saved_values",
+      "label": "test_ofox_settings_order_and_saved_values()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "config.py",
+      "file_type": "code",
+      "norm_label": "test_ofox_settings_order_and_saved_values()",
+      "source_file": "test/services/test_webui_ofox_placement.py",
+      "source_location": "L34"
+    },
+    {
       "id": "test_services_test_webui_ofox_test_ofox_source_requires_confirmation_then_submits_without_secret_in_params",
       "label": "test_ofox_source_requires_confirmation_then_submits_without_secret_in_params()",
       "_callable": true,
@@ -23093,6 +23129,18 @@
       "norm_label": "_widget_by_key()",
       "source_file": "test/services/test_webui_seedance.py",
       "source_location": "L13"
+    },
+    {
+      "id": "test_test_main_test_main_starts_uvicorn_with_runtime_config",
+      "label": "test_main_starts_uvicorn_with_runtime_config()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "config.py",
+      "file_type": "code",
+      "norm_label": "test_main_starts_uvicorn_with_runtime_config()",
+      "source_file": "test/test_main.py",
+      "source_location": "L11"
     },
     {
       "id": "app_services_material_download_videos_ofox_on_demand",
@@ -23393,54 +23441,6 @@
       "norm_label": ".test_external_directory_prefers_project_app_package()",
       "source_file": "test/services/test_webui_startup.py",
       "source_location": "L15"
-    },
-    {
-      "id": "test_services_test_kokoro_integration_live_config",
-      "label": "live_config()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 404,
-      "community_name": "live_config",
-      "file_type": "code",
-      "norm_label": "live_config()",
-      "source_file": "test/services/test_kokoro_integration.py",
-      "source_location": "L20"
-    },
-    {
-      "id": "test_services_test_kokoro_kokoro_config",
-      "label": "kokoro_config()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 405,
-      "community_name": "kokoro_config",
-      "file_type": "code",
-      "norm_label": "kokoro_config()",
-      "source_file": "test/services/test_kokoro.py",
-      "source_location": "L14"
-    },
-    {
-      "id": "test_services_test_webui_ofox_placement_test_ofox_settings_order_and_saved_values",
-      "label": "test_ofox_settings_order_and_saved_values()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 406,
-      "community_name": "test_ofox_settings_order_and_saved_values",
-      "file_type": "code",
-      "norm_label": "test_ofox_settings_order_and_saved_values()",
-      "source_file": "test/services/test_webui_ofox_placement.py",
-      "source_location": "L34"
-    },
-    {
-      "id": "test_test_main_test_main_starts_uvicorn_with_runtime_config",
-      "label": "test_main_starts_uvicorn_with_runtime_config()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 407,
-      "community_name": "test_main_starts_uvicorn_with_runtime_config",
-      "file_type": "code",
-      "norm_label": "test_main_starts_uvicorn_with_runtime_config()",
-      "source_file": "test/test_main.py",
-      "source_location": "L11"
     },
     {
       "id": "test_services_test_llm_testscriptpromptoptions_test_build_script_prompt_appends_advanced_requirements",
@@ -41035,22 +41035,44 @@
       "source_location": "L1290"
     },
     {
+      "id": "test_services_test_youtube_audience",
+      "label": "test_youtube_audience.py",
+      "_origin": "ast",
+      "community": 199,
+      "community_name": "test_youtube_audience.py",
+      "file_type": "code",
+      "norm_label": "test_youtube_audience.py",
+      "source_file": "test/services/test_youtube_audience.py",
+      "source_location": "L1"
+    },
+    {
       "id": "test_services_test_youtube_audience_py_fixture",
       "label": "fixture",
       "_origin": "ast",
       "community": 199,
-      "community_name": "upload_config",
+      "community_name": "test_youtube_audience.py",
       "file_type": "code",
       "norm_label": "fixture",
       "source_file": "",
       "source_location": ""
     },
     {
+      "id": "test_services_test_youtube_audience_rationale_1",
+      "label": "\u9a8c\u8bc1\u513f\u7ae5\u53d7\u4f17\u58f0\u660e\u7684\u914d\u7f6e\u3001\u4efb\u52a1\u5feb\u7167\u548c\u771f\u5b9e HTTP \u8868\u5355\u7f16\u7801\uff0c\u4e0d\u8fde\u63a5\u5916\u90e8\u5e73\u53f0\u3002",
+      "_origin": "ast",
+      "community": 199,
+      "community_name": "test_youtube_audience.py",
+      "file_type": "rationale",
+      "norm_label": "\u9a8c\u8bc1\u513f\u7ae5\u53d7\u4f17\u58f0\u660e\u7684\u914d\u7f6e\u3001\u4efb\u52a1\u5feb\u7167\u548c\u771f\u5b9e http \u8868\u5355\u7f16\u7801,\u4e0d\u8fde\u63a5\u5916\u90e8\u5e73\u53f0\u3002",
+      "source_file": "test/services/test_youtube_audience.py",
+      "source_location": "L1"
+    },
+    {
       "id": "test_services_test_youtube_audience_rationale_22",
       "label": "\u6d4b\u8bd5\u53ea\u4f7f\u7528\u865a\u6784\u51ed\u636e\uff0c\u4e0d\u80fd\u8bfb\u53d6\u7528\u6237\u771f\u5b9e\u53d1\u5e03\u76ee\u6807\u6216\u53d1\u8d77\u771f\u5b9e\u4e0a\u4f20\u3002",
       "_origin": "ast",
       "community": 199,
-      "community_name": "upload_config",
+      "community_name": "test_youtube_audience.py",
       "file_type": "rationale",
       "norm_label": "\u6d4b\u8bd5\u53ea\u4f7f\u7528\u865a\u6784\u51ed\u636e,\u4e0d\u80fd\u8bfb\u53d6\u7528\u6237\u771f\u5b9e\u53d1\u5e03\u76ee\u6807\u6216\u53d1\u8d77\u771f\u5b9e\u4e0a\u4f20\u3002",
       "source_file": "test/services/test_youtube_audience.py",
@@ -43089,6 +43111,17 @@
       "file_type": "code",
       "norm_label": "test_controller_video.py",
       "source_file": "test/services/test_controller_video.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "test_services_test_state",
+      "label": "test_state.py",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "v1/video.py",
+      "file_type": "code",
+      "norm_label": "test_state.py",
+      "source_file": "test/services/test_state.py",
       "source_location": "L1"
     },
     {
@@ -47157,6 +47190,28 @@
       "source_location": "L1"
     },
     {
+      "id": "test_services_test_kokoro_integration_py_fixture",
+      "label": "fixture",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "config.py",
+      "file_type": "code",
+      "norm_label": "fixture",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "test_services_test_kokoro_py_fixture",
+      "label": "fixture",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "config.py",
+      "file_type": "code",
+      "norm_label": "fixture",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "test_services_test_llm",
       "label": "test_llm.py",
       "_origin": "ast",
@@ -47264,17 +47319,6 @@
       "file_type": "code",
       "norm_label": "test_sonilo.py",
       "source_file": "test/services/test_sonilo.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "test_services_test_state",
-      "label": "test_state.py",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "config.py",
-      "file_type": "code",
-      "norm_label": "test_state.py",
-      "source_file": "test/services/test_state.py",
       "source_location": "L1"
     },
     {
@@ -47465,6 +47509,17 @@
       "source_location": "L1"
     },
     {
+      "id": "test_services_test_webui_ofox_placement_py_parametrize",
+      "label": "parametrize",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "config.py",
+      "file_type": "code",
+      "norm_label": "parametrize",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "test_services_test_webui_seedance",
       "label": "test_webui_seedance.py",
       "_origin": "ast",
@@ -47484,17 +47539,6 @@
       "file_type": "code",
       "norm_label": "test_webui_startup.py",
       "source_file": "test/services/test_webui_startup.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "test_services_test_youtube_audience",
-      "label": "test_youtube_audience.py",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "config.py",
-      "file_type": "code",
-      "norm_label": "test_youtube_audience.py",
-      "source_file": "test/services/test_youtube_audience.py",
       "source_location": "L1"
     },
     {
@@ -47597,15 +47641,15 @@
       "source_location": "L1"
     },
     {
-      "id": "test_services_test_youtube_audience_rationale_1",
-      "label": "\u9a8c\u8bc1\u513f\u7ae5\u53d7\u4f17\u58f0\u660e\u7684\u914d\u7f6e\u3001\u4efb\u52a1\u5feb\u7167\u548c\u771f\u5b9e HTTP \u8868\u5355\u7f16\u7801\uff0c\u4e0d\u8fde\u63a5\u5916\u90e8\u5e73\u53f0\u3002",
+      "id": "test_test_main_rationale_12",
+      "label": "\u670d\u52a1\u542f\u52a8\u5165\u53e3\u53ea\u8d1f\u8d23\u628a\u8fd0\u884c\u914d\u7f6e\u4ea4\u7ed9 Uvicorn\u3002\u8fd9\u91cc mock \u771f\u6b63\u7684\u670d\u52a1\u5668\u542f\u52a8\uff0c \u65e2\u907f\u514d\u6d4b\u8bd5\u5360\u7528\u7aef\u53e3\uff0c\u4e5f\u786e\u8ba4\u76d1\u542c\u5730\u5740\u3001\u7aef\u53e3\u548c\u70ed\u91cd\u8f7d\u914d\u7f6e\u4e0d\u4f1a\u5728\u5165\u53e3\u5c42\u4e22\u5931\u3002",
       "_origin": "ast",
       "community": 4,
       "community_name": "config.py",
       "file_type": "rationale",
-      "norm_label": "\u9a8c\u8bc1\u513f\u7ae5\u53d7\u4f17\u58f0\u660e\u7684\u914d\u7f6e\u3001\u4efb\u52a1\u5feb\u7167\u548c\u771f\u5b9e http \u8868\u5355\u7f16\u7801,\u4e0d\u8fde\u63a5\u5916\u90e8\u5e73\u53f0\u3002",
-      "source_file": "test/services/test_youtube_audience.py",
-      "source_location": "L1"
+      "norm_label": "\u670d\u52a1\u542f\u52a8\u5165\u53e3\u53ea\u8d1f\u8d23\u628a\u8fd0\u884c\u914d\u7f6e\u4ea4\u7ed9 uvicorn\u3002\u8fd9\u91cc mock \u771f\u6b63\u7684\u670d\u52a1\u5668\u542f\u52a8, \u65e2\u907f\u514d\u6d4b\u8bd5\u5360\u7528\u7aef\u53e3,\u4e5f\u786e\u8ba4\u76d1\u542c\u5730\u5740\u3001\u7aef\u53e3\u548c\u70ed\u91cd\u8f7d\u914d\u7f6e\u4e0d\u4f1a\u5728\u5165\u53e3\u5c42\u4e22\u5931\u3002",
+      "source_file": "test/test_main.py",
+      "source_location": "L12"
     },
     {
       "id": "app_services_ofox",
@@ -47760,50 +47804,6 @@
       "norm_label": "fixture",
       "source_file": "",
       "source_location": ""
-    },
-    {
-      "id": "test_services_test_kokoro_integration_py_fixture",
-      "label": "fixture",
-      "_origin": "ast",
-      "community": 404,
-      "community_name": "live_config",
-      "file_type": "code",
-      "norm_label": "fixture",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "test_services_test_kokoro_py_fixture",
-      "label": "fixture",
-      "_origin": "ast",
-      "community": 405,
-      "community_name": "kokoro_config",
-      "file_type": "code",
-      "norm_label": "fixture",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "test_services_test_webui_ofox_placement_py_parametrize",
-      "label": "parametrize",
-      "_origin": "ast",
-      "community": 406,
-      "community_name": "test_ofox_settings_order_and_saved_values",
-      "file_type": "code",
-      "norm_label": "parametrize",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "test_test_main_rationale_12",
-      "label": "\u670d\u52a1\u542f\u52a8\u5165\u53e3\u53ea\u8d1f\u8d23\u628a\u8fd0\u884c\u914d\u7f6e\u4ea4\u7ed9 Uvicorn\u3002\u8fd9\u91cc mock \u771f\u6b63\u7684\u670d\u52a1\u5668\u542f\u52a8\uff0c \u65e2\u907f\u514d\u6d4b\u8bd5\u5360\u7528\u7aef\u53e3\uff0c\u4e5f\u786e\u8ba4\u76d1\u542c\u5730\u5740\u3001\u7aef\u53e3\u548c\u70ed\u91cd\u8f7d\u914d\u7f6e\u4e0d\u4f1a\u5728\u5165\u53e3\u5c42\u4e22\u5931\u3002",
-      "_origin": "ast",
-      "community": 407,
-      "community_name": "test_main_starts_uvicorn_with_runtime_config",
-      "file_type": "rationale",
-      "norm_label": "\u670d\u52a1\u542f\u52a8\u5165\u53e3\u53ea\u8d1f\u8d23\u628a\u8fd0\u884c\u914d\u7f6e\u4ea4\u7ed9 uvicorn\u3002\u8fd9\u91cc mock \u771f\u6b63\u7684\u670d\u52a1\u5668\u542f\u52a8, \u65e2\u907f\u514d\u6d4b\u8bd5\u5360\u7528\u7aef\u53e3,\u4e5f\u786e\u8ba4\u76d1\u542c\u5730\u5740\u3001\u7aef\u53e3\u548c\u70ed\u91cd\u8f7d\u914d\u7f6e\u4e0d\u4f1a\u5728\u5165\u53e3\u5c42\u4e22\u5931\u3002",
-      "source_file": "test/test_main.py",
-      "source_location": "L12"
     },
     {
       "id": "test_services_test_llm_rationale_135",
@@ -54288,6 +54288,42 @@
       "type": "external"
     },
     {
+      "id": "concurrent_futures",
+      "label": "concurrent_futures",
+      "_origin": "semantic",
+      "community": 199,
+      "community_name": "test_youtube_audience.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "concurrent_futures",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "email_parser",
+      "label": "email_parser",
+      "_origin": "semantic",
+      "community": 199,
+      "community_name": "test_youtube_audience.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "email_parser",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "email_policy",
+      "label": "email_policy",
+      "_origin": "semantic",
+      "community": 199,
+      "community_name": "test_youtube_audience.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "email_policy",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "gc",
       "label": "gc",
       "_origin": "semantic",
@@ -54320,18 +54356,6 @@
       "external": true,
       "file_type": "concept",
       "norm_label": "moviepy_video_tools_subtitles",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "pil",
-      "label": "pil",
-      "_origin": "semantic",
-      "community": 2,
-      "community_name": "services/video.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "pil",
       "source_file": "",
       "type": "external"
     },
@@ -54960,18 +54984,6 @@
       "type": "external"
     },
     {
-      "id": "concurrent_futures",
-      "label": "concurrent_futures",
-      "_origin": "semantic",
-      "community": 4,
-      "community_name": "config.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "concurrent_futures",
-      "source_file": "",
-      "type": "external"
-    },
-    {
       "id": "contextlib",
       "label": "contextlib",
       "_origin": "semantic",
@@ -54980,30 +54992,6 @@
       "external": true,
       "file_type": "concept",
       "norm_label": "contextlib",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "email_parser",
-      "label": "email_parser",
-      "_origin": "semantic",
-      "community": 4,
-      "community_name": "config.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "email_parser",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "email_policy",
-      "label": "email_policy",
-      "_origin": "semantic",
-      "community": 4,
-      "community_name": "config.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "email_policy",
       "source_file": "",
       "type": "external"
     },
@@ -55100,6 +55088,18 @@
       "external": true,
       "file_type": "concept",
       "norm_label": "pathlib",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "pil",
+      "label": "pil",
+      "_origin": "semantic",
+      "community": 4,
+      "community_name": "config.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "pil",
       "source_file": "",
       "type": "external"
     },
@@ -68086,7 +68086,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L108",
+      "source_location": "L100",
       "weight": 1.0
     },
     {
@@ -68098,7 +68098,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L114",
+      "source_location": "L106",
       "weight": 1.0
     },
     {
@@ -68110,7 +68110,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L120",
+      "source_location": "L112",
       "weight": 1.0
     },
     {
@@ -68122,7 +68122,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L121",
+      "source_location": "L113",
       "weight": 1.0
     },
     {
@@ -68134,7 +68134,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L124",
+      "source_location": "L116",
       "weight": 1.0
     },
     {
@@ -68146,7 +68146,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L128",
+      "source_location": "L120",
       "weight": 1.0
     },
     {
@@ -68158,7 +68158,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L129",
+      "source_location": "L121",
       "weight": 1.0
     },
     {
@@ -68170,19 +68170,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L131",
-      "weight": 1.0
-    },
-    {
-      "source": "supervisor_r10_check_main",
-      "target": "app_services_voice_get_audio_duration",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "supervisor/r10_check.py",
-      "source_location": "L162",
+      "source_location": "L123",
       "weight": 1.0
     },
     {
@@ -68194,7 +68182,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L168",
+      "source_location": "L146",
       "weight": 1.0
     },
     {
@@ -68206,7 +68194,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L180",
+      "source_location": "L160",
       "weight": 1.0
     },
     {
@@ -68218,7 +68206,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L189",
+      "source_location": "L169",
       "weight": 1.0
     },
     {
@@ -68230,7 +68218,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L203",
+      "source_location": "L183",
       "weight": 1.0
     },
     {
@@ -68242,7 +68230,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L216",
+      "source_location": "L196",
       "weight": 1.0
     },
     {
@@ -68254,7 +68242,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L241",
+      "source_location": "L221",
       "weight": 1.0
     },
     {
@@ -90987,42 +90975,6 @@
     },
     {
       "source": "supervisor_r10_check",
-      "target": "app_models_schema_materialinfo",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "supervisor/r10_check.py",
-      "source_location": "L101",
-      "weight": 1.0
-    },
-    {
-      "source": "supervisor_r10_check",
-      "target": "app_models_schema_videoconcatmode",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "supervisor/r10_check.py",
-      "source_location": "L101",
-      "weight": 1.0
-    },
-    {
-      "source": "supervisor_r10_check",
-      "target": "app_models_schema_videoparams",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "supervisor/r10_check.py",
-      "source_location": "L101",
-      "weight": 1.0
-    },
-    {
-      "source": "supervisor_r10_check",
       "target": "argparse",
       "relation": "imports",
       "_origin": "ast",
@@ -91030,19 +90982,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L24",
-      "weight": 1.0
-    },
-    {
-      "source": "supervisor_r10_check",
-      "target": "math",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "supervisor/r10_check.py",
-      "source_location": "L25",
+      "source_location": "L22",
       "weight": 1.0
     },
     {
@@ -91054,7 +90994,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L26",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -91066,7 +91006,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L27",
+      "source_location": "L24",
       "weight": 1.0
     },
     {
@@ -91078,7 +91018,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L28",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -91090,7 +91030,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L29",
+      "source_location": "L26",
       "weight": 1.0
     },
     {
@@ -91102,7 +91042,43 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L30",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "supervisor_r10_check",
+      "target": "app_models_schema_materialinfo",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "supervisor/r10_check.py",
+      "source_location": "L94",
+      "weight": 1.0
+    },
+    {
+      "source": "supervisor_r10_check",
+      "target": "app_models_schema_videoconcatmode",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "supervisor/r10_check.py",
+      "source_location": "L94",
+      "weight": 1.0
+    },
+    {
+      "source": "supervisor_r10_check",
+      "target": "app_models_schema_videoparams",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "supervisor/r10_check.py",
+      "source_location": "L94",
       "weight": 1.0
     },
     {
@@ -98026,7 +98002,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L31",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -98038,7 +98014,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L32",
+      "source_location": "L29",
       "weight": 1.0
     },
     {
@@ -98050,7 +98026,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L33",
+      "source_location": "L30",
       "weight": 1.0
     },
     {
@@ -104014,7 +103990,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L64",
+      "source_location": "L61",
       "weight": 1.0
     },
     {
@@ -105778,7 +105754,7 @@
       "confidence_score": 1.0,
       "context": "submodule_import",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L102",
+      "source_location": "L95",
       "weight": 1.0
     },
     {
@@ -105790,7 +105766,7 @@
       "confidence_score": 1.0,
       "context": "submodule_import",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L103",
+      "source_location": "L96",
       "weight": 1.0
     },
     {
@@ -105802,19 +105778,7 @@
       "confidence_score": 1.0,
       "context": "submodule_import",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L104",
-      "weight": 1.0
-    },
-    {
-      "source": "supervisor_r10_check",
-      "target": "app_services_voice",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "submodule_import",
-      "source_file": "supervisor/r10_check.py",
-      "source_location": "L105",
+      "source_location": "L97",
       "weight": 1.0
     },
     {
@@ -105826,7 +105790,7 @@
       "confidence_score": 1.0,
       "context": "submodule_import",
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L106",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -115659,7 +115623,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L43",
+      "source_location": "L40",
       "weight": 1.0
     },
     {
@@ -115670,7 +115634,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L55",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -115681,7 +115645,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L59",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -115692,7 +115656,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L64",
+      "source_location": "L61",
       "weight": 1.0
     },
     {
@@ -115703,7 +115667,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L80",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -115714,7 +115678,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L86",
+      "source_location": "L83",
       "weight": 1.0
     },
     {
@@ -158213,7 +158177,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "supervisor/r10_check.py",
-      "source_location": "L138",
+      "source_location": "L130",
       "weight": 0.8
     },
     {

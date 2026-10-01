@@ -1,12 +1,12 @@
 # Graph Report - MoneyPrinterTurbo  (2026-10-02)
 
 ## Corpus Check
-- 162 files · ~299,025 words
+- 162 files · ~298,832 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 25 file(s) not represented in the graph (top: .ttf 7, (none) 6, .ttc 4)
 
 ## Summary
-- 4709 nodes · 9064 edges · 408 communities (125 shown, 283 thin omitted)
+- 4709 nodes · 9061 edges · 404 communities (125 shown, 279 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 403 edges (avg confidence: 0.89)
 - Token cost: 0 input · 0 output
 
@@ -200,7 +200,7 @@
 - webui.sh
 - trello
 - subtitle_colors_are_indistinguishable
-- upload_config
+- test_youtube_audience.py
 - submit_generation
 - TestFishAudioDispatch
 - get_default_ollama_base_url
@@ -245,10 +245,6 @@
 - _force_utf8_console
 - headless_task_app
 - TestWebuiStartup
-- live_config
-- kokoro_config
-- test_ofox_settings_order_and_saved_values
-- test_main_starts_uvicorn_with_runtime_config
 
 ## God Nodes (most connected - your core abstractions)
 1. `VideoParams` - 157 edges
@@ -282,7 +278,7 @@
 - **Docker Deployment Variants** — docker_compose_webui, docker_compose_api, docker_compose_release, docker_compose_gpu, docker_compose_claude [EXTRACTED 1.00]
 - **Farsi Reel Generation Pipeline** — intent_2026_09_29_ig_reel_agent_intent, skills_meta_safe_farsi_reel_script_skill, intent_2026_09_29_ig_reel_agent_intent_2026_09_29_ig_reel_agent_meta_graph_api, intent_2026_09_29_ig_reel_agent_intent_2026_09_29_ig_reel_agent_idea_cards [EXTRACTED 1.00]
 
-## Communities (408 total, 283 thin omitted)
+## Communities (404 total, 279 thin omitted)
 
 ### Community 0 - "BufferClient"
 Cohesion: 0.13
@@ -301,8 +297,8 @@ Cohesion: 0.06
 Nodes (11): UploadPostService, _get_all(), _has_key(), _mock_response(), TestUploadPostService, TestUploadPostServiceDynamicConfig, TestUploadPostYouTubePayload, test_audience_payload_and_snapshot_override() (+3 more)
 
 ### Community 4 - "config.py"
-Cohesion: 0.08
-Nodes (9): _button_by_key_prefix(), test_headless_open_folder_shows_host_mapped_path(), test_headless_play_renders_and_closes_browser_preview(), test_muapi_source_requires_confirmation_then_submits_without_secret_in_params(), _widget_by_key(), test_ofox_source_requires_confirmation_then_submits_without_secret_in_params(), _widget_by_key(), test_seedance_source_requires_confirmation_then_submits_without_secret_in_params() (+1 more)
+Cohesion: 0.07
+Nodes (13): live_config(), kokoro_config(), _button_by_key_prefix(), test_headless_open_folder_shows_host_mapped_path(), test_headless_play_renders_and_closes_browser_preview(), test_muapi_source_requires_confirmation_then_submits_without_secret_in_params(), _widget_by_key(), test_ofox_settings_order_and_saved_values() (+5 more)
 
 ### Community 7 - "test_webui_voice_preview.py"
 Cohesion: 0.15
@@ -787,17 +783,17 @@ Nodes (5): _path_is_within_directory(), _prepare_cli_materials(), _resolve_cli_f
 ## Knowledge Gaps
 - **73 isolated node(s):** `$schema`, `plugin`, `type`, `url`, `enabled` (+68 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2160 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **283 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **279 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `VideoParams` connect `VideoParams` to `services/video.py`, `config.py`, `TestTaskArtifacts`, `TestTaskService`, `_validate_cli_files`, `MemoryState`, `material.py`, `.test_generate_audio_falls_back_to_sub_maker_when_file_duration_is_zero`, `cli.py`, `test_webui_voice_preview.py`, `TestSubtitleBackgroundSettings`, `.test_start_generates_youtube_metadata_for_each_cross_post`, `.test_custom_script_keeps_literal_error_text`, `test_metaso_minimax.py`, `.test_start_rejects_missing_elevenlabs_key_before_pipeline_steps`, `task_dir`, `RedisTaskManager`, `muapi.py`, `v1/video.py`, `task.py`, `generate_video`, `Main.py`, `main`, `_run_pipeline`, `test_webui_settings_transfer.py`, `schema.py`, `.test_generate_subtitle_uses_whisper_word_timing_without_correction`, `TestVolcEngineSeedanceMaterialIntegration`, `subtitle_colors_are_indistinguishable`, `_render_application`, `submit_generation`, `test_webui_task.py`, `_run_generation`, `_render_key_backup_settings`, `.test_start_returns_before_cross_post_worker_runs`, `_run_webui_upload_block`, `_run_webui_audio_block`, `test_batch_material_allocation.py`, `Spec: Farsi Instagram Reel Generation Agent (MoneyPrinterTurbo)`, `TestOFoxMaterialIntegration`, `run_cli`, `_build_batch_tasks`, `_schedule_cross_post`?**
+- **Why does `VideoParams` connect `VideoParams` to `services/video.py`, `config.py`, `TestTaskArtifacts`, `TestTaskService`, `_validate_cli_files`, `MemoryState`, `material.py`, `.test_generate_audio_falls_back_to_sub_maker_when_file_duration_is_zero`, `cli.py`, `test_webui_voice_preview.py`, `TestSubtitleBackgroundSettings`, `.test_start_generates_youtube_metadata_for_each_cross_post`, `.test_custom_script_keeps_literal_error_text`, `test_metaso_minimax.py`, `.test_start_rejects_missing_elevenlabs_key_before_pipeline_steps`, `task_dir`, `RedisTaskManager`, `muapi.py`, `v1/video.py`, `task.py`, `generate_video`, `Main.py`, `main`, `_run_pipeline`, `test_webui_settings_transfer.py`, `schema.py`, `.test_generate_subtitle_uses_whisper_word_timing_without_correction`, `TestVolcEngineSeedanceMaterialIntegration`, `subtitle_colors_are_indistinguishable`, `test_youtube_audience.py`, `submit_generation`, `_render_application`, `test_webui_task.py`, `_run_generation`, `_render_key_backup_settings`, `.test_start_returns_before_cross_post_worker_runs`, `_run_webui_upload_block`, `_run_webui_audio_block`, `test_batch_material_allocation.py`, `Spec: Farsi Instagram Reel Generation Agent (MoneyPrinterTurbo)`, `TestOFoxMaterialIntegration`, `run_cli`, `_build_batch_tasks`, `_schedule_cross_post`?**
   _High betweenness centrality (0.101) - this node is a cross-community bridge._
 - **Why does `TestLiteLLMProvider` connect `TestLiteLLMProvider` to `._assert_ollama_base_url`, `config.py`, `._patch_dashscope_generation`, `._use_litellm_provider`, `.test_current_default_model_names`, `.test_provider_defaults_are_not_persisted_as_user_overrides`, `.test_provider_registry_preserves_product_group_order`, `.test_registry_replaces_deprecated_provider_models`, `.test_required_api_key_providers_have_clickable_entry_points`, `.test_service_endpoint_registry_references_valid_stable_ids`, `.test_kimi_endpoint_selection_does_not_depend_on_marketing_url`, `.test_cloudflare_requires_account_id_before_request`, `.test_aimlapi_provider_uses_openai_compatible_client`, `.test_gemini_uses_google_genai_client`, `.test_openai_provider_error_redacts_embedded_base_url_credentials`, `.test_apimart_provider_uses_unwrapped_openai_compatible_endpoint`, `.test_aihubmix_provider_uses_openai_compatible_client`, `.test_evolink_provider_uses_openai_compatible_client`, `.test_openrouter_provider_uses_openai_compatible_client`, `.test_api_route_provider_uses_openai_compatible_client`, `.test_volcengine_provider_uses_openai_compatible_client`, `.test_mimo_provider_uses_openai_compatible_client`, `.test_azure_provider_uses_azure_client_directly`, `.test_pollinations_uses_unified_openai_compatible_api`, `.test_anthropic_uses_openai_compatible_chat_completions`, `.test_cloudflare_uses_ai_gateway_openai_endpoint`?**
   _High betweenness centrality (0.051) - this node is a cross-community bridge._
 - **Why does `MaterialInfo` connect `material.py` to `VideoAspect`, `services/video.py`, `_download_videos_muapi_on_demand`, `config.py`, `TestCli`, `TestTaskService`, `_validate_cli_files`, `cli.py`, `.test_local_material_filename_resolved_to_absolute_path`, `test_metaso_minimax.py`, `TestMaterialSearchCache`, `muapi.py`, `TestVideoService`, `task.py`, `Main.py`, `main`, `ofox.py`, `schema.py`, `volcengine_seedance.py`, `tr`, `storage_dir`, `TestVolcEngineSeedanceMaterialIntegration`, `_run_webui_upload_block`, `TestOFoxMaterialIntegration`?**
-  _High betweenness centrality (0.047) - this node is a cross-community bridge._
+  _High betweenness centrality (0.046) - this node is a cross-community bridge._
 - **Are the 30 inferred relationships involving `VideoParams` (e.g. with `RedisTaskManager` and `_get_video_music_prompt()`) actually correct?**
   _`VideoParams` has 30 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 2 inferred relationships involving `TestCli` (e.g. with `MaterialInfo` and `VideoTransitionMode`) actually correct?**
