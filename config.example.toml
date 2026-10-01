@@ -715,3 +715,29 @@ open_task_folder_on_completion = true
 # app.gemini_api_key (see [app]) to use it. Fall back to Edge-TTS
 # "fa-IR-DilaraNeural" (free, no key) if Gemini is unavailable.
 tts_voice = "gemini:Charon"
+
+# -----------------------------------------------------------------------------
+# Posting backend (R-5, resolved 2026-10-01): Buffer GraphQL API instead of a
+# direct Meta Graph app, so no operator Meta developer account or app review is
+# needed. The operator connects their Instagram account to Buffer once (OAuth in
+# the Buffer app), then the supervisor drives Buffer's GraphQL API with this
+# single key (Bearer token). Keep the key in config.toml only (NFR-5).
+# Create/rotate it in Buffer: Settings -> API.
+# Proof-of-concept runner: `uv run python -X utf8 -m supervisor.buffer_poc`
+# -----------------------------------------------------------------------------
+buffer_api_key = ""
+# GraphQL endpoint (leave empty for the public SaaS endpoint).
+buffer_base_url = "https://api.buffer.com"
+# Your Buffer organization id (from GET account.organizations). Leave empty to
+# auto-resolve at runtime.
+buffer_organization_id = ""
+# The Buffer Instagram channel id to post to (from GET channels). Leave empty to
+# auto-select the first "instagram" channel.
+buffer_channel_id = ""
+# metadata.instagram.type: "post" | "story" | "reel".
+buffer_reel_type = "reel"
+# R-9: Buffer has no upload endpoint; the reel MP4 must be a public URL Buffer can
+# fetch. "cloudinary" (free tier, confirmed working) or "r2" (signed, short-lived)
+# are the candidate public hosts. See plan R-9.
+buffer_media_host = "cloudinary"
+

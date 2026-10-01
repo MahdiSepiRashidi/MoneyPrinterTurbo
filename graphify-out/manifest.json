@@ -1332,15 +1332,33 @@
     "semantic_hash": ""
   },
   "plan/2026-09-29-ig-reel-agent/plan.md": {
-    "mtime": 1790845792.3925467,
-    "seen": 1790852436.611659,
-    "ast_hash": "9cd8348f3b448c5993d44da533839e48",
+    "mtime": 1790885231.6851892,
+    "seen": 1790885289.640482,
+    "ast_hash": "821c4afa32d5e04655847de3310ebc1c",
     "semantic_hash": ""
   },
-  "r1_tts_azure_test.py": {
-    "mtime": 1790855746.4201498,
-    "seen": 1790862984.6085963,
-    "ast_hash": "6d52e91b85093439ad56f37534be1a02",
+  "supervisor/__init__.py": {
+    "mtime": 1790880524.6797216,
+    "seen": 1790880984.8344553,
+    "ast_hash": "e08011b4b7c64aebde2d366e220a082f",
+    "semantic_hash": ""
+  },
+  "resource/fonts/OFL-Vazirmatn.txt": {
+    "mtime": 1790866307.058348,
+    "seen": 1790880984.834704,
+    "ast_hash": "88985b4355a8a44627dde041f10aba75",
+    "semantic_hash": ""
+  },
+  "supervisor/buffer.py": {
+    "mtime": 1790884955.4802966,
+    "seen": 1790885289.6401181,
+    "ast_hash": "f439e454950be946371f8bd60d4f2565",
+    "semantic_hash": ""
+  },
+  "supervisor/buffer_poc.py": {
+    "mtime": 1790884823.569813,
+    "seen": 1790885289.6401267,
+    "ast_hash": "10336325e3a120c6c44c7a2df196ab1e",
     "semantic_hash": ""
   }
 }
