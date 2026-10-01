@@ -546,11 +546,19 @@ compute_type = "int8"
 # =============================================================================
 
 [proxy]
-# Optional proxy used by Pexels, Pixabay, Coverr, and material downloads.
+# Optional proxy used by Pexels, Pixabay, Coverr, and material downloads. Also
+# honored by the supervisor's outbound Buffer/Telegram/Meta calls (R-7) and the
+# Buffer POC (supervisor/buffer_poc.py).
 # Format: "http://<username>:<password>@<proxy>:<port>"
 # Documentation: https://requests.readthedocs.io/en/latest/user/advanced/#proxies
+# HTTP/HTTPS relay:
 # http = "http://127.0.0.1:3128"
-# https = "http://127.0.0.1:1080"
+# https = "http://127.0.0.1:3128"
+# SOCKS5 relay (requires the pysocks dependency; use "socks5h" so DNS is
+# resolved on the relay side, which is needed behind a restricted network).
+# URL-encode special characters in the password, e.g. "@" -> "%40".
+# http = "socks5h://<username>:<password>@<proxy>:<port>"
+# https = "socks5h://<username>:<password>@<proxy>:<port>"
 
 # =============================================================================
 # TTS Providers / 语音合成服务
