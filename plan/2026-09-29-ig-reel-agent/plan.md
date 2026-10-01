@@ -1,7 +1,7 @@
 # Plan: Farsi Instagram Reel Agent (from intent.md 2026-09-29)
 **Source spec:** intent/2026-09-29-ig-reel-agent/spec.md (2026-09-29, approved; §-references below point to this in-repo file)
 **Status:** draft
-**Plan version:** 4
+**Plan version:** 5
 
 ## Config key contract (defines everything below; add to `config.example.toml`, expose in `app/config/config.py`)
 - New `[supervisor]` section (supervisor-only; never read by MPT pipeline code):
@@ -9,7 +9,7 @@
   Gemini 3.8 Flash TTS + Charon; Edge-TTS `fa-IR-DilaraNeural` remains the key-free fallback),
   `candidates_llm_ranking=false`, `candidates_count=5`, `pick_deadline_weekday="18:00"`,
   `pick_deadline_friday="12:00"`, `post_time_weekday="20:00"`, `post_time_friday="14:00"`,
-  `meta_access_token`, `meta_ig_user_id`, `meta_schedule=true`, `meta_graph_version="19.0"`,
+   `meta_access_token`, `meta_ig_user_id`, `meta_schedule=false` (R-4: our-side scheduling, immediate post), `meta_graph_version="19.0"`,
   `video_url_provider="r2"` (+ `r2_bucket`, `r2_access_key`, `r2_secret_key`, `r2_endpoint`),
   `clip_max_downloads=10000`, `bgm_moods=["calm","motivational","reflective","hopeful"]`, `bgm_volume=0.2`, `retry_backoff_seconds="30,120,600"`,
   `poll_interval_seconds=30`.
@@ -29,7 +29,7 @@
 - [x] R-1 · OQ-1 (TTS): **Resolved 2026-10-01 — Gemini 3.8 Flash TTS + `gemini:Charon`** (auditioned: Edge-TTS `fa-IR-DilaraNeural` flat question intonation; Fish Audio public Farsi voices poor accent; Gemini 3.8 won). MPT: `gemini_tts()` model now config-selectable via `app.gemini_tts_model_name` (default `gemini-2.5-flash-preview-tts`; this deployment sets `gemini-3.8-flash-tts`, `voice.py:1742-1747`); provider switch later stays config-only (`tts_voice` voice-name prefix dispatch `voice.py:593-714`). Free Edge-TTS `fa-IR-DilaraNeural` remains the no-key fallback. Unblocks FR-6, FR-17.
 - [ ] R-2 · OQ-9 / Concern #9: **rule-based normalizer + validator** in `supervisor/farsi_norm.py` (required-ZWNJ word list, harakat check on ambiguous-token list, punctuation-density bounds); LLM-only diacritics rejected (unverified, non-deterministic, untestable); optional model-based post-step behind config flag later. Unblocks FR-17, FR-4.
 - [ ] R-3 · OQ-2 (font): add **Vazirmatn (OFL)** TTFs to `resource/fonts/`; supervisor sets `params.font_name="Vazirmatn-Regular.ttf"` (fonts must live there — `app/services/video.py:1381` resolves only within `resource/fonts`). Unblocks FR-9.
-- [ ] R-4 · Concern #1: POC P-1a against the Meta app: does `publish_time` on A2 work for this access tier? If no → `meta_schedule=false` (build 19:55/13:55 Tehran, post immediately). `supervisor/meta_poster.py` supports both, selected by config. Unblocks FR-11.
+- [x] R-4 · Concern #1 (scheduling): **Resolved 2026-10-01 — keep the video on our side; immediate post, no Meta-side `publish_time` POC**. `meta_schedule=false`; the supervisor builds at 19:55/13:55 Tehran and posts immediately at 20:00/14:00; `supervisor/meta_poster.py` has the immediate-post path only. Unblocks FR-11.
 - [ ] R-5 · Concern #2: Meta app review / business verification for `ig_user_reels` is external — start the review early; until it clears, the FR-12 manual-post path is the daily operating mode. Ops task, no code gate.
 - [ ] R-6 · OQ-7: Graph errors 190/1/200 → run `post_status: failed` + Telegram alert; bot command `refresh-token <token>` writes `[supervisor] meta_access_token` via `save_config()` (`app/config/config.py:483`) then retries. Unblocks FR-11, FR-13.
 - [ ] R-7 · OQ-8 / Concern #5: Meta egress uses the existing `[proxy]` config; a paid stable non-Iran relay is a documented NFR-1 exception. Telegram `getUpdates`/`sendMessage`/`sendVideo` egress also honors `[proxy]` when set (operator may sit behind the same restricted network). Ops decision. Unblocks FR-11, FR-15.
@@ -98,13 +98,13 @@
 
 ### Epic D — Post, operator surface, ship
 - **FR-11** — Post via official Meta Graph API on schedule (20:00 weekday / 14:00 Friday Tehran)
-  - [ ] `supervisor/meta_poster.py`: `upload_mp4(path) -> public_url` via `video_url_provider` (R-9); build every Graph endpoint from `meta_graph_version` (config, default "19.0") + `meta_ig_user_id` — never hardcode the version. The reel `caption` field is `DailyRun.caption` + newline + `" ".join(DailyRun.hashtags)` (Meta Graph has no separate hashtag field for Reels — hashtags ride inline in the caption, FR-10). A1 `POST /graph/<v>/{ig_user_id}/media` `{"media_type":"REELS","video_url":url,"caption":<caption+hashtags>}` → container id; A2 `POST /graph/<v>/{container}/published_media` with `publish_time` (unix ts, Tehran clock) when `meta_schedule=true` (R-4 POC result) else at build-then-post time; A3 poll `GET /graph/<v>/{media}?fields=status_code` until `posted` → mark the picked card `status: used`. Retries with backoff; error 190/1/200 → R-6 flow. Official endpoints only, `[proxy]` honored (R-7).
+  - [ ] `supervisor/meta_poster.py`: `upload_mp4(path) -> public_url` via `video_url_provider` (R-9); build every Graph endpoint from `meta_graph_version` (config, default "19.0") + `meta_ig_user_id` — never hardcode the version. The reel `caption` field is `DailyRun.caption` + newline + `" ".join(DailyRun.hashtags)` (Meta Graph has no separate hashtag field for Reels — hashtags ride inline in the caption, FR-10). A1 `POST /graph/<v>/{ig_user_id}/media` `{"media_type":"REELS","video_url":url,"caption":<caption+hashtags>}` → container id; A2 `POST /graph/<v>/{container}/published_media` immediately after build (no `publish_time` — R-4 resolved 2026-10-01: our-side scheduling, `meta_schedule=false`, build 19:55/13:55 Tehran, post at 20:00/14:00); A3 poll `GET /graph/<v>/{media}?fields=status_code` until `posted` → mark the picked card `status: used`. Retries with backoff; error 190/1/200 → R-6 flow. Official endpoints only, `[proxy]` honored (R-7).
 - **FR-12** — Manual fallback on post failure
   - [ ] `supervisor/flow.py` after retries: `supervisor/telegram_bot.py::send_video` (POST `sendVideo`, file <48 MB) with caption = `DailyRun.caption` + `" ".join(hashtags)`; `post_status: manual`; bot command `ack-post` records the operator's manual result and marks the picked card `status: used`.
 - **FR-15** — Telegram bot is the sole operator surface
   - [ ] `supervisor/telegram_bot.py`: long-poll `getUpdates` (timeout 50 s, loop per `poll_interval_seconds`; on 429 sleep `retry_after`). Command map: `1`–`5` pick · `approve`/`rewrite`/`reject` · `review <text>` · `ack-post` · `resume <run_id>` · `refresh-token <token>`; all replies Farsi; every operator action in spec §5 is completable here.
 - **FR-16** — One Docker image: pipeline + supervisor + bot
-  - [ ] `supervisor/__main__.py` command `serve`: starts scheduler (daily jobs: 08:00 pick; deadlines 18:00/12:00; build-then-post 19:55/13:55 or post-then-20:00/14:00 per R-4) + bot poll loop + on-start resume of any non-terminal `DailyRun` from `daily_runs.json` (NFR-8).
+  - [ ] `supervisor/__main__.py` command `serve`: starts scheduler (daily jobs: 08:00 pick; deadlines 18:00/12:00; build-then-post 19:55/13:55 Tehran, immediate post at 20:00/14:00 (R-4: our-side scheduling)) + bot poll loop + on-start resume of any non-terminal `DailyRun` from `daily_runs.json` (NFR-8).
   - [ ] `docker-compose.yml`: add `supervisor` service on the existing image (`command: ["python3","-m","supervisor","serve"]`, `environment: TZ=Asia/Tehran`, bind-mount `./`); `Dockerfile`: `ENV TZ=Asia/Tehran`. No new deps (requests/loguru already in `requirements.txt`).
   - [ ] `pyproject.toml`: add `"supervisor"` to coverage `source` (L64); new tests live in `test/supervisor/test_<domain>.py` mirroring `test/services/` conventions.
 
@@ -114,13 +114,13 @@
 3. R-2 → FR-17 (`farsi_norm.py` + fixture tests) — needed by FR-4.
 4. Epic B: FR-1 → FR-2/FR-3 → FR-4 → FR-5 → FR-10 (Telegram handlers land alongside each).
 5. R-1, R-3 → Epic C: FR-6 → FR-7 → FR-8 → FR-9 (FR-9 is the riskiest code step — P-2 attached).
-6. P-1a + P-1b (Meta, external) → R-4/R-9 decisions → FR-11 → FR-12 → R-5 tracking.
+6. P-1b (Meta/external; P-1a retired with R-4) → R-9 decision → FR-11 → FR-12 → R-5 tracking.
 7. FR-13 (retry/backoff/resume wrapper over the whole flow) → FR-15 polish → FR-16 Docker/compose/coverage.
 8. F-1 flow test; `graphify update .` (graphify-out/ exists; incremental AST update).
 
 ## Risks
 - Meta app review blocks `ig_user_reels` (Concern #2) → FR-12 manual fallback keeps cadence; start review at step 6.
-- `publish_time` unsupported on app tier (Concern #1) → R-4 POC decides; immediate-post fallback is spec-sanctioned.
+- Scheduling: Meta-side `publish_time` not adopted — **resolved 2026-10-01 per R-4** (our-side scheduling, `meta_schedule=false`, immediate post at 20:00/14:00 Tehran). Residual risk: the host must be up at post time; FR-12 manual fallback covers a missed post.
 - agnes-3.0-flash Farsi/ZWNJ quality (Concern #3) → cheap-model fallback + `needs_review` gate; monitor first weeks.
 - agnes endpoint not OpenAI-compatible (RK-1) → custom adapter in `llm.py`; decision made at FR-14 build time.
 - Pexels Audio availability/CC0/variety unconfirmed (Concern #8) → P-1c before FR-7; fallback: `resource/songs` pool.
@@ -131,6 +131,6 @@
 - Edge-TTS Farsi quality unverified (Concern #4) → **resolved via R-1 (2026-10-01)**: Gemini 3.8 Flash TTS + Charon adopted; `fa-IR-DilaraNeural` kept as key-free fallback via `tts_voice`. New ops note: Gemini TTS egress sends our generated script text to Google (R-7 relay applies; free tier is dev-only, production uses paid Gemini TTS rates).
 
 ## Proof
-- P-1 (Meta/external POC, `python -m supervisor meta-poc`): (a) A1+A2 with a 5 s test reel — does `publish_time` work on this app tier? (R-4); (b) upload a test MP4 to the chosen `video_url_provider` and confirm Meta accepts the URL as `video_url` (R-9); (c) Pexels Audio C1: endpoint reachable with existing key, `tracks[]` shape + CC0 license metadata (Concern #8). All three must pass before FR-11 build.
+- P-1 (Meta/external POC, `python -m supervisor meta-poc`): (b) upload a test MP4 to the chosen `video_url_provider` and confirm Meta accepts the URL as `video_url` (R-9); (c) Pexels Audio C1: endpoint reachable with existing key, `tracks[]` shape + CC0 license metadata (Concern #8). Both must pass before FR-11 build. (a) retired 2026-10-01: R-4 resolved — our-side immediate post, no `publish_time` POC.
 - P-2 (encode POC): in `test/supervisor/`, encode a sample 60–90 s 1080×1920 reel through the new FR-9 `ffmpeg_parameters` path; assert file ≤48 MB and bitrate ≤4.5 Mbps; run before finishing FR-9.
 - F-1 (flow test): `test/supervisor/test_daily_flow.py` — patch module-level callables only: all supervisor LLM calls via `supervisor/llm.py` (`complete`, one stub), Pexels via `bgm_pexels`/`clip_rank` callables, Meta via `meta_poster`, Telegram via `telegram_bot`; MPT media stages via the `app.services.task` functions named in R-10; Farsi fixtures in `test/resources/farsi/`. Drive: ingest → 08:00 pick → script + validator → approve → build → post; assert: final MP4 9:16 and ≤48 MB, `DailyRun.checkpoint/post_status` values, picked card `used` + 4 candidates released, `clip_usage.json` write, `music_usage.json` no-reuse. Run: `uv run python -X utf8 -m pytest -q test`.
