@@ -239,6 +239,13 @@ sonilo_timeout = 600
 # Registry defaults; only set them when you need an explicit override.
 llm_provider = "moonshot"
 
+# When the primary provider's retry loop in the LLM steps (script, search
+# terms, social metadata) comes up empty, those steps re-attempt ONCE with
+# this provider. Use any registered provider id; its model, base URL, and API
+# key come from that provider's own keys below (or Registry defaults when
+# empty). Leave empty to disable the fallback.
+llm_fallback_provider = ""
+
 # Kimi / Moonshot AI
 # API key: https://platform.kimi.com?track_id=track-6eec1e56a4494e52adcaebbcbbefce59&aff=moneyprinterturbo
 moonshot_api_key = ""
@@ -434,6 +441,14 @@ groq_model_name = ""
 pollinations_api_key = ""
 pollinations_base_url = ""
 pollinations_model_name = ""
+
+# Agnes AI (Sapiens AI), OpenAI-compatible text API.
+# API key: https://agnes-ai.com/ (create one on the API Key page)
+# Docs: https://wiki.agnes-ai.com/en/docs/overview
+# agnes_model_name defaults to agnes-3.0-flash (free tier, 512K context).
+agnes_api_key = ""
+agnes_base_url = ""
+agnes_model_name = ""
 
 # -----------------------------------------------------------------------------
 # Speech, Subtitles, and Video / 语音、字幕与视频
@@ -723,6 +738,12 @@ open_task_folder_on_completion = true
 # app.gemini_api_key (see [app]) to use it. Fall back to Edge-TTS
 # "fa-IR-DilaraNeural" (free, no key) if Gemini is unavailable.
 tts_voice = "gemini:Charon"
+
+# R-12: Candidate selection. Default is uniform random pick of 5 unused cards.
+# When true, use LLM ranking (opt-in); on failure, fall back to random.
+candidates_llm_ranking = false
+# Number of candidate cards to pick each day (default 5).
+candidates_count = 5
 
 # -----------------------------------------------------------------------------
 # Posting backend (R-5, resolved 2026-10-01): Buffer GraphQL API instead of a
