@@ -116,6 +116,8 @@ class IdeaCard:
     claim: str
     quote: str
     example: str
+    lesson: str = ""
+    type: str = "principle"
     status: str = "unused"
     picked_date: Optional[str] = None
     run_id: Optional[str] = None
@@ -398,3 +400,42 @@ class MusicUsageStore(JsonStore):
         yesterday = (date.today() - timedelta(days=1)).isoformat()
         rows = [r for r in self.load() if r.get("used_date") == yesterday]
         return rows[-1]["pexels_audio_track_id"] if rows else None
+
+
+class IngestProgressStore(JsonStore):
+    """storage/ingest_progress.json — per-book FR-1 ingestion checkpoint.
+
+    One row per book, keyed by `book`:
+    `{book, last_completed_chunk, total_chunks, updated_at}`.
+    `last_completed_chunk` is the highest chunk index that got a real LLM
+    answer (empty [] and malformed responses count as answered; only hard
+    LLM `Error:` responses leave the checkpoint un-advanced so a quota
+    failure is retried on the next run). Re-running without an explicit
+    `--from-chunk` resumes from `last_completed_chunk + 1`.
+    """
+
+    filename = "ingest_progress.json"
+    id_key = "book"
+
+    def get(self, book: str) -> Optional[dict]:
+        return self.get_by_id(book)
+
+    def mark(self, book: str, last_completed_chunk: int, total_chunks: int,
+             skipped_chunks: Optional[list] = None) -> None:
+        row = {
+            "book": book,
+            "last_completed_chunk": last_completed_chunk,
+            "total_chunks": total_chunks,
+            "updated_at": time.time(),
+        }
+        if skipped_chunks is not None:
+            row["skipped_chunks"] = skipped_chunks
+        self.upsert(row)
+
+    def next_chunk(self, book: str, total_chunks: int) -> int:
+        """The chunk index to start from on an auto-resume (or 0)."""
+        row = self.get(book)
+        if row is None:
+            return 0
+        nxt = int(row.get("last_completed_chunk", -1)) + 1
+        return min(nxt, total_chunks)

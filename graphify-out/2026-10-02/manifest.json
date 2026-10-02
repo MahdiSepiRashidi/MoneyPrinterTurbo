@@ -312,9 +312,9 @@
     "semantic_hash": "ffe86e3fb75b909d7587184a48e0734f"
   },
   "pyproject.toml": {
-    "mtime": 1790887830.174154,
-    "seen": 1790893403.9922874,
-    "ast_hash": "738fbc4479117d0538fb624dc7a77aa8",
+    "mtime": 1790950854.3606026,
+    "seen": 1790951370.9951296,
+    "ast_hash": "972b9afa95eb36a8deb6f7a7da16fd38",
     "semantic_hash": ""
   },
   "test/__init__.py": {
@@ -960,9 +960,9 @@
     "semantic_hash": "bc70da8bcfdb2c3f1187a79b0cb6affe"
   },
   "requirements.txt": {
-    "mtime": 1790887844.3414595,
-    "seen": 1790893403.9928708,
-    "ast_hash": "7dd520e0187bbd2ba69cfb3d42b0e94c",
+    "mtime": 1790950844.1695404,
+    "seen": 1790951370.9955535,
+    "ast_hash": "073e88c0ba491892c2c02f269a12c775",
     "semantic_hash": ""
   },
   "resource/public/index.html": {
@@ -1332,9 +1332,9 @@
     "semantic_hash": ""
   },
   "plan/2026-09-29-ig-reel-agent/plan.md": {
-    "mtime": 1790941286.403345,
-    "seen": 1790944841.2026272,
-    "ast_hash": "59bc21ea7bc0ad0e580b4b64a3bef93d",
+    "mtime": 1790952570.1161416,
+    "seen": 1790952626.6323354,
+    "ast_hash": "b43a8feef615f946b9a0b0541a4468e3",
     "semantic_hash": ""
   },
   "supervisor/__init__.py": {
@@ -1374,9 +1374,9 @@
     "semantic_hash": ""
   },
   "supervisor/__main__.py": {
-    "mtime": 1790944385.0999463,
-    "seen": 1790944841.2022574,
-    "ast_hash": "b51cd6897e0d861a2b4e9dde73c3843d",
+    "mtime": 1790955441.6735196,
+    "seen": 1790955840.4155543,
+    "ast_hash": "3786391ec30c6927bb4cca08161f098c",
     "semantic_hash": ""
   },
   "supervisor/config.py": {
@@ -1404,9 +1404,33 @@
     "semantic_hash": ""
   },
   "supervisor/store.py": {
-    "mtime": 1790944734.7370522,
-    "seen": 1790944841.2022815,
-    "ast_hash": "1a3f229ba6fa36c3af3558bb674f90e4",
+    "mtime": 1790955315.5425024,
+    "seen": 1790955840.4155946,
+    "ast_hash": "c2f546568ee01116d8789070b37adad3",
+    "semantic_hash": ""
+  },
+  "supervisor/flow.py": {
+    "mtime": 1790948506.5473845,
+    "seen": 1790949292.2695806,
+    "ast_hash": "c66637ee7b38a681b42e4bc1585fc02f",
+    "semantic_hash": ""
+  },
+  "supervisor/ingest.py": {
+    "mtime": 1790955585.4360142,
+    "seen": 1790955840.4155788,
+    "ast_hash": "0a5de545e422ddb2f5f2010ec71129a9",
+    "semantic_hash": ""
+  },
+  "contents/The-Game-Neil-Strauss-bMRpEc6o_SciOne.ir.pdf": {
+    "mtime": 1778354117.0,
+    "seen": 1790951370.9955926,
+    "ast_hash": "dd057d64ab2163aed080d219ee2334b7",
+    "semantic_hash": ""
+  },
+  "docs/ops/RUNBOOK.md": {
+    "mtime": 1790955763.7096982,
+    "seen": 1790955840.4160063,
+    "ast_hash": "5c5c499507d423f1a42cff17735e8c0e",
     "semantic_hash": ""
   }
 }

@@ -45,36 +45,42 @@ def cmd_serve(args: argparse.Namespace) -> int:
 
 
 def cmd_ingest_books(args: argparse.Namespace) -> int:
-    """Ingest book text file into idea cards."""
+    """Ingest book text/PDF file into idea cards."""
+    from supervisor.ingest import ingest_book
+
     file_path = Path(args.file)
     if not file_path.exists():
         print(f"File not found: {file_path}")
         return 1
-    
-    text = file_path.read_text(encoding="utf-8")
-    
-    # Split into ~3000-char chunks with 500-char overlap
-    chunk_size = 3000
-    overlap = 500
-    chunks = []
-    for i in range(0, len(text), chunk_size - overlap):
-        chunk = text[i:i + chunk_size]
-        if len(chunk.strip()) > 100:  # Skip tiny chunks
-            chunks.append(chunk)
-    
-    print(f"Split book into {len(chunks)} chunks")
-    
-    # TODO: Call LLM per chunk via supervisor.llm.complete
-    # For now, just show the structure
-    for i, chunk in enumerate(chunks[:3]):
-        print(f"Chunk {i+1}: {len(chunk)} chars - {chunk[:100]}...")
-    
-    if len(chunks) > 3:
-        print(f"... and {len(chunks) - 3} more chunks")
-    
-    # TODO: Parse LLM JSON array, validate, generate deterministic IDs, upsert
-    print("LLM ingestion not yet implemented")
-    return 0
+
+    book_name = getattr(args, "book", None)
+    skip_chunks = [int(x) for x in getattr(args, "skip_chunk", "").split(",") if x.strip()]
+    result = ingest_book(
+        file_path=file_path,
+        book_name=book_name,
+        max_chunks=args.max_chunks,
+        from_chunk=args.from_chunk,  # None = auto-resume from checkpoint
+        skip_chunks=skip_chunks,
+    )
+
+    print(f"\nBook: {result.book}")
+    if args.from_chunk is None and result.start_chunk > 0 and result.processed_chunks > 0:
+        print(f"  Resumed from checkpoint at chunk {result.start_chunk}")
+    print(f"  Chunks: processed {result.processed_chunks} of {result.total_chunks} (start {result.start_chunk})")
+    print(f"  New cards: {result.cards_created}")
+    print(f"  Needs review: {result.cards_review}")
+    print(f"  Vague cards dropped: {result.vague_dropped}")
+    print(f"  Chunks rejected: {result.chunks_rejected}")
+    print(f"  LLM errors: {result.llm_errors}")
+    if result.skipped_chunks:
+        print(f"  Skipped chunks: {result.skipped_chunks}")
+
+    remaining = result.total_chunks - result.start_chunk - result.processed_chunks
+    if remaining > 0:
+        print(f"\n  Remaining: {remaining} chunk(s)")
+        print(f"  Re-run the same command to auto-resume (no --from-chunk needed).")
+
+    return 0 if result.llm_errors == 0 else 1
 
 
 def cmd_resume(args: argparse.Namespace) -> int:
@@ -114,8 +120,16 @@ def main() -> int:
     serve_parser = subparsers.add_parser("serve", help="Run scheduler + Telegram bot")
     
     # ingest-books
-    ingest_parser = subparsers.add_parser("ingest-books", help="Ingest book text into idea cards")
-    ingest_parser.add_argument("file", help="Path to book text file")
+    ingest_parser = subparsers.add_parser("ingest-books", help="Ingest book text/PDF into idea cards")
+    ingest_parser.add_argument("file", help="Path to book file (.txt, .md, .pdf)")
+    ingest_parser.add_argument("--book", default=None, help="Book name override (default: file stem)")
+    ingest_parser.add_argument("--max-chunks", type=int, default=None, help="Process at most N chunks")
+    ingest_parser.add_argument("--from-chunk", type=int, default=None,
+                              help="Start at chunk index N (0-based). Omit to auto-resume from the last saved checkpoint.")
+    ingest_parser.add_argument("--skip-chunk", default="",
+                              help="Comma-separated 0-based chunk indices to skip WITHOUT calling the LLM "
+                                   "(use for chunks the LLM refuses on content, e.g. explicit text). "
+                                   "They are recorded in the progress store so auto-resume moves past them.")
     
     # resume
     resume_parser = subparsers.add_parser("resume", help="Resume a DailyRun from checkpoint")
