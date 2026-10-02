@@ -11,7 +11,7 @@ import argparse
 from pathlib import Path
 
 from supervisor.daily import create_daily_run
-from supervisor.store import upsert_card, IdeaCard
+from supervisor.store import IdeaCard, IdeaCardStore
 from supervisor.config import load_supervisor_config
 
 

@@ -221,6 +221,7 @@
     "LLM Provider": "Fournisseur LLM",
     "Recommended": "Recommandé",
     "llm_provider_label.moonshot": "Kimi / Moonshot AI (Recommandé)",
+    "llm_provider_label.agnes": "Agnes AI",
     "API Key": "Clé API",
     "Base Url": "URL de base",
     "Account ID": "ID de compte",

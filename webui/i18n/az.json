@@ -215,6 +215,7 @@
     "LLM Provider": "LLM provayderi",
     "Recommended": "Tövsiyə olunur",
     "llm_provider_label.moonshot": "Kimi / Moonshot AI (tövsiyə olunur)",
+    "llm_provider_label.agnes": "Agnes AI",
     "API Key": "API açarı",
     "Base Url": "Əsas URL",
     "Account ID": "Hesab ID-si",

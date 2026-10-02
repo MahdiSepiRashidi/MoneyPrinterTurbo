@@ -484,6 +484,16 @@ LLM_PROVIDER_REGISTRY = (
         deprecated_models=("default",),
         deprecated_base_urls=("https://text.pollinations.ai/openai",),
     ),
+    # Agnes AI（Sapiens AI）提供 OpenAI 兼容的 Chat Completions 接口；官方文档
+    # https://wiki.agnes-ai.com/en/docs/overview 给出的 Base URL 和 Bearer Key
+    # 鉴权方式与通用适配器完全一致，因此不需要新增 adapter 分支。
+    LLMProviderSpec(
+        "agnes",
+        "Agnes AI (Sapiens AI)",
+        api_key_url="https://agnes-ai.com/",
+        default_model="agnes-3.0-flash",
+        default_base_url="https://apihub.agnes-ai.com/v1",
+    ),
 )
 
 LLM_PROVIDERS = {provider.provider_id: provider for provider in LLM_PROVIDER_REGISTRY}

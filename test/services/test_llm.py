@@ -34,6 +34,16 @@ RUN_INTEGRATION_TESTS = os.environ.get("MPT_RUN_INTEGRATION_TESTS", "").lower() 
 
 
 class TestScriptPromptOptions(unittest.TestCase):
+    def setUp(self):
+        # 这些用例验证主 Provider 的重试语义，屏蔽部署配置里的 fallback，
+        # 避免本机的 llm_fallback_provider 让调用次数超出 _max_retries。
+        self._original_app_config = dict(config.app)
+        config.app["llm_fallback_provider"] = ""
+
+    def tearDown(self):
+        config.app.clear()
+        config.app.update(self._original_app_config)
+
     def test_normalize_text_response_preserves_internal_newlines(self):
         """
         归一化只清理首尾空白，不能删除正文内部的换行。双换行用于区分脚本
@@ -460,6 +470,7 @@ class TestLiteLLMProvider(unittest.TestCase):
                 "litellm",
                 "groq",
                 "pollinations",
+                "agnes",
             ],
         )
         self.assertEqual(
@@ -1787,6 +1798,288 @@ class TestLiteLLMProvider(unittest.TestCase):
 
         self.assertIn("Error:", result)
         self.assertIn("unsupported llm provider", result)
+
+
+class TestAgnesProvider(unittest.TestCase):
+    """Agnes AI（Sapiens AI）走 OpenAI-compatible 适配器，切换 Provider 只需改配置。"""
+
+    def setUp(self):
+        self.original_app_config = dict(config.app)
+
+    def tearDown(self):
+        config.app.clear()
+        config.app.update(self.original_app_config)
+
+    def _use_agnes_provider(self, api_key="agnes-test-key"):
+        config.app["llm_provider"] = "agnes"
+        config.app["agnes_api_key"] = api_key
+        config.app["agnes_base_url"] = ""
+        config.app["agnes_model_name"] = ""
+
+    def test_agnes_uses_openai_compatible_client(self):
+        """Registry 默认值让 Agnes 开箱可用：只需配置 API Key。"""
+        self._use_agnes_provider()
+
+        class FakeCompletions:
+            def create(self, **kwargs):
+                self.kwargs = kwargs
+                message = types.SimpleNamespace(content="hello\nagnes")
+                choice = types.SimpleNamespace(message=message)
+                return types.SimpleNamespace(choices=[choice])
+
+        fake_completions = FakeCompletions()
+        fake_client = types.SimpleNamespace(
+            chat=types.SimpleNamespace(completions=fake_completions)
+        )
+
+        with (
+            patch.object(llm, "OpenAI", return_value=fake_client) as openai_client,
+            patch.object(llm, "ChatCompletion", types.SimpleNamespace),
+        ):
+            result = llm._generate_response("Say hello")
+
+        openai_client.assert_called_once_with(
+            api_key="agnes-test-key",
+            base_url="https://apihub.agnes-ai.com/v1",
+        )
+        self.assertEqual(
+            fake_completions.kwargs,
+            {
+                "model": "agnes-3.0-flash",
+                "messages": [{"role": "user", "content": "Say hello"}],
+            },
+        )
+        self.assertEqual(result, "hello\nagnes")
+
+    def test_agnes_requires_api_key_before_request(self):
+        self._use_agnes_provider(api_key="")
+
+        with patch.object(llm, "OpenAI") as openai_client:
+            result = llm._generate_response("test")
+
+        openai_client.assert_not_called()
+        self.assertIn("api_key is not set", result)
+
+    def test_switching_provider_is_config_only(self):
+        """同一代码路径在两个已注册 Provider 之间切换，只改 config，不改代码。"""
+        config.app.update(
+            {
+                "llm_provider": "gemini",
+                "gemini_api_key": "gemini-test-key",
+                "gemini_model_name": "gemini-flash-latest",
+                "agnes_api_key": "agnes-test-key",
+            }
+        )
+        captured = {}
+
+        class FakeModels:
+            def generate_content(self, **kwargs):
+                captured.update(kwargs)
+                return types.SimpleNamespace(text="hello\ngemini")
+
+        class FakeClient:
+            def __init__(self, **kwargs):
+                captured["client_kwargs"] = kwargs
+                self.models = FakeModels()
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc_value, traceback):
+                captured["closed"] = True
+
+        with patch("google.genai.Client", FakeClient):
+            result = llm._generate_response("Say hello")
+
+        self.assertEqual(result, "hello\ngemini")
+        self.assertEqual(captured["model"], "gemini-flash-latest")
+
+
+class TestLLMFallbackProvider(unittest.TestCase):
+    """FR-14：主 Provider 重试耗尽后，用 llm_fallback_provider 恰好重新尝试一次。"""
+
+    def setUp(self):
+        self.original_app_config = dict(config.app)
+        config.app["llm_provider"] = "moonshot"
+        config.app["llm_fallback_provider"] = "gemini"
+        config.app["moonshot_api_key"] = "moonshot-key"
+
+    def tearDown(self):
+        config.app.clear()
+        config.app.update(self.original_app_config)
+
+    @staticmethod
+    def _split_calls(calls):
+        return [c for c in calls if c is None], [c for c in calls if c is not None]
+
+    def test_generate_script_fires_fallback_once_on_primary_exhaustion(self):
+        calls = []
+
+        def fake(prompt, app_config=None):
+            calls.append(app_config)
+            if app_config is not None:
+                return "Fallback narration.\n\nMore text."
+            return "Error: primary quota exhausted"
+
+        with patch.object(llm, "_generate_response", side_effect=fake):
+            result = llm.generate_script(video_subject="Coffee")
+
+        primary, fallback = self._split_calls(calls)
+        self.assertEqual(len(primary), llm._max_retries)
+        self.assertEqual(len(fallback), 1)
+        self.assertEqual(fallback[0]["llm_provider"], "gemini")
+        self.assertEqual(result, "Fallback narration.\n\nMore text.")
+
+    def test_generate_script_fallback_not_used_when_primary_succeeds(self):
+        calls = []
+
+        def fake(prompt, app_config=None):
+            calls.append(app_config)
+            return "Primary narration."
+
+        with patch.object(llm, "_generate_response", side_effect=fake):
+            result = llm.generate_script(video_subject="Coffee")
+
+        self.assertEqual(result, "Primary narration.")
+        self.assertEqual(len(calls), 1)
+        self.assertIsNone(calls[0])
+
+    def test_generate_script_fallback_skipped_when_unconfigured(self):
+        config.app["llm_fallback_provider"] = ""
+        calls = []
+
+        def fake(prompt, app_config=None):
+            calls.append(app_config)
+            return "Error: primary quota exhausted"
+
+        with patch.object(llm, "_generate_response", side_effect=fake):
+            result = llm.generate_script(video_subject="Coffee")
+
+        self.assertEqual(result, "")
+        self.assertEqual(len(calls), llm._max_retries)
+
+    def test_generate_script_fallback_skipped_when_unregistered(self):
+        config.app["llm_fallback_provider"] = "no-such-provider"
+        calls = []
+
+        def fake(prompt, app_config=None):
+            calls.append(app_config)
+            return "Error: primary quota exhausted"
+
+        with patch.object(llm, "_generate_response", side_effect=fake):
+            result = llm.generate_script(video_subject="Coffee")
+
+        self.assertEqual(result, "")
+        self.assertEqual(len(calls), llm._max_retries)
+
+    def test_generate_script_fallback_skipped_when_same_as_primary(self):
+        config.app["llm_provider"] = "gemini"
+        config.app["llm_fallback_provider"] = "gemini"
+        calls = []
+
+        def fake(prompt, app_config=None):
+            calls.append(app_config)
+            return "Error: primary quota exhausted"
+
+        with patch.object(llm, "_generate_response", side_effect=fake):
+            result = llm.generate_script(video_subject="Coffee")
+
+        self.assertEqual(result, "")
+        self.assertEqual(len(calls), llm._max_retries)
+
+    def test_generate_terms_fires_fallback_once_on_provider_error(self):
+        """Provider 错误提前结束重试循环后，fallback 仍触发一次。"""
+        calls = []
+
+        def fake(prompt, app_config=None):
+            calls.append(app_config)
+            if app_config is not None:
+                return '["coffee beans", "barista tools"]'
+            return "Error: primary quota exhausted"
+
+        with patch.object(llm, "_generate_response", side_effect=fake):
+            result = llm.generate_terms(
+                video_subject="Coffee", video_script="How to brew coffee."
+            )
+
+        primary, fallback = self._split_calls(calls)
+        self.assertEqual(len(primary), 1)
+        self.assertEqual(len(fallback), 1)
+        self.assertEqual(fallback[0]["llm_provider"], "gemini")
+        self.assertEqual(result, ["coffee beans", "barista tools"])
+
+    def test_generate_terms_fires_fallback_once_after_retries_exhausted(self):
+        calls = []
+
+        def fake(prompt, app_config=None):
+            calls.append(app_config)
+            if app_config is not None:
+                return '["fallback term"]'
+            return "not json at all"
+
+        with patch.object(llm, "_generate_response", side_effect=fake):
+            result = llm.generate_terms(
+                video_subject="Coffee", video_script="How to brew coffee."
+            )
+
+        primary, fallback = self._split_calls(calls)
+        self.assertEqual(len(primary), llm._max_retries)
+        self.assertEqual(len(fallback), 1)
+        self.assertEqual(result, ["fallback term"])
+
+    def test_generate_terms_no_fallback_when_unconfigured(self):
+        config.app["llm_fallback_provider"] = ""
+        calls = []
+
+        def fake(prompt, app_config=None):
+            calls.append(app_config)
+            return "Error: primary quota exhausted"
+
+        with patch.object(llm, "_generate_response", side_effect=fake):
+            result = llm.generate_terms(
+                video_subject="Coffee", video_script="How to brew coffee."
+            )
+
+        self.assertEqual(result, [])
+        self.assertEqual(len(calls), 1)
+
+    def test_generate_social_metadata_fires_fallback_once_on_provider_error(self):
+        payload = '{"title":"T","caption":"C","hashtags":["#x"]}'
+        calls = []
+
+        def fake(prompt, app_config=None):
+            calls.append(app_config)
+            if app_config is not None:
+                return payload
+            return "Error: primary quota exhausted"
+
+        with patch.object(llm, "_generate_response", side_effect=fake):
+            result = llm.generate_social_metadata(
+                video_subject="Coffee", video_script="Brew it."
+            )
+
+        primary, fallback = self._split_calls(calls)
+        self.assertEqual(len(primary), 1)
+        self.assertEqual(len(fallback), 1)
+        self.assertEqual(fallback[0]["llm_provider"], "gemini")
+        self.assertEqual(result["title"], "T")
+        self.assertEqual(result["hashtags"], ["#x"])
+
+    def test_generate_social_metadata_uses_heuristic_when_fallback_unconfigured(self):
+        config.app["llm_fallback_provider"] = ""
+        calls = []
+
+        def fake(prompt, app_config=None):
+            calls.append(app_config)
+            return "Error: primary quota exhausted"
+
+        with patch.object(llm, "_generate_response", side_effect=fake):
+            result = llm.generate_social_metadata(
+                video_subject="Coffee", video_script="Brew it."
+            )
+
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(result["hashtags"][0], "#shorts")
 
 
 class TestClaudeCodeProvider(unittest.TestCase):

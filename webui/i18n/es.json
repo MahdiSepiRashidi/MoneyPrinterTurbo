@@ -221,6 +221,7 @@
     "LLM Provider": "Proveedor LLM",
     "Recommended": "Recomendado",
     "llm_provider_label.moonshot": "Kimi / Moonshot AI (recomendado)",
+    "llm_provider_label.agnes": "Agnes AI",
     "API Key": "Clave API (:red[Requerida])",
     "Base Url": "URL base",
     "Account ID": "ID de cuenta (Obtén desde el panel de Cloudflare)",

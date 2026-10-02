@@ -221,6 +221,7 @@
     "LLM Provider": "Proveïdor del model de llenguatge",
     "Recommended": "Recomanat",
     "llm_provider_label.moonshot": "Kimi / Moonshot AI (recomanat)",
+    "llm_provider_label.agnes": "Agnes AI",
     "API Key": "Clau API (:red[obligatòria])",
     "Base Url": "URL base",
     "Account ID": "ID del compte (al tauler de Cloudflare)",

@@ -3,14 +3,14 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from supervisor.store import (
-    get_unused_cards,
-    mark_cards_picked,
     IdeaCard,
+    IdeaCardStore,
 )
 from supervisor.config import load_supervisor_config
 
-
 TEHRAN_TZ = ZoneInfo("Asia/Tehran")
+
+CARD_STORE = IdeaCardStore()
 
 
 def now_tehran() -> datetime:
@@ -26,7 +26,7 @@ def pick_candidate_cards(run_id: str, picked_date: str) -> list[IdeaCard]:
     cfg = load_supervisor_config()
     count = cfg.candidates_count
     
-    unused_cards = get_unused_cards(limit=count * 10)  # Get more than needed for LLM ranking
+    unused_cards = CARD_STORE.unused(limit=count * 10)  # Get more than needed for LLM ranking
     
     if len(unused_cards) < count:
         # Return whatever we have (will trigger warning in caller)
@@ -112,7 +112,7 @@ def create_daily_run() -> dict:
             "checkpoint": "cards_picked",
             "retry_count": 0,
             "last_error": None,
-            "warning": "No unused cards available. Ingest more books." if len(get_unused_cards()) == 0 else f"Only {len(candidate_cards)} unused cards available. Ingest more books."
+            "warning": "No unused cards available. Ingest more books." if len(CARD_STORE.unused()) == 0 else f"Only {len(candidate_cards)} unused cards available. Ingest more books."
         }
     
     candidate_ids = [card.id for card in candidate_cards]

@@ -221,6 +221,7 @@
     "LLM Provider": "LLM Provider",
     "Recommended": "권장",
     "llm_provider_label.moonshot": "Kimi / Moonshot AI (권장)",
+    "llm_provider_label.agnes": "Agnes AI",
     "API Key": "API 키",
     "Base Url": "Base Url",
     "Account ID": "계정 ID",

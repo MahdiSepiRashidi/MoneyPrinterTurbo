@@ -644,6 +644,35 @@ def _generate_response(prompt: str, app_config=None) -> str:
         return f"Error: {_sanitize_error_message(e)}"
 
 
+def _fallback_app_config(app_config=None):
+    """
+    构造 FR-14 的一次性 fallback 运行期配置。
+
+    主 Provider 重试耗尽后，LLM 步骤用它重新尝试一次。fallback Provider 的
+    model / base_url / api_key 全部来自它自己的 `{provider}_*` 配置键或
+    Registry 默认值，不需要单独的 fallback 模型键。未配置、与主 Provider
+    相同、或不是已注册 Provider 时返回 None，调用方保持原有空值返回契约。
+    """
+    base = dict(app_config) if app_config is not None else dict(config.app)
+    fallback_id = str(base.get("llm_fallback_provider", "") or "").strip().lower()
+    if not fallback_id:
+        return None
+
+    provider = get_llm_provider(fallback_id)
+    if provider is None:
+        logger.warning(
+            f"llm_fallback_provider '{fallback_id}' is not a registered "
+            "provider, fallback skipped"
+        )
+        return None
+
+    primary_id = str(base.get("llm_provider", "") or "").strip().lower()
+    if primary_id and fallback_id == primary_id:
+        return None
+
+    return dict(base, llm_provider=fallback_id)
+
+
 def test_connection() -> tuple[bool, str, float]:
     """
     使用当前 Provider 配置发起一次最小请求，验证实际生成链路是否可用。
@@ -788,12 +817,14 @@ def generate_script(
         # Join the selected paragraphs into a single string
         return "\n\n".join(paragraphs)
 
-    for i in range(_max_retries):
+    def run_attempt(run_config):
+        """一次 LLM 请求 + 清洗；成功写入 final_script，失败返回 False。"""
+        nonlocal final_script
         try:
-            if app_config is None:
+            if run_config is None:
                 response = _generate_response(prompt=prompt)
             else:
-                response = _generate_response(prompt=prompt, app_config=app_config)
+                response = _generate_response(prompt=prompt, app_config=run_config)
             if isinstance(response, str) and response.startswith("Error: "):
                 # _generate_response returns provider failures as text. Passing
                 # that text through would make the task treat it as narration.
@@ -810,14 +841,33 @@ def generate_script(
 
             if candidate:
                 final_script = candidate
-                break
+                return True
+            return False
         except Exception as e:
             logger.error(f"failed to generate script: {e}")
+            return False
 
+    for i in range(_max_retries):
+        if run_attempt(app_config):
+            break
         if i < _max_retries - 1:
             logger.warning(f"failed to generate video script, trying again... {i + 1}")
+
     if not final_script:
-        logger.error("failed to generate video script after retries")
+        # FR-14: 主 Provider 重试耗尽且结果为空时，用配置的 fallback Provider
+        # 重新尝试一次；失败仍返回空串，保持 task 层既有的空值失败契约。
+        fallback_config = _fallback_app_config(app_config)
+        if fallback_config is not None:
+            logger.info(
+                f"primary llm provider exhausted retries, one re-attempt with "
+                f"fallback provider '{fallback_config['llm_provider']}'"
+            )
+            if not run_attempt(fallback_config):
+                logger.error(
+                    "failed to generate video script with fallback provider"
+                )
+        else:
+            logger.error("failed to generate video script after retries")
     else:
         logger.success(f"completed: \n{final_script}")
     return final_script.strip()
@@ -904,10 +954,34 @@ Please note that you must use English for generating video search terms; Chinese
 
     logger.info(f"subject: {video_subject}, match_script_order: {match_script_order}")
 
+    def parse_terms(response):
+        """一次响应的 JSON 解析 + 校验；保留原文包裹时的正则恢复路径。"""
+        terms = []
+        try:
+            terms = json.loads(_strip_code_fence(response))
+        except Exception as e:
+            logger.warning(f"failed to generate video terms: {str(e)}")
+            match = re.search(r"\[.*]", response or "", re.DOTALL)
+            if match:
+                try:
+                    terms = json.loads(match.group())
+                except Exception as e:
+                    # 这里保留重试流程，但必须记录 LLM 返回的非标准 JSON，
+                    # 否则后续排查搜索词为空时无法定位
+                    # 是模型格式问题还是解析逻辑问题。
+                    logger.warning(f"failed to generate video terms: {str(e)}")
+
+        # Apply the same contract to direct JSON and prose-wrapped recovery.
+        # Otherwise a nonempty array of numbers or objects reaches material search.
+        if not isinstance(terms, list) or not all(
+            isinstance(term, str) for term in terms
+        ):
+            logger.error("response is not a list of strings.")
+            terms = []
+        return terms
+
     search_terms = []
-    response = ""
     for i in range(_max_retries):
-        search_terms = []
         try:
             if app_config is None:
                 response = _generate_response(prompt)
@@ -919,33 +993,36 @@ Please note that you must use English for generating video search terms; Chinese
                 # 素材下载循环还会按字符遍历错误文案，产生无意义的外部请求。
                 # 这里统一返回空列表，让任务编排层在真实故障位置立即结束任务。
                 logger.error(f"failed to generate video terms: {response}")
-                return []
-            search_terms = json.loads(_strip_code_fence(response))
+                break
+            search_terms = parse_terms(response)
         except Exception as e:
             logger.warning(f"failed to generate video terms: {str(e)}")
-            if response:
-                match = re.search(r"\[.*]", response, re.DOTALL)
-                if match:
-                    try:
-                        search_terms = json.loads(match.group())
-                    except Exception as e:
-                        # 这里保留重试流程，但必须记录 LLM 返回的非标准 JSON，
-                        # 否则后续排查搜索词为空时无法定位
-                        # 是模型格式问题还是解析逻辑问题。
-                        logger.warning(f"failed to generate video terms: {str(e)}")
-
-        # Apply the same contract to direct JSON and prose-wrapped recovery.
-        # Otherwise a nonempty array of numbers or objects reaches material search.
-        if not isinstance(search_terms, list) or not all(
-            isinstance(term, str) for term in search_terms
-        ):
-            logger.error("response is not a list of strings.")
             search_terms = []
 
-        if search_terms and len(search_terms) > 0:
+        if search_terms:
             break
         if i < _max_retries - 1:
             logger.warning(f"failed to generate video terms, trying again... {i + 1}")
+
+    if not search_terms:
+        # FR-14: 主 Provider 重试耗尽（含 Provider 错误提前结束）后，用配置
+        # 的 fallback Provider 重新尝试一次；仍失败返回空列表，契约不变。
+        fallback_config = _fallback_app_config(app_config)
+        if fallback_config is not None:
+            logger.info(
+                f"primary llm provider exhausted retries, one re-attempt with "
+                f"fallback provider '{fallback_config['llm_provider']}'"
+            )
+            try:
+                response = _generate_response(prompt, app_config=fallback_config)
+                if not response.startswith("Error: "):
+                    search_terms = parse_terms(response)
+            except Exception as e:
+                logger.warning(f"failed to generate video terms: {str(e)}")
+            if not search_terms:
+                logger.error(
+                    "failed to generate video terms with fallback provider"
+                )
 
     logger.success(f"completed: \n{search_terms}")
     return search_terms
@@ -1192,6 +1269,7 @@ def generate_social_metadata(
     logger.info(f"generating social metadata: platform={platform}, language={language}")
 
     response = ""
+    metadata = None
     for i in range(_max_retries):
         try:
             response = _generate_response(prompt)
@@ -1207,6 +1285,25 @@ def generate_social_metadata(
         if i < _max_retries - 1:
             logger.warning(
                 f"failed to generate social metadata, trying again... {i + 1}"
+            )
+
+    # FR-14: 主 Provider 重试耗尽（含 Provider 错误提前结束）后，先尝试一次
+    # 配置的 fallback Provider，仍失败才降级为启发式结果。
+    fallback_config = _fallback_app_config(None)
+    if fallback_config is not None:
+        logger.info(
+            f"primary llm provider exhausted retries, one re-attempt with "
+            f"fallback provider '{fallback_config['llm_provider']}'"
+        )
+        try:
+            response = _generate_response(prompt, app_config=fallback_config)
+            if not (isinstance(response, str) and "Error: " in response):
+                metadata = _parse_social_metadata(response, platform)
+                logger.success(f"completed with fallback provider: \n{metadata}")
+                return metadata
+        except Exception as e:
+            logger.warning(
+                f"failed to generate social metadata with fallback provider: {str(e)}"
             )
 
     logger.warning("falling back to heuristic social metadata")
