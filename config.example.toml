@@ -770,3 +770,10 @@ buffer_reel_type = "reel"
 # are the candidate public hosts. See plan R-9.
 buffer_media_host = "cloudinary"
 
+# FR-13: retry/backoff schedule for every pipeline stage. Three comma-separated
+# delays (seconds) gate the three primary attempts; the last value also gates the
+# single FR-14 cheap-model fallback attempt for LLM stages. Day-missed alert only
+# fires when a failure passes post_time_weekday/post_time_friday.
+retry_backoff_seconds = "30,120,600"
+
+

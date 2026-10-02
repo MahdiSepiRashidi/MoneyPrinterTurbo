@@ -78,11 +78,31 @@ def cmd_ingest_books(args: argparse.Namespace) -> int:
 
 
 def cmd_resume(args: argparse.Namespace) -> int:
-    """Resume a DailyRun from checkpoint."""
+    """Resume a DailyRun from checkpoint (FR-13)."""
+    from supervisor.flow import TERMINAL_CHECKPOINT, resume_run
+
+    cfg = load_supervisor_config()
     run_id = args.run_id
     print(f"Resuming run: {run_id}")
-    # TODO: Load DailyRun, continue at checkpoint
-    print("Resume not yet implemented")
+    try:
+        run = resume_run(run_id, cfg=cfg)
+    except KeyError as exc:
+        print(f"  {exc}")
+        return 1
+
+    print(
+        "  checkpoint={} post_status={} retry_count={} last_error={!r}".format(
+            run.checkpoint, run.post_status, run.retry_count, run.last_error
+        )
+    )
+    if run.checkpoint == TERMINAL_CHECKPOINT and run.post_status in ("posted", "scheduled"):
+        print("  done - run is terminal.")
+        return 0
+    if run.last_error:
+        print(f"  stopped at stage: {run.last_error}")
+        print("  Retry later with: python -m supervisor resume " + run.run_id)
+        return 1
+    print("  nothing left to do (already terminal or no stages pending).")
     return 0
 
 
