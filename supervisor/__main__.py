@@ -3,6 +3,8 @@
 Commands:
 - serve: Run the scheduler + Telegram bot (FR-16)
 - ingest-books <file>: Ingest book text into idea cards (FR-1)
+- pick-send: FR-2 manual bridge — pick 5 unused cards, send the numbered shortlist to Telegram, print the run_id
+- lock-pick <run_id> <1-5>: FR-2 manual bridge — lock the operator's 1-5 choice on the day's run
 - resume <run_id>: Resume a non-terminal DailyRun from checkpoint (FR-13)
 """
 
@@ -10,7 +12,12 @@ import sys
 import argparse
 from pathlib import Path
 
-from supervisor.daily import create_daily_run
+from supervisor.daily import (
+    lock_pick,
+    register_deadline_job,
+    register_pick_job,
+    run_pick_job,
+)
 from supervisor.store import IdeaCard, IdeaCardStore
 from supervisor.config import load_supervisor_config
 
@@ -33,15 +40,28 @@ def cmd_serve(args: argparse.Namespace) -> int:
     print(f"  Pick deadline (Friday): {cfg.pick_deadline_friday}")
     print(f"  Post time (weekday): {cfg.post_time_weekday}")
     print(f"  Post time (Friday): {cfg.post_time_friday}")
-    
-    # TODO: Start scheduler and Telegram bot (FR-16)
-    # from supervisor.scheduler import start_scheduler
+
+    from supervisor.scheduler import Scheduler
+
+    scheduler = Scheduler(tick_interval=cfg.poll_interval_seconds)
+    register_pick_job(scheduler)
+    register_deadline_job(scheduler)
+    scheduler.start()
+    print("Scheduler started; 08:00 Tehran pick job + deadline job registered (FR-2/FR-3).")
+
+    # FR-15: full long-poll command bot (approve/rewrite/reject/ack-post/...).
     # from supervisor.telegram_bot import start_bot
-    # start_scheduler()
     # start_bot()
-    
-    print("Supervisor started (scheduler + bot not yet implemented)")
-    return 0
+
+    print("Supervisor started.")
+    try:
+        import time
+
+        while True:
+            time.sleep(3600)
+    except KeyboardInterrupt:
+        scheduler.stop()
+        return 0
 
 
 def cmd_ingest_books(args: argparse.Namespace) -> int:
@@ -81,6 +101,34 @@ def cmd_ingest_books(args: argparse.Namespace) -> int:
         print(f"  Re-run the same command to auto-resume (no --from-chunk needed).")
 
     return 0 if result.llm_errors == 0 else 1
+
+
+def cmd_pick_send(args: argparse.Namespace) -> int:
+    """FR-2 manual bridge: pick 5 unused cards, send the numbered shortlist to Telegram."""
+    from supervisor.store import DailyRunStore, IdeaCardStore as _ICS
+
+    run = run_pick_job(store=DailyRunStore(), idea_store=_ICS())
+    print(f"run_id: {run.run_id}")
+    print(f"candidates: {len(run.candidate_card_ids)}")
+    if run.last_error:
+        print(f"warning: {run.last_error}")
+    print("Check your Telegram for the numbered cards, then lock the pick with:")
+    print(f"  uv run python -X utf8 -m supervisor lock-pick {run.run_id} <1-{max(len(run.candidate_card_ids), 1)}>")
+    return 0
+
+
+def cmd_lock_pick(args: argparse.Namespace) -> int:
+    """FR-2 manual bridge: lock the operator's 1-5 choice on the day's run."""
+    from supervisor.store import DailyRunStore
+
+    try:
+        run = lock_pick(args.run_id, args.number, store=DailyRunStore())
+    except (KeyError, ValueError) as exc:
+        print(str(exc))
+        return 1
+    print(f"locked: {run.run_id} -> card {run.picked_card_id} (picked_by={run.picked_by})")
+    print(f"checkpoint: {run.checkpoint} (FR-5's 'approve' advances it)")
+    return 0
 
 
 def cmd_resume(args: argparse.Namespace) -> int:
@@ -125,22 +173,32 @@ def main() -> int:
     ingest_parser.add_argument("--book", default=None, help="Book name override (default: file stem)")
     ingest_parser.add_argument("--max-chunks", type=int, default=None, help="Process at most N chunks")
     ingest_parser.add_argument("--from-chunk", type=int, default=None,
-                              help="Start at chunk index N (0-based). Omit to auto-resume from the last saved checkpoint.")
+                               help="Start at chunk index N (0-based). Omit to auto-resume from the last saved checkpoint.")
     ingest_parser.add_argument("--skip-chunk", default="",
-                              help="Comma-separated 0-based chunk indices to skip WITHOUT calling the LLM "
-                                   "(use for chunks the LLM refuses on content, e.g. explicit text). "
-                                   "They are recorded in the progress store so auto-resume moves past them.")
-    
+                               help="Comma-separated 0-based chunk indices to skip WITHOUT calling the LLM "
+                                    "(use for chunks the LLM refuses on content, e.g. explicit text). "
+                                    "They are recorded in the progress store so auto-resume moves past them.")
+
+    # pick-send / lock-pick (FR-2 manual bridge)
+    subparsers.add_parser("pick-send", help="Pick 5 unused cards, send the numbered shortlist to Telegram")
+    lock_parser = subparsers.add_parser("lock-pick", help="Lock the operator's 1-5 choice on a day's run")
+    lock_parser.add_argument("run_id", help="DailyRun ID from pick-send")
+    lock_parser.add_argument("number", type=int, help="1-based index into the day's candidate cards")
+
     # resume
     resume_parser = subparsers.add_parser("resume", help="Resume a DailyRun from checkpoint")
     resume_parser.add_argument("run_id", help="DailyRun ID to resume")
-    
+
     args = parser.parse_args()
-    
+
     if args.command == "serve":
         return cmd_serve(args)
     elif args.command == "ingest-books":
         return cmd_ingest_books(args)
+    elif args.command == "pick-send":
+        return cmd_pick_send(args)
+    elif args.command == "lock-pick":
+        return cmd_lock_pick(args)
     elif args.command == "resume":
         return cmd_resume(args)
     else:

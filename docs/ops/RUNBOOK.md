@@ -177,16 +177,18 @@ Current state:
 
 | Piece | Module | Status |
 |---|---|---|
-| Card pick + run creation | `supervisor/daily.py` `create_daily_run()` | logic present, not scheduled |
+| Card pick + run creation | `supervisor/daily.py` `create_daily_run()` | implemented, persists via `DailyRunStore` |
+| 08:00 pick job (Telegram delivery) | `supervisor/daily.py` `run_pick_job` + `supervisor/telegram_client.py` | [LIVE] |
 | Pipeline runner w/ retry+backoff+checkpoint | `supervisor/flow.py` `run_pipeline`, `resume_run` | implemented |
 | Media chain (audio→sub→materials→video) | `app/services/task.py` stage fns | verified via `supervisor/r10_check.py` |
 | Post via Buffer | `supervisor/buffer.py` | [POC] |
-| Scheduler (08:00 pick, deadlines, build+post) | `supervisor/scheduler.py` | implemented, not wired into a running loop |
-| Telegram operator surface (approve/rewrite/reject) | `supervisor/telegram_bot.py` | **not built** |
+| Scheduler (08:00 pick, deadlines, build+post) | `supervisor/scheduler.py` | implemented, wired into `serve` |
+| Telegram operator surface (approve/rewrite/reject) | `supervisor/telegram_bot.py` | **not built** (outbound `send_message`/`send_video` live via `telegram_client.py`) |
 
-There is **no first-class CLI to trigger a manual daily cycle** yet; that
-arrives with the Telegram/scheduler build. Until then, media + posting can be
-exercised via the POC and `r10_check.py` below.
+There is **no automatic 1-5 reply receiver** yet (that is FR-15's long-poll
+loop); the manual `pick-send` / `lock-pick` bridge below closes the loop
+for now. Until the full bot lands, media + posting can be exercised via the
+POC and `r10_check.py` below.
 
 ### 3.3 Resume a stuck daily run (FR-13) [LIVE]
 
@@ -204,12 +206,48 @@ stage. Prints checkpoint / post_status / last_error. Run ids come from
 uv run python -X utf8 -m supervisor serve
 ```
 
-Currently a stub: it loads + validates `[supervisor]` config, then exits
-("scheduler + bot not yet implemented"). It requires
-`telegram_bot_token` + `telegram_chat_id` to do anything useful. Expect the
-daily loop + Telegram bot to land here.
+Runs the in-process scheduler (08:00 Tehran pick job) and the Telegram bot.
+The pick job (FR-2) is now live: it fires at 08:00 Tehran (07:00 Friday),
+picks 5 unused cards, marks them `picked`, persists the `DailyRun`, and sends
+the numbered Farsi shortlist to the operator via `telegram_client`. The full
+command bot (FR-15) is still in build. Requires `telegram_bot_token` +
+`telegram_chat_id` in `[supervisor]` to do anything useful.
 
-### 3.5 Buffer post POC [POC]
+### 3.5 Manual daily cycle: pick → send → lock (FR-2 bridge) [LIVE]
+
+The full Telegram command bot (auto 1-5 receiver, approve/rewrite/reject) is
+FR-15's build. Until it lands, this two-step bridge drives the pick +
+operator choice from the CLI, with the delivery and locking done for real:
+
+```
+# 1. create today's run, send the numbered 5-card shortlist to Telegram
+uv run python -X utf8 -m supervisor pick-send
+
+# 2. read the cards in your chat, then lock the pick (1-5 = the number shown)
+uv run python -X utf8 -m supervisor lock-pick <run_id> <1-5>
+```
+
+- `pick-send` runs `run_pick_job()`: picks 5 unused cards, marks them
+  `picked`, persists the `DailyRun` (`checkpoint = cards_picked`), and sends
+  the Farsi numbered list via `telegram_client` (honors `[proxy]`). It prints
+  the `run_id`. With <5 unused cards it sends however many exist plus an
+  "ingest more books" warning.
+- `lock-pick <run_id> <n>` runs `lock_pick()`: sets
+  `picked_card_id` = the nth candidate, `picked_by = "operator"`, persists.
+  The checkpoint stays `cards_picked`; FR-5's `approve` is what advances it.
+- Run ids come from `storage/daily_runs.json`. Invalid number / unknown run
+  → the command errors and nothing is changed.
+
+You can also inspect state directly:
+
+```
+# today's run
+uv run python -X utf8 -c "import json,os; p='storage/daily_runs.json'; print(json.load(open(p)) if os.path.exists(p) else [])"
+# how many unused cards are left
+uv run python -X utf8 -c "import json,os; c=json.load(open('storage/idea_cards.json')); print('unused:', sum(1 for x in c if x.get('status')=='unused'))"
+```
+
+### 3.6 Buffer post POC [POC]
 
 Non-destructive by default. List channels / create a draft / publish / check /
 delete a Reel through the operator's Buffer account:
@@ -224,7 +262,7 @@ uv run python -X utf8 -m supervisor.buffer_poc --delete <post_id>
 Requires `[supervisor] buffer_api_key` (and optionally org/channel ids) in
 `config.toml`; honors `[proxy]`.
 
-### 3.6 Media-chain proof (R-10) [POC]
+### 3.7 Media-chain proof (R-10) [POC]
 
 ```
 uv run python -X utf8 -m supervisor.r10_check
@@ -236,11 +274,18 @@ manager. Good smoke test of the reel build path.
 
 ---
 
-## 4. Operator surface (Telegram) [BUILD]
+## 4. Operator surface (Telegram) [PARTIAL — outbound live, reply loop BUILD]
 
 The plan's target: a Telegram bot is the **sole** operator UI, with Farsi
-replies. Command set (to be implemented in `supervisor/telegram_bot.py`,
-driven by `supervisor/__main__.py serve` + `supervisor/scheduler.py`):
+replies. Two halves:
+
+**Outbound delivery — [LIVE] via `supervisor/telegram_client.py`:**
+`send_message` / `send_video` to the operator's `telegram_chat_id` (429 →
+`retry_after` sleep, `[proxy]` honored). The 08:00 numbered card shortlist
+(FR-2) and the manual-fallback video (FR-12) both go through it.
+
+**Inbound reply loop — [BUILD] (`supervisor/telegram_bot.py`, FR-15).**
+Full command set (to be implemented, driven by `serve`):
 
 | Command | Effect |
 |---|---|
@@ -253,16 +298,20 @@ driven by `supervisor/__main__.py serve` + `supervisor/scheduler.py`):
 | `resume <run_id>` | continue a stuck run |
 | `refresh-key <key>` | rotate the Buffer key via `save_config()` |
 
-Until this is built, operator actions are done by hand (inspect
-`storage/*.json`, run `resume`, use the Buffer POC).
+Until the inbound loop is built, the operator's `1`–`5` choice is made by
+hand: run `pick-send` (it messages you the numbered cards), read them, then
+`lock-pick <run_id> <n>` (§3.5). Everything else is done by hand today
+(inspect `storage/*.json`, run `resume`, use the Buffer POC).
 
 ---
 
-## 5. Daily timing (once the scheduler runs) [BUILD]
+## 5. Daily timing
 
-Times are Tehran (`Asia/Tehran`), computed in-process — no cron/APScheduler:
+The 08:00 pick is live (via `serve` or manually with `pick-send`, §3.5).
+The rest of the day's gates land with the scheduler loop build. All times
+are Tehran (`Asia/Tehran`), computed in-process — no cron/APScheduler:
 
-- **08:00** pick 5 cards → Telegram.
+- **08:00** pick 5 cards → Telegram. **[LIVE via `serve` / `pick-send`]**
 - **Pick deadline:** 18:00 weekday / 12:00 Friday (never fires twice).
 - **Build** reel at 19:55 / 13:55; **post immediately** at 20:00 / 14:00
   (our-side scheduling, R-4).

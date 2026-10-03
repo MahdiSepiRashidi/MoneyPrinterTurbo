@@ -12,7 +12,6 @@ listen_host = "0.0.0.0"
 listen_port = 8080
 
 [app]
-
 # Optional protection for API routes and generated files under /tasks.
 # Leave empty for local backward-compatible access. When configured, clients
 # must send the same value in the x-api-key request header. Keep real keys only
@@ -21,7 +20,7 @@ listen_port = 8080
 # 配置后客户端必须通过 x-api-key 请求头传入同一个值。
 # Task artifact requests also require this header; a browser address bar cannot
 # attach custom headers, so authenticated clients should download them via HTTP.
-# 任务产物下载同样需要该请求头；浏览器地址栏无法附加自定义请求头，启用鉴权后
+# 任务产物下载同样需要该请求头；浏览器地址栏无法附加自定义头部，启用鉴权后
 # 应由 API 客户端携带请求头下载。
 api_key = ""
 
@@ -775,5 +774,19 @@ buffer_media_host = "cloudinary"
 # single FR-14 cheap-model fallback attempt for LLM stages. Day-missed alert only
 # fires when a failure passes post_time_weekday/post_time_friday.
 retry_backoff_seconds = "30,120,600"
+
+# -----------------------------------------------------------------------------
+# Telegram operator surface (FR-2 / FR-15). The bot is the sole operator UI:
+# the 08:00 candidate-card shortlist, script approval, and manual-post
+# confirmation all flow through it. Create a bot with @BotFather; set both
+# keys here and in config.toml only (NFR-5). The supervisor's egress to the
+# Telegram API honors [proxy] (R-7).
+# -----------------------------------------------------------------------------
+# Bot token from @BotFather. Empty disables the operator surface.
+telegram_bot_token = ""
+# The operator's chat id (message from /getUpdates, or user id).
+telegram_chat_id = ""
+# Tick interval for the in-process scheduler (default 30s).
+# poll_interval_seconds = 30
 
 
