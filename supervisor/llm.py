@@ -11,12 +11,24 @@ from loguru import logger
 from app.config import config as app_config
 from app.services.llm import _fallback_app_config, _generate_response
 
+# Provider-agnostic generic failure markers returned by some SDKs without the
+# "Error: " prefix (observed: google-genai's transient 503s surface as this text
+# through MPT's gemini adapter). Kept short and extendable (R-14 config-only).
+_GENERIC_ERROR_MARKERS = ("An error occurred during generation",)
+
 
 def _is_failed_response(response) -> bool:
-    """_generate_response 把 Provider 失败返回为 "Error: ..." 文本；空串同样算失败。"""
+    """_generate_response 把 Provider 失败返回为 "Error: ..." 文本；空串同样算失败。
+
+    部分 SDK（如 google-genai）的瞬时故障会以不带 "Error: " 前缀的通用错误文本返回，
+    这些也视为失败，使 FR-14 的一次性 fallback 仍能触发。
+    """
     if not response or not response.strip():
         return True
-    return response.startswith("Error: ")
+    text = response.lstrip()
+    if text.startswith("Error: "):
+        return True
+    return any(text.startswith(m) for m in _GENERIC_ERROR_MARKERS)
 
 
 def complete(system: str, user: str) -> str:

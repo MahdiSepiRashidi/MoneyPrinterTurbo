@@ -154,6 +154,7 @@ class DailyRun:
     scheduled_time_tehran: Optional[str] = None
     checkpoint: str = "cards_picked"
     retry_count: int = 0
+    rewrite_count: int = 0
     last_error: Optional[str] = None
 
     def to_dict(self) -> dict:

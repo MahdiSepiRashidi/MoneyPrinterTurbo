@@ -1,0 +1,62 @@
+[
+  {
+    "id": "happy-0001",
+    "book": "How to Win Friends and Influence People",
+    "claim": "Genuine interest in others is more socially effective than trying to be liked by impressing them.",
+    "quote": "You can make more friends in two months by becoming interested in other people than you can in two years by trying to get other people interested in you.",
+    "example": "A man who started asking each new colleague about their work history instead of pitching himself found the room felt warmer within a week.",
+    "lesson": "Lead conversations with curiosity about the other person, not with self-presentation.",
+    "type": "principle",
+    "status": "unused",
+    "picked_date": null,
+    "run_id": null
+  },
+  {
+    "id": "happy-0002",
+    "book": "Nonviolent Communication",
+    "claim": "Listening to understand, not to reply, is a trainable skill that lowers social anxiety over time.",
+    "quote": "Most people listen not to understand, but to reply.",
+    "example": "Someone who practiced a silent self-check after a stressful conversation (what did I actually hear, what do I think?) reported the tension dropping.",
+    "lesson": "Pause before replying; reflect back what you heard first.",
+    "type": "tip",
+    "status": "unused",
+    "picked_date": null,
+    "run_id": null
+  },
+  {
+    "id": "happy-0003",
+    "book": "Deep Conversations",
+    "claim": "Small, consistent social acts compound into general comfort with strangers.",
+    "quote": "Comfort with strangers is built by reps, not by personality.",
+    "example": "A quiet guy who greeted his barista by name for three months could later hold a five-minute chat at a coffee shop without thinking about it.",
+    "lesson": "Pick one small daily social rep and do it until it feels normal.",
+    "type": "principle",
+    "status": "unused",
+    "picked_date": null,
+    "run_id": null
+  },
+  {
+    "id": "happy-0004",
+    "book": "The Courage to Be Disliked",
+    "claim": "Naming an emotion in the moment lowers its intensity (affect labeling).",
+    "quote": "Putting a feeling into words calms the limbic system.",
+    "example": "Saying to yourself 'I am nervous' before a meeting makes the nerves easier to work with than fighting them.",
+    "lesson": "Label the emotion instead of fighting it.",
+    "type": "insight",
+    "status": "unused",
+    "picked_date": null,
+    "run_id": null
+  },
+  {
+    "id": "happy-0005",
+    "book": "Atomic Habits",
+    "claim": "Scheduling social time as an appointment makes it actually happen.",
+    "quote": "You do not rise to the level of your goals; you fall to the level of your systems.",
+    "example": "A guy who put 'walk with a friend' in his calendar on Thursday ended up going more often than when it was just a vague 'I should hang out'.",
+    "lesson": "Put social time in the calendar, not in your thoughts.",
+    "type": "tip",
+    "status": "unused",
+    "picked_date": null,
+    "run_id": null
+  }
+]

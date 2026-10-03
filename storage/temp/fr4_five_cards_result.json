@@ -1,0 +1,213 @@
+{
+  "cards": [
+    "cb2d19cd-1f7c-39c8-c54a-7ab7266dfc92",
+    "2d315a00-c81b-9a9d-31bd-96bdbed2b7bd",
+    "ccee5a83-f797-3f6b-dafc-a6667043dd0c",
+    "2904b650-e624-1420-10da-134b53856696",
+    "2fd22bb1-79c1-a3b5-6e7a-108a67cb22ce"
+  ],
+  "summary": [
+    {
+      "card_id": "cb2d19cd-1f7c-39c8-c54a-7ab7266dfc92",
+      "hook_type": "stat",
+      "status": "needs_review",
+      "approved": false,
+      "words": 0,
+      "flags": [
+        "word-count:0 (allowed 150-220)"
+      ]
+    },
+    {
+      "card_id": "2d315a00-c81b-9a9d-31bd-96bdbed2b7bd",
+      "hook_type": "story",
+      "status": "needs_review",
+      "approved": false,
+      "words": 0,
+      "flags": [
+        "word-count:0 (allowed 150-220)"
+      ]
+    },
+    {
+      "card_id": "ccee5a83-f797-3f6b-dafc-a6667043dd0c",
+      "hook_type": "question",
+      "status": "needs_review",
+      "approved": false,
+      "words": 0,
+      "flags": [
+        "word-count:0 (allowed 150-220)",
+        "hook-mismatch:None (expected 'question')"
+      ]
+    },
+    {
+      "card_id": "2904b650-e624-1420-10da-134b53856696",
+      "hook_type": "stat",
+      "status": "needs_review",
+      "approved": false,
+      "words": 0,
+      "flags": [
+        "word-count:0 (allowed 150-220)",
+        "hook-mismatch:None (expected 'stat')"
+      ]
+    },
+    {
+      "card_id": "2fd22bb1-79c1-a3b5-6e7a-108a67cb22ce",
+      "hook_type": "question",
+      "status": "needs_review",
+      "approved": false,
+      "words": 0,
+      "flags": [
+        "word-count:0 (allowed 150-220)"
+      ]
+    }
+  ],
+  "approved_count": 0,
+  "results": [
+    {
+      "card": {
+        "id": "cb2d19cd-1f7c-39c8-c54a-7ab7266dfc92",
+        "book": "The Game",
+        "claim": "Systematic, learnable techniques outperform natural charisma in social skill acquisition",
+        "quote": "The difference was that these men had broken down their methods to a specific set of rules that anybody could apply.",
+        "example": "The narrator finds that individuals without natural charm (like a construction worker or real estate agent) can succeed in social situations by applying codified rules from 'pickup artists'.",
+        "lesson": "Treat complex skills like social interaction as systems with learnable components rather than innate talents.",
+        "type": "principle",
+        "status": "unused",
+        "picked_date": null,
+        "run_id": null
+      },
+      "test_date": "2026-09-29",
+      "result": {
+        "status": "needs_review",
+        "hook_type": "stat",
+        "script_farsi": "",
+        "target_seconds": null,
+        "caption": "",
+        "hashtags": [],
+        "opening_line": "",
+        "flags": [
+          "word-count:0 (allowed 150-220)"
+        ]
+      },
+      "approved": false,
+      "word_count": 0
+    },
+    {
+      "card": {
+        "id": "2d315a00-c81b-9a9d-31bd-96bdbed2b7bd",
+        "book": "The Game",
+        "claim": "Effective social openers should be low-stakes and intriguing to facilitate initial contact rather than immediate romantic pursuit",
+        "quote": "innocent but intriguing questions like “Do you think magic spells work?”... all they are meant to do is get two strangers talking.",
+        "example": "Mystery suggests using questions like 'Do you think magic spells work?' or 'Did you see those two girls fighting outside?' to start a conversation with a group of strangers.",
+        "lesson": "Use low-pressure, curious questions to break the ice with strangers instead of leading with high-stakes romantic or sexual advances.",
+        "type": "tip",
+        "status": "unused",
+        "picked_date": null,
+        "run_id": null
+      },
+      "test_date": "2026-09-30",
+      "result": {
+        "status": "needs_review",
+        "hook_type": "story",
+        "script_farsi": "",
+        "target_seconds": 0,
+        "caption": "",
+        "hashtags": [],
+        "opening_line": "",
+        "flags": [
+          "word-count:0 (allowed 150-220)"
+        ]
+      },
+      "approved": false,
+      "word_count": 0
+    },
+    {
+      "card": {
+        "id": "ccee5a83-f797-3f6b-dafc-a6667043dd0c",
+        "book": "The Game",
+        "claim": "High-stakes approaches should be delayed until after initial rapport or context is established to appear less aggressive",
+        "quote": "A pro waits eight to ten minutes.",
+        "example": "Mystery advises against hitting on a woman right away; instead, he waits to build a context or 'camouflage' before making his intentions clear.",
+        "lesson": "Delay direct romantic or sales pitches until you have established a baseline of comfort or shared context with the other person.",
+        "type": "principle",
+        "status": "unused",
+        "picked_date": null,
+        "run_id": null
+      },
+      "test_date": "2026-10-01",
+      "result": {
+        "status": "needs_review",
+        "hook_type": "question",
+        "script_farsi": "",
+        "target_seconds": null,
+        "caption": "",
+        "hashtags": [],
+        "opening_line": "",
+        "flags": [
+          "word-count:0 (allowed 150-220)",
+          "hook-mismatch:None (expected 'question')"
+        ]
+      },
+      "approved": false,
+      "word_count": 0
+    },
+    {
+      "card": {
+        "id": "2904b650-e624-1420-10da-134b53856696",
+        "book": "The Game",
+        "claim": "People generally enjoy and appreciate non-sexual physical touch (kinesthetic rapport) despite societal stigma.",
+        "quote": "Pets like to be petted. It isn’t sexual when a dog or a cat begs for physical affection. People are the same way: We need touch.",
+        "example": "The narrator places his arm on the woman's shoulder, feeling the heat of her body, and notes that her initial reaction was not negative but that he felt self-conscious about the 'wrong' feeling of the contact.",
+        "lesson": "Recognize that appropriate, non-sexual physical contact is a fundamental human need for connection, and practice offering it with confidence rather than anxiety.",
+        "type": "insight",
+        "status": "unused",
+        "picked_date": null,
+        "run_id": null
+      },
+      "test_date": "2026-10-02",
+      "result": {
+        "status": "needs_review",
+        "hook_type": "stat",
+        "script_farsi": "",
+        "target_seconds": null,
+        "caption": "",
+        "hashtags": [],
+        "opening_line": "",
+        "flags": [
+          "word-count:0 (allowed 150-220)",
+          "hook-mismatch:None (expected 'stat')"
+        ]
+      },
+      "approved": false,
+      "word_count": 0
+    },
+    {
+      "card": {
+        "id": "2fd22bb1-79c1-a3b5-6e7a-108a67cb22ce",
+        "book": "The Game",
+        "claim": "In social interactions, positive affirmation is more effective than backhanded compliments or 'negs'.",
+        "quote": "So I said, “It smells like smoke.” “Nooooo!” Sin hissed in my ear. ... She seemed offended.",
+        "example": "The narrator initially makes a backhanded comment about the woman's hair smelling like smoke, which offends her; he recovers by adding a compliment about the 'intoxicating smell' underneath.",
+        "lesson": "Avoid using backhanded compliments or 'negs' to provoke interest, as they often offend; instead, use genuine or layered compliments to build rapport.",
+        "type": "tip",
+        "status": "unused",
+        "picked_date": null,
+        "run_id": null
+      },
+      "test_date": "2026-10-03",
+      "result": {
+        "status": "needs_review",
+        "hook_type": "question",
+        "script_farsi": "",
+        "target_seconds": 0,
+        "caption": "",
+        "hashtags": [],
+        "opening_line": "",
+        "flags": [
+          "word-count:0 (allowed 150-220)"
+        ]
+      },
+      "approved": false,
+      "word_count": 0
+    }
+  ]
+}

@@ -6,6 +6,9 @@ Runs the ``meta-safe-farsi-reel-script`` skill through the **raw** supervisor LL
 - parses + validates the single JSON object (status, 150-220 Farsi words,
   ``hook_type`` matches the rotated value, ``self_check.flags`` empty when
   ``passed`` is true);
+- FR-10: validates the ``caption_farsi`` (1-2 Farsi lines, not a verbatim
+  repeat of the narration, exactly one follow+bio soft CTA) and ``hashtags``
+  (3-5 items, Farsi-first) contract fields;
 - runs the FR-17 TTS-ready validator (``supervisor.farsi_norm.validate``) on the
   script + caption;
 - routes: ``needs_review`` / any structural or TTS flag -> ``script_status:
@@ -18,6 +21,7 @@ The LLM call, Telegram send, and stores are injectable so tests run offline.
 
 from __future__ import annotations
 
+import ast
 import json
 import re
 from dataclasses import dataclass, field
@@ -43,9 +47,10 @@ MAX_WORDS = 220
 TTS_INSTRUCTIONS = (
     "نکات آماده‌سازی TTS را الزاماً رعایت کن:\n"
     "- خروجی را TTS-ready بنویس: زبانی صحیح، بدون انگلیسی‌سازی، با اعداد فارسی.\n"
-    "- Hmakat را روی کلمات ابهام‌دار درست بگذار تا گوینده‌ی گفتاری صحیح بخواند.\n"
+    "- تعداد کلماتِ script_farsi الزاماً بین 150 تا 220 کلمه باشد؛ قبل از ارسال بشمار و هدف 200 تا 210 کلمه باشد.\n"
+    "- هراکات را روی کلمات ابهام‌دار درست بگذار تا گوینده‌ی گفتاری صحیح بخواند.\n"
     "- نیم‌فاصله (ZWNJ) را درست بگذار (مثلاً می‌شود، بچه‌ها، می‌کند).\n"
-    "- نشانه‌گذاریِ روانی: فقط ویرگول و علامت سؤال/تعجب؛ هر ۱۵ تا ۲۵ کلمه یک نشانه.\n"
+    "- نشانه‌گذاریِ روانی: فقط ویرگول و علامت سؤال/تعجب؛ هر 10 تا 25 کلمه یک نشانه؛ از تراکم نشانه پرهیز کن.\n"
     "فقط همان JSON یک‌تکه را بازگردان؛ هیچ متن اضافی نیاور."
 )
 
@@ -119,6 +124,8 @@ def parse_json_object(raw: str) -> dict:
     """Extract and parse the single JSON object from a raw LLM string.
 
     Tolerates ```json fences and surrounding prose: takes the outermost ``{...}``.
+    Gemini occasionally emits single-quoted (Python-style) JSON, so a strict
+    ``json.loads`` failure falls back to ``ast.literal_eval``.
     Raises ``ValueError`` when no valid object is found.
     """
     text = raw or ""
@@ -129,7 +136,13 @@ def parse_json_object(raw: str) -> dict:
         if start == -1 or end == -1 or end <= start:
             raise ValueError("no JSON object in LLM response")
         candidate = text[start : end + 1]
-    data = json.loads(candidate)
+    try:
+        data = json.loads(candidate)
+    except json.JSONDecodeError:
+        try:
+            data = ast.literal_eval(candidate)
+        except (ValueError, SyntaxError) as exc:
+            raise ValueError(f"unparseable JSON object: {exc}") from exc
     if not isinstance(data, dict):
         raise ValueError("LLM response is not a JSON object")
     return data
@@ -138,6 +151,64 @@ def parse_json_object(raw: str) -> dict:
 def count_farsi_words(text: str) -> int:
     text = (text or "").strip()
     return len(text.split()) if text else 0
+
+
+# ---------------------------------------------------------------------------
+# FR-10: caption + hashtag contract checks
+# ---------------------------------------------------------------------------
+
+# A single Farsi/Arabic-block letter (covers all Farsi letters incl. پ چ ژ گ).
+FARI_CHARS = re.compile(r"[\u0600-\u06FF]")
+
+MIN_HASHTAGS = 3
+MAX_HASHTAGS = 5
+MAX_CAPTION_LINES = 2
+
+# The only allowed soft CTA, as two markers: "follow" + "link in bio".
+CTA_FOLLOW_MARKER = "فالو"
+CTA_BIO_MARKER = "پروفایل"
+
+
+def _squash(text: str) -> str:
+    """Whitespace/ZWNJ-free form used for the verbatim-narration containment check."""
+    return re.sub(r"[\s\u200c]+", "", text or "")
+
+
+def caption_flags(caption: str, script: str) -> list[str]:
+    """FR-10 caption contract: 1-2 Farsi lines, exactly one follow+bio CTA,
+    never a verbatim repeat of the narration."""
+    caption = caption or ""
+    lines = [ln for ln in caption.splitlines() if ln.strip()]
+    if not lines:
+        return ["caption-missing"]
+    flags: list[str] = []
+    if len(lines) > MAX_CAPTION_LINES:
+        flags.append(f"caption-lines:{len(lines)} (allowed 1-{MAX_CAPTION_LINES})")
+    if not FARI_CHARS.search(caption):
+        flags.append("caption-not-farsi")
+    cap, scr = _squash(caption), _squash(script)
+    if cap and scr and (cap in scr or scr in cap):
+        flags.append("caption-verbatim-narration")
+    follow = caption.count(CTA_FOLLOW_MARKER)
+    bio = caption.count(CTA_BIO_MARKER)
+    if follow == 0 or bio == 0:
+        flags.append("caption-cta-missing")
+    elif follow > 1 or bio > 1:
+        flags.append(f"caption-cta-multiple (follow={follow}, bio={bio})")
+    return flags
+
+
+def hashtag_flags(hashtags: list) -> list[str]:
+    """FR-10 hashtag contract: 3-5 items, Farsi-first (the first tag is Farsi)."""
+    items = [hashtags] if isinstance(hashtags, str) else (hashtags or [])
+    tags = [str(t).strip() for t in items if str(t).strip()]
+    flags: list[str] = []
+    n = len(tags)
+    if not (MIN_HASHTAGS <= n <= MAX_HASHTAGS):
+        flags.append(f"hashtags-count:{n} (allowed {MIN_HASHTAGS}-{MAX_HASHTAGS})")
+    if tags and not FARI_CHARS.search(tags[0]):
+        flags.append("hashtags-not-farsi-first")
+    return flags
 
 
 def structural_flags(data: dict, expected_hook_type: str) -> list[str]:
@@ -159,6 +230,15 @@ def structural_flags(data: dict, expected_hook_type: str) -> list[str]:
     self_check = data.get("self_check") or {}
     if self_check.get("passed") and self_check.get("flags"):
         flags.append("self-check-flags-nonempty")
+
+    # FR-10 approval gate: caption + hashtag contract. Refusals (needs_review)
+    # carry their own self_check reasons and are not re-validated.
+    if status == "ok":
+        flags.extend(caption_flags(str(data.get("caption_farsi") or ""), script))
+        hashtags = data.get("hashtags") or []
+        if not isinstance(hashtags, list):
+            hashtags = [str(hashtags)]
+        flags.extend(hashtag_flags(hashtags))
     return flags
 
 
@@ -202,6 +282,40 @@ def _first_line(text: str) -> str:
     return ""
 
 
+MAX_REGEN_PASSES = 2
+
+
+def _regen_instruction(words: int, script_flags: list[str]) -> str:
+    """Close-the-gap instruction appended for a regeneration pass (plan §FR-6 recovery).
+
+    Models (both Agnes and Gemini) systematically undershoot the 150-220 band and
+    sometimes drop prosody punctuation on a rewrite, so targets sit safely inside
+    the band (210 when short, 170 when long) and the punctuation requirement is
+    restated. ``script_flags`` are the FR-17 flags on the previous script.
+    """
+    parts: list[str] = []
+    if words < MIN_WORDS:
+        parts.append(
+            f"نکته: نسخه‌ی قبلی فقط {words} کلمه بود و از محدوده خارج است. "
+            "نسخه‌ی جدید script_farsi را بلند بنویس: حدود 210 کلمه (حتماً بیش از 150، حداکثر 220)."
+        )
+    elif words > MAX_WORDS:
+        parts.append(
+            f"نکته: نسخه‌ی قبلی {words} کلمه بود و از محدوده خارج است. "
+            "نسخه‌ی جدید script_farsi را فشرده‌تر بنویس: حدود 170 کلمه (حداقل 150، حداکثر 220)."
+        )
+    if any(f.startswith("punctuation-density") for f in script_flags):
+        parts.append(
+            "نکته: نشانه‌گذاریِ سبکِ روانی لازم است: هر 10 تا 20 کلمه یک ویرگول یا علامت سؤال؛ "
+            "جمله‌ای بدون هیچ نشانه‌ای نیاور."
+        )
+    other = [f for f in script_flags if not f.startswith("punctuation-density")]
+    if other:
+        parts.append("نکته: مشکلات زیر را در نسخه‌ی جدید رفع کن: " + "; ".join(other))
+    parts.append("همان هوک و ساختار را نگه دار. فقط JSON بازگردان.")
+    return " ".join(parts)
+
+
 def generate_script(
     card: IdeaCard,
     hook_type: str,
@@ -211,18 +325,47 @@ def generate_script(
     """Generate + parse + validate the Farsi script for one card.
 
     Returns a ``ScriptResult``; ``result.approved`` is True only when the LLM
-    status is ``ok`` **and** there are no structural or TTS flags.
+    status is ``ok`` **and** there are no structural or TTS flags. When an ``ok``
+    result misses the 150-220 word band or the FR-17 TTS gate on the script, up
+    to ``MAX_REGEN_PASSES`` regenerations with close-the-gap instructions are
+    attempted; an unparseable or non-ok re-attempt keeps the previous result.
+    Refusals (``needs_review``) are never retried.
     """
     if llm_fn is None:
         from supervisor.llm import complete as llm_fn  # noqa: PLC0415 - injectable seam
 
-    raw = llm_fn(build_system_prompt(), build_user_prompt(card, hook_type, recent_hooks or []))
+    system = build_system_prompt()
+    user = build_user_prompt(card, hook_type, recent_hooks or [])
+
+    raw = llm_fn(system, user)
 
     try:
         data = parse_json_object(raw)
     except (ValueError, json.JSONDecodeError) as exc:
         logger.warning("FR-4: unparseable script JSON: {}", exc)
         return ScriptResult(status="needs_review", flags=[f"json-unparseable:{exc}"])
+
+    # Up to MAX_REGEN_PASSES regenerations for an ok script that misses the word
+    # band or the FR-17 gate on the script itself (never on a refusal).
+    if str(data.get("status") or "") == "ok":
+        for pass_no in range(MAX_REGEN_PASSES):
+            script = str(data.get("script_farsi") or "")
+            words = count_farsi_words(script)
+            script_flags = farsi_norm.validate(script)
+            if MIN_WORDS <= words <= MAX_WORDS and not script_flags:
+                break
+            retry_user = user + "\n" + _regen_instruction(words, script_flags)
+            try:
+                data = parse_json_object(llm_fn(system, retry_user))
+                logger.info(
+                    "FR-4: attempt {} flagged (words={}, flags={}) — regenerated",
+                    pass_no + 1, words, script_flags,
+                )
+            except (ValueError, json.JSONDecodeError) as exc:
+                logger.warning("FR-4: regeneration unparseable ({}); keeping previous attempt", exc)
+                break
+            if str(data.get("status") or "") != "ok":
+                break
 
     flags = structural_flags(data, hook_type)
 

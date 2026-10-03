@@ -44,6 +44,11 @@ CHECKPOINT_ORDER = [
 ]
 TERMINAL_CHECKPOINT = "posted"
 
+# FR-5 approval boundary: no media/post stage may run before the operator advances
+# the run to this checkpoint (the `approve` gate in supervisor/approval.py).
+APPROVAL_CHECKPOINT = "script_approved"
+APPROVAL_INDEX = CHECKPOINT_ORDER.index(APPROVAL_CHECKPOINT)
+
 DEFAULT_BACKOFF_SECONDS = [30, 120, 600]
 
 
@@ -128,6 +133,18 @@ def pending_stages(run: DailyRun, stages: list[Stage]) -> list[Stage]:
     """
     current = checkpoint_index(run.checkpoint)
     return [s for s in stages if checkpoint_index(s.checkpoint) > current]
+
+
+def media_stage_eligible(run: DailyRun, stage: "Stage") -> bool:
+    """FR-5 gate: a media/post stage (checkpoint past the approval boundary) may only
+    run once the run itself is at/past ``script_approved``. Before the operator's
+    ``approve`` event this is False, so the pipeline stops at the gate and no media
+    stage runs. Media stages are never gated for post-approval runs.
+    """
+    return not (
+        checkpoint_index(stage.checkpoint) > APPROVAL_INDEX
+        and checkpoint_index(run.checkpoint) < APPROVAL_INDEX
+    )
 
 
 def _parse_hhmm(value: str) -> dtime:
@@ -227,6 +244,16 @@ def run_pipeline(
     stages = list(stages if stages is not None else build_drivable_stages(cfg))
     target_backoff = list(backoff) if backoff is not None else parse_backoff(cfg.retry_backoff_seconds)
     remaining = pending_stages(run, stages) if resume else list(stages)
+
+    # FR-5 media gate: hold every media/post stage while the run is unapproved so no
+    # media stage can run before the operator's `approve` event.
+    held = [s for s in remaining if not media_stage_eligible(run, s)]
+    if held:
+        logger.info(
+            "flow: run {} gated at approval (FR-5); holding {} media stage(s): {}",
+            run.run_id, len(held), [s.name for s in held],
+        )
+        remaining = [s for s in remaining if media_stage_eligible(run, s)]
 
     if not remaining:
         logger.info("flow: nothing to do for run {} (checkpoint '{}')", run.run_id, run.checkpoint)
@@ -413,6 +440,7 @@ def build_drivable_stages(cfg) -> list[Stage]:
 __all__ = [
     "CHECKPOINT_ORDER",
     "TERMINAL_CHECKPOINT",
+    "APPROVAL_CHECKPOINT",
     "DEFAULT_BACKOFF_SECONDS",
     "Stage",
     "register_stage",
@@ -421,6 +449,7 @@ __all__ = [
     "parse_backoff",
     "checkpoint_index",
     "pending_stages",
+    "media_stage_eligible",
     "post_time_for_date",
     "is_past_post_time",
     "run_stage_with_retry",

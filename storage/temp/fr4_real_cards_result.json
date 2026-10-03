@@ -1,0 +1,204 @@
+{
+  "approved_count": 5,
+  "summary": [
+    {
+      "card_id": "cb2d19cd-1f7c-39c8-c54a-7ab7266dfc92",
+      "book": "The Game",
+      "claim": "Systematic, learnable techniques outperform natural charisma in social skill acquisition",
+      "hook_type": "stat",
+      "status": "ok",
+      "approved": true,
+      "words": 159,
+      "flags": []
+    },
+    {
+      "card_id": "2d315a00-c81b-9a9d-31bd-96bdbed2b7bd",
+      "book": "The Game",
+      "claim": "Effective social openers should be low-stakes and intriguing to facilitate initial contact rather than immediate romantic pursuit",
+      "hook_type": "story",
+      "status": "ok",
+      "approved": true,
+      "words": 182,
+      "flags": []
+    },
+    {
+      "card_id": "ccee5a83-f797-3f6b-dafc-a6667043dd0c",
+      "book": "The Game",
+      "claim": "High-stakes approaches should be delayed until after initial rapport or context is established to appear less aggressive",
+      "hook_type": "question",
+      "status": "ok",
+      "approved": true,
+      "words": 170,
+      "flags": []
+    },
+    {
+      "card_id": "2904b650-e624-1420-10da-134b53856696",
+      "book": "The Game",
+      "claim": "People generally enjoy and appreciate non-sexual physical touch (kinesthetic rapport) despite societal stigma.",
+      "hook_type": "stat",
+      "status": "ok",
+      "approved": true,
+      "words": 180,
+      "flags": []
+    },
+    {
+      "card_id": "2fd22bb1-79c1-a3b5-6e7a-108a67cb22ce",
+      "book": "The Game",
+      "claim": "In social interactions, positive affirmation is more effective than backhanded compliments or 'negs'.",
+      "hook_type": "question",
+      "status": "ok",
+      "approved": true,
+      "words": 178,
+      "flags": []
+    }
+  ],
+  "results": [
+    {
+      "card": {
+        "id": "cb2d19cd-1f7c-39c8-c54a-7ab7266dfc92",
+        "book": "The Game",
+        "claim": "Systematic, learnable techniques outperform natural charisma in social skill acquisition",
+        "quote": "The difference was that these men had broken down their methods to a specific set of rules that anybody could apply.",
+        "example": "The narrator finds that individuals without natural charm (like a construction worker or real estate agent) can succeed in social situations by applying codified rules from 'pickup artists'.",
+        "lesson": "Treat complex skills like social interaction as systems with learnable components rather than innate talents.",
+        "type": "principle",
+        "status": "unused",
+        "picked_date": null,
+        "run_id": null
+      },
+      "result": {
+        "status": "ok",
+        "hook_type": "stat",
+        "script_farsi": "تحقیقات نشون میده بیش از هشتاد درصد از مهارت‌های اجتماعی، اکتسابی هستن و هیچ ربطی به جذابیت ذاتی ندارن. یعنی چی؟ یعنی لازم نیست ژنتیکِ خاصی داشته باشی تا بتونی با دیگران ارتباط عمیق بسازی. خیلی از پسرا فکر می‌کنن روابط خوب فقط کارِ آدم‌های خوش‌بیان یا اصطلاحاً خوش‌شانسه، ولی حقیقت اینه که ارتباط مثل یه زبونه؛ باید گرامرش رو یاد بگیری و تمرین کنی. تو هم می‌تونی مهارت‌های ارتباطی رو مثل هر هنر دیگه‌ای یاد بگیری. وقتی به جای متکی بودن به شانس، روی روش‌های درست و اصول انسانی وقت می‌ذاری، همه چیز تغییر می‌کنه. فرقی نداره کارت چیه یا چقدر تو جمع‌ها خجالتی هستی، با تمرینِ آگاهانه می‌تونی قدم‌به‌قدم ترست رو بریزی و یاد بگیری چطور بدون تقلا و نقاب زدن، خودِ واقعیت رو به دیگران نشون بدی. این یعنی مهارت واقعی و پایدار که توی هیچ کتاب سحر و جادویی پیدا نمی‌شه، بلکه توی شناخت درستِ روان آدم‌هاست. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "target_seconds": 80,
+        "caption": "مهارت‌های اجتماعی یادگرفتنی هستن، نه ذاتی.",
+        "hashtags": [
+          "#مهارت‌های_اجتماعی",
+          "#مکتب_جاذبه",
+          "#ارتباط_موثر",
+          "#رابطه‌سازی"
+        ],
+        "opening_line": "تحقیقات نشون میده بیش از هشتاد درصد از مهارت‌های اجتماعی، اکتسابی هستن و هیچ ربطی به جذابیت ذاتی ندارن. یعنی چی؟ یعنی لازم نیست ژنتیکِ خاصی داشته باشی تا بتونی با دیگران ارتباط عمیق بسازی. خیلی از پسرا فکر می‌کنن روابط خوب فقط کارِ آدم‌های خوش‌بیان یا اصطلاحاً خوش‌شانسه، ولی حقیقت اینه که ارتباط مثل یه زبونه؛ باید گرامرش رو یاد بگیری و تمرین کنی. تو هم می‌تونی مهارت‌های ارتباطی رو مثل هر هنر دیگه‌ای یاد بگیری. وقتی به جای متکی بودن به شانس، روی روش‌های درست و اصول انسانی وقت می‌ذاری، همه چیز تغییر می‌کنه. فرقی نداره کارت چیه یا چقدر تو جمع‌ها خجالتی هستی، با تمرینِ آگاهانه می‌تونی قدم‌به‌قدم ترست رو بریزی و یاد بگیری چطور بدون تقلا و نقاب زدن، خودِ واقعیت رو به دیگران نشون بدی. این یعنی مهارت واقعی و پایدار که توی هیچ کتاب سحر و جادویی پیدا نمی‌شه، بلکه توی شناخت درستِ روان آدم‌هاست. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "flags": []
+      }
+    },
+    {
+      "card": {
+        "id": "2d315a00-c81b-9a9d-31bd-96bdbed2b7bd",
+        "book": "The Game",
+        "claim": "Effective social openers should be low-stakes and intriguing to facilitate initial contact rather than immediate romantic pursuit",
+        "quote": "innocent but intriguing questions like “Do you think magic spells work?”... all they are meant to do is get two strangers talking.",
+        "example": "Mystery suggests using questions like 'Do you think magic spells work?' or 'Did you see those two girls fighting outside?' to start a conversation with a group of strangers.",
+        "lesson": "Use low-pressure, curious questions to break the ice with strangers instead of leading with high-stakes romantic or sexual advances.",
+        "type": "tip",
+        "status": "unused",
+        "picked_date": null,
+        "run_id": null
+      },
+      "result": {
+        "status": "ok",
+        "hook_type": "story",
+        "script_farsi": "یه‌بار یکی از بچه‌ها تو کافه برگشت گفت، آقا چطور برم جلو یه چیزی بپرسم که ضایع نباشم؟ گفتم چرا فکر می‌کنی باید حتماً یه ترفند خفن رو کنی تا کسی باهات حرف بزنه؟ اصل ماجرا اصلاً این نیست که وسطِ خیابون دنبال این باشی چطور مخ بزنی یا یه شوخی خاص بکنی. حقیقتش اینه که آدم‌ها فقط دوست دارن یه گپِ ساده و بی‌خطر باهاشون شروع بشه، بدون اینکه حس کنن الان قراره تحت‌فشار قرار بگیرن. مثلاً همون اول کار، لازم نیست بری سراغ بحث‌های پیچیده یا بخوای خیلی باهوش به نظر برسی. یه سوالِ ساده و عجیب‌غریب، مثل اینکه «به نظرت جادو واقعیه‌؟» یا «اونجا رو دیدی چه خبره؟»، فقط یه بهانه‌ست برای اینکه یخِ بین دو نفر آب بشه. نکته اینجاست که مغز ما از آدم‌هایی که خیلی رسمی یا برنامه‌ریزی‌شده میان جلو، می‌ترسه و گارد می‌گیره. وقتی سوالت بی‌خطر و بی‌منظور باشه، طرف مقابل راحت‌تر جواب می‌ده و فضا صمیمی‌تر می‌شه. اینجوری دیگه استرس نداری که حالا چی بگم کم نیارم، چون هدف فقط حرف زدنه نه هیچ چیز دیگه‌ای. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "target_seconds": 75,
+        "caption": "شروع یه مکالمه‌ی خوب اصلاً کار سختی نیست، فقط کافیه کم‌فشار و بی‌منظور باشی.",
+        "hashtags": [
+          "#مهارت_ارتباطی",
+          "#مکتب_جاذبه",
+          "#اعتماد_به_نفس",
+          "#ارتباط_موثر"
+        ],
+        "opening_line": "یه‌بار یکی از بچه‌ها تو کافه برگشت گفت، آقا چطور برم جلو یه چیزی بپرسم که ضایع نباشم؟ گفتم چرا فکر می‌کنی باید حتماً یه ترفند خفن رو کنی تا کسی باهات حرف بزنه؟ اصل ماجرا اصلاً این نیست که وسطِ خیابون دنبال این باشی چطور مخ بزنی یا یه شوخی خاص بکنی. حقیقتش اینه که آدم‌ها فقط دوست دارن یه گپِ ساده و بی‌خطر باهاشون شروع بشه، بدون اینکه حس کنن الان قراره تحت‌فشار قرار بگیرن. مثلاً همون اول کار، لازم نیست بری سراغ بحث‌های پیچیده یا بخوای خیلی باهوش به نظر برسی. یه سوالِ ساده و عجیب‌غریب، مثل اینکه «به نظرت جادو واقعیه‌؟» یا «اونجا رو دیدی چه خبره؟»، فقط یه بهانه‌ست برای اینکه یخِ بین دو نفر آب بشه. نکته اینجاست که مغز ما از آدم‌هایی که خیلی رسمی یا برنامه‌ریزی‌شده میان جلو، می‌ترسه و گارد می‌گیره. وقتی سوالت بی‌خطر و بی‌منظور باشه، طرف مقابل راحت‌تر جواب می‌ده و فضا صمیمی‌تر می‌شه. اینجوری دیگه استرس نداری که حالا چی بگم کم نیارم، چون هدف فقط حرف زدنه نه هیچ چیز دیگه‌ای. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "flags": []
+      }
+    },
+    {
+      "card": {
+        "id": "ccee5a83-f797-3f6b-dafc-a6667043dd0c",
+        "book": "The Game",
+        "claim": "High-stakes approaches should be delayed until after initial rapport or context is established to appear less aggressive",
+        "quote": "A pro waits eight to ten minutes.",
+        "example": "Mystery advises against hitting on a woman right away; instead, he waits to build a context or 'camouflage' before making his intentions clear.",
+        "lesson": "Delay direct romantic or sales pitches until you have established a baseline of comfort or shared context with the other person.",
+        "type": "principle",
+        "status": "unused",
+        "picked_date": null,
+        "run_id": null
+      },
+      "result": {
+        "status": "ok",
+        "hook_type": "question",
+        "script_farsi": "چرا بعضی‌وقت‌ها وقتی همون ثانیه‌های اولِ آشنایی می‌خوای خیلی جذاب و خاص به نظر برسی، همه‌چیز خراب می‌شه؟ راستش رو بخوای، مشکل اصلی اینجاست که آدم‌ها قبل از اینکه بتونن تو رو بشناسن، احساس ناامنی می‌کنن و گارد می‌گیرن. وقتی بی‌مهابا و بدون هیچ‌جور زمینه و دلیلی می‌پری وسط بحث، طرف مقابل حس می‌کنه یه جای کار می‌لنگه و سریع عقب می‌کشه. یه آدم کاربلد، عجله‌ای نداره؛ اون اول یه بسترِ امن می‌سازه و با یه گفتگوی ساده و دور از استرس، فضا رو آروم می‌کنه. این کار باعث می‌شه هم تو راحت‌تر حرفت رو بزنی و هم اون طرف حس کنه داره با یه انسانِ واقعی و امن صحبت می‌کنه، نه کسی که فقط دنبال یه هدفِ خاصه. در واقع، هنرِ اصلی توی ارتباطات اینه که یاد بگیری چطور زمان بختی، فضا رو بسازی و اجازه بدی همه‌چیز توی مسیرِ طبیعی خودش جلو بره. این‌جوری هم احترامِ خودت حفظ می‌شه و هم رابطه‌ای که شکل می‌گیره عمیق‌تر و واقعی‌تر خواهد بود. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "target_seconds": 80,
+        "caption": "عجله کردن تو رابطه، حس ناامنی می‌ساره. یاد بگیر چطور اول بستر ارتباط رو آرام کنی.",
+        "hashtags": [
+          "#رابطه‌سازی",
+          "#مهارت‌های_اجتماعی",
+          "#مکتب_جاذبه",
+          "#ارتباط_موثر"
+        ],
+        "opening_line": "چرا بعضی‌وقت‌ها وقتی همون ثانیه‌های اولِ آشنایی می‌خوای خیلی جذاب و خاص به نظر برسی، همه‌چیز خراب می‌شه؟ راستش رو بخوای، مشکل اصلی اینجاست که آدم‌ها قبل از اینکه بتونن تو رو بشناسن، احساس ناامنی می‌کنن و گارد می‌گیرن. وقتی بی‌مهابا و بدون هیچ‌جور زمینه و دلیلی می‌پری وسط بحث، طرف مقابل حس می‌کنه یه جای کار می‌لنگه و سریع عقب می‌کشه. یه آدم کاربلد، عجله‌ای نداره؛ اون اول یه بسترِ امن می‌سازه و با یه گفتگوی ساده و دور از استرس، فضا رو آروم می‌کنه. این کار باعث می‌شه هم تو راحت‌تر حرفت رو بزنی و هم اون طرف حس کنه داره با یه انسانِ واقعی و امن صحبت می‌کنه، نه کسی که فقط دنبال یه هدفِ خاصه. در واقع، هنرِ اصلی توی ارتباطات اینه که یاد بگیری چطور زمان بختی، فضا رو بسازی و اجازه بدی همه‌چیز توی مسیرِ طبیعی خودش جلو بره. این‌جوری هم احترامِ خودت حفظ می‌شه و هم رابطه‌ای که شکل می‌گیره عمیق‌تر و واقعی‌تر خواهد بود. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "flags": []
+      }
+    },
+    {
+      "card": {
+        "id": "2904b650-e624-1420-10da-134b53856696",
+        "book": "The Game",
+        "claim": "People generally enjoy and appreciate non-sexual physical touch (kinesthetic rapport) despite societal stigma.",
+        "quote": "Pets like to be petted. It isn’t sexual when a dog or a cat begs for physical affection. People are the same way: We need touch.",
+        "example": "The narrator places his arm on the woman's shoulder, feeling the heat of her body, and notes that her initial reaction was not negative but that he felt self-conscious about the 'wrong' feeling of the contact.",
+        "lesson": "Recognize that appropriate, non-sexual physical contact is a fundamental human need for connection, and practice offering it with confidence rather than anxiety.",
+        "type": "insight",
+        "status": "unused",
+        "picked_date": null,
+        "run_id": null
+      },
+      "result": {
+        "status": "ok",
+        "hook_type": "stat",
+        "script_farsi": "می‌دونی، نود درصد آدما از اینکه یه لمس ساده و محترمانه روی شونه‌شون حس کنن خوشحال می‌شن، ولی ما فکر می‌کنیم حتماً یه منظوری پشتشه. این یه حقیقت بیولوژیکه؛ آدم‌ها مثل گربه‌ها و سگ‌ها به نوازش و ارتباط فیزیکی نیاز دارن، نه به خاطر مسائل جنسی، بلکه چون اینجوری سیستم عصبی‌شون آروم می‌گیره. وقتی تو کتاب «بازی» طرف دستش رو روی شونه‌ی همراهش می‌ذاره، اولش خودِش استرس می‌گیره که نکنه کار بدی کرده، ولی واکنش طرف کاملاً خونسرد و راحته. مشکل اینجاست که ما تو جامعه یاد گرفتیم از هر ارتباط بدنی بترسیم و فکر کنیم حتماً باید اتفاق خاصی بیفته. در حالی که یه دست دادن گرم، یه لمس خیلی کوتاه روی بازو موقع رد شدن از خیابون، یا یه احوال‌پرسی که با یه تماس کوچک همراهه، حس امنیت و صمیمیت میاره. یاد گرفتن این مهارت یعنی بدونی چطور بدون هیچ خودآگاهی و فشاری، مرزهای صمیمیت رو کم‌کم و با احترام جلو ببری. وقتی خودت موقع این کار معذب نباشی، طرف مقابل هم معذب نمی‌شه و فضا خیلی طبیعی‌تر پیش می‌ره. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "target_seconds": 80,
+        "caption": "ارتباط فیزیکی محترمانه و اصولی چطور صمیمیت رو می‌سازه؟",
+        "hashtags": [
+          "#مهارت‌های_ارتباطی",
+          "#زبان_بدن",
+          "#رابطه_سالم",
+          "#اعتماد_به_نفس",
+          "#مکتب_جاذبه"
+        ],
+        "opening_line": "می‌دونی، نود درصد آدما از اینکه یه لمس ساده و محترمانه روی شونه‌شون حس کنن خوشحال می‌شن، ولی ما فکر می‌کنیم حتماً یه منظوری پشتشه. این یه حقیقت بیولوژیکه؛ آدم‌ها مثل گربه‌ها و سگ‌ها به نوازش و ارتباط فیزیکی نیاز دارن، نه به خاطر مسائل جنسی، بلکه چون اینجوری سیستم عصبی‌شون آروم می‌گیره. وقتی تو کتاب «بازی» طرف دستش رو روی شونه‌ی همراهش می‌ذاره، اولش خودِش استرس می‌گیره که نکنه کار بدی کرده، ولی واکنش طرف کاملاً خونسرد و راحته. مشکل اینجاست که ما تو جامعه یاد گرفتیم از هر ارتباط بدنی بترسیم و فکر کنیم حتماً باید اتفاق خاصی بیفته. در حالی که یه دست دادن گرم، یه لمس خیلی کوتاه روی بازو موقع رد شدن از خیابون، یا یه احوال‌پرسی که با یه تماس کوچک همراهه، حس امنیت و صمیمیت میاره. یاد گرفتن این مهارت یعنی بدونی چطور بدون هیچ خودآگاهی و فشاری، مرزهای صمیمیت رو کم‌کم و با احترام جلو ببری. وقتی خودت موقع این کار معذب نباشی، طرف مقابل هم معذب نمی‌شه و فضا خیلی طبیعی‌تر پیش می‌ره. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "flags": []
+      }
+    },
+    {
+      "card": {
+        "id": "2fd22bb1-79c1-a3b5-6e7a-108a67cb22ce",
+        "book": "The Game",
+        "claim": "In social interactions, positive affirmation is more effective than backhanded compliments or 'negs'.",
+        "quote": "So I said, “It smells like smoke.” “Nooooo!” Sin hissed in my ear. ... She seemed offended.",
+        "example": "The narrator initially makes a backhanded comment about the woman's hair smelling like smoke, which offends her; he recovers by adding a compliment about the 'intoxicating smell' underneath.",
+        "lesson": "Avoid using backhanded compliments or 'negs' to provoke interest, as they often offend; instead, use genuine or layered compliments to build rapport.",
+        "type": "tip",
+        "status": "unused",
+        "picked_date": null,
+        "run_id": null
+      },
+      "result": {
+        "status": "ok",
+        "hook_type": "question",
+        "script_farsi": "تا حالا دقت کردی چرا وقتی یه تیکه میندازی یا با متلک سر صحبت رو باز می‌کنی، طرف سریع گارد می‌گیره و حس خوبی بهت نداره؟ خیلی وقت‌ها فکر می‌کنیم با این کارا جذاب‌تر به نظر می‌رسیم یا اهمیت نمی‌دیم، ولی حقیقت اینه که آدم‌ها جذب کسی می‌شن که بهشون حس امنیت بده، نه کسی که مدام بخواد ایراد بگیره یا بازی دربیاره. چند وقت پیش توی یه جمعی، یکی از بچه‌ها خواست با یه تیکه درباره‌ی بوی دودِ سیگار روی موهای یه نفر، یخِ رابطه رو بشکنه؛ نتیجه چی شد؟ طرف مقابل بلافاصله ناراحت شد و خودش رو کشید عقب. اما وقتی سریع حرفش رو عوض کرد و با یه تعریفِ واقعی و حسابی، از رایحه‌ی خوشبوکننده‌ی اونجا تعریف کرد، فضا کلاً عوض شد و لبخند نشست رو لبش. نکته‌ی ماجرا اینجاست که تأییدِ مثبت و تعریفِ واقعی، همیشه صدابردارتر و مؤثرتر از هر ترفند یا متلکیه. لازم نیست دنبال راهکارهای عجیب‌وغریب باشی؛ آدم‌ها یادشون می‌مونه که کنارِ تو چه حسی داشتن، نه اینکه چقدر باهوش به نظر رسیدی. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "target_seconds": 78,
+        "caption": "تأیید واقعی همیشه برنده است؛ نیازی به متلک نیست.",
+        "hashtags": [
+          "#رابطه‌سازی",
+          "#مهارت‌های_اجتماعی",
+          "#مکتب_جاذبه",
+          "#ارتباط_مؤثر",
+          "#هوش_هیجانی"
+        ],
+        "opening_line": "تا حالا دقت کردی چرا وقتی یه تیکه میندازی یا با متلک سر صحبت رو باز می‌کنی، طرف سریع گارد می‌گیره و حس خوبی بهت نداره؟ خیلی وقت‌ها فکر می‌کنیم با این کارا جذاب‌تر به نظر می‌رسیم یا اهمیت نمی‌دیم، ولی حقیقت اینه که آدم‌ها جذب کسی می‌شن که بهشون حس امنیت بده، نه کسی که مدام بخواد ایراد بگیره یا بازی دربیاره. چند وقت پیش توی یه جمعی، یکی از بچه‌ها خواست با یه تیکه درباره‌ی بوی دودِ سیگار روی موهای یه نفر، یخِ رابطه رو بشکنه؛ نتیجه چی شد؟ طرف مقابل بلافاصله ناراحت شد و خودش رو کشید عقب. اما وقتی سریع حرفش رو عوض کرد و با یه تعریفِ واقعی و حسابی، از رایحه‌ی خوشبوکننده‌ی اونجا تعریف کرد، فضا کلاً عوض شد و لبخند نشست رو لبش. نکته‌ی ماجرا اینجاست که تأییدِ مثبت و تعریفِ واقعی، همیشه صدابردارتر و مؤثرتر از هر ترفند یا متلکیه. لازم نیست دنبال راهکارهای عجیب‌وغریب باشی؛ آدم‌ها یادشون می‌مونه که کنارِ تو چه حسی داشتن، نه اینکه چقدر باهوش به نظر رسیدی. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "flags": []
+      }
+    }
+  ]
+}

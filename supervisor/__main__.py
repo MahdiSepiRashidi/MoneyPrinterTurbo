@@ -5,6 +5,9 @@ Commands:
 - ingest-books <file>: Ingest book text into idea cards (FR-1)
 - pick-send: FR-2 manual bridge — pick 5 unused cards, send the numbered shortlist to Telegram, print the run_id
 - lock-pick <run_id> <1-5>: FR-2 manual bridge — lock the operator's 1-5 choice on the day's run
+- approve <run_id>: FR-5 manual bridge — pass the script gate so media stages may start
+- rewrite <run_id>: FR-5 manual bridge — re-generate the script once, re-enter the gate
+- reject <run_id>: FR-5 manual bridge — reject the reel, release the cards, flag day-missed
 - resume <run_id>: Resume a non-terminal DailyRun from checkpoint (FR-13)
 """
 
@@ -18,7 +21,6 @@ from supervisor.daily import (
     register_pick_job,
     run_pick_job,
 )
-from supervisor.store import IdeaCard, IdeaCardStore
 from supervisor.config import load_supervisor_config
 
 
@@ -98,7 +100,7 @@ def cmd_ingest_books(args: argparse.Namespace) -> int:
     remaining = result.total_chunks - result.start_chunk - result.processed_chunks
     if remaining > 0:
         print(f"\n  Remaining: {remaining} chunk(s)")
-        print(f"  Re-run the same command to auto-resume (no --from-chunk needed).")
+        print("  Re-run the same command to auto-resume (no --from-chunk needed).")
 
     return 0 if result.llm_errors == 0 else 1
 
@@ -128,6 +130,53 @@ def cmd_lock_pick(args: argparse.Namespace) -> int:
         return 1
     print(f"locked: {run.run_id} -> card {run.picked_card_id} (picked_by={run.picked_by})")
     print(f"checkpoint: {run.checkpoint} (FR-5's 'approve' advances it)")
+    return 0
+
+
+def cmd_approve(args: argparse.Namespace) -> int:
+    """FR-5 manual bridge: pass the script gate so media stages may start."""
+    from supervisor import approval
+    from supervisor.store import DailyRunStore, IdeaCardStore
+
+    try:
+        run = approval.resolve_run(DailyRunStore(), run_id=args.run_id)
+    except KeyError as exc:
+        print(str(exc))
+        return 1
+    approval.approve(run, store=DailyRunStore(), idea_store=IdeaCardStore())
+    print(f"approved: {run.run_id} -> checkpoint={run.checkpoint} (media gate released)")
+    return 0
+
+
+def cmd_rewrite(args: argparse.Namespace) -> int:
+    """FR-5 manual bridge: re-generate the script once, re-enter the gate."""
+    from supervisor import approval
+    from supervisor.store import DailyRunStore, IdeaCardStore
+
+    try:
+        run = approval.resolve_run(DailyRunStore(), run_id=args.run_id)
+    except KeyError as exc:
+        print(str(exc))
+        return 1
+    approval.rewrite(run, store=DailyRunStore(), idea_store=IdeaCardStore())
+    print(f"rewrote: {run.run_id} -> script_status={run.script_status} "
+          f"rewrite_count={run.rewrite_count}")
+    return 0
+
+
+def cmd_reject(args: argparse.Namespace) -> int:
+    """FR-5 manual bridge: reject the reel, release the cards, flag day-missed."""
+    from supervisor import approval
+    from supervisor.store import DailyRunStore, IdeaCardStore
+
+    try:
+        run = approval.resolve_run(DailyRunStore(), run_id=args.run_id)
+    except KeyError as exc:
+        print(str(exc))
+        return 1
+    approval.reject(run, store=DailyRunStore(), idea_store=IdeaCardStore())
+    print(f"rejected: {run.run_id} -> post_status={run.post_status} "
+          f"({len(run.candidate_card_ids)} cards released to unused)")
     return 0
 
 
@@ -165,7 +214,7 @@ def main() -> int:
     subparsers = parser.add_subparsers(dest="command", required=True)
     
     # serve
-    serve_parser = subparsers.add_parser("serve", help="Run scheduler + Telegram bot")
+    subparsers.add_parser("serve", help="Run scheduler + Telegram bot")
     
     # ingest-books
     ingest_parser = subparsers.add_parser("ingest-books", help="Ingest book text/PDF into idea cards")
@@ -189,6 +238,15 @@ def main() -> int:
     resume_parser = subparsers.add_parser("resume", help="Resume a DailyRun from checkpoint")
     resume_parser.add_argument("run_id", help="DailyRun ID to resume")
 
+    # FR-5 manual bridge: approve / rewrite / reject
+    for name, help_text in (
+        ("approve", "FR-5: pass the script gate so media stages may start"),
+        ("rewrite", "FR-5: re-generate the script once, re-enter the gate"),
+        ("reject", "FR-5: reject the reel, release the cards, flag day-missed"),
+    ):
+        p = subparsers.add_parser(name, help=help_text)
+        p.add_argument("run_id", help="DailyRun ID to act on")
+
     args = parser.parse_args()
 
     if args.command == "serve":
@@ -199,6 +257,12 @@ def main() -> int:
         return cmd_pick_send(args)
     elif args.command == "lock-pick":
         return cmd_lock_pick(args)
+    elif args.command == "approve":
+        return cmd_approve(args)
+    elif args.command == "rewrite":
+        return cmd_rewrite(args)
+    elif args.command == "reject":
+        return cmd_reject(args)
     elif args.command == "resume":
         return cmd_resume(args)
     else:

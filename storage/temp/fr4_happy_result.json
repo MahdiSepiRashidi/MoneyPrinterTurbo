@@ -1,0 +1,231 @@
+{
+  "cards": [
+    "happy-0001",
+    "happy-0002",
+    "happy-0003",
+    "happy-0004",
+    "happy-0005"
+  ],
+  "summary": [
+    {
+      "card_id": "happy-0001",
+      "hook_type": "stat",
+      "status": "ok",
+      "approved": false,
+      "words": 162,
+      "flags": [
+        "punctuation-density-out-of-range:0.068 (allowed 0.040-0.067)"
+      ]
+    },
+    {
+      "card_id": "happy-0002",
+      "hook_type": "story",
+      "status": "ok",
+      "approved": false,
+      "words": 131,
+      "flags": [
+        "word-count:131 (allowed 150-220)",
+        "punctuation-density-out-of-range:0.092 (allowed 0.040-0.067)"
+      ]
+    },
+    {
+      "card_id": "happy-0003",
+      "hook_type": "question",
+      "status": "needs_review",
+      "approved": false,
+      "words": 0,
+      "flags": [
+        "json-unparseable:no JSON object in LLM response"
+      ]
+    },
+    {
+      "card_id": "happy-0004",
+      "hook_type": "stat",
+      "status": "ok",
+      "approved": false,
+      "words": 112,
+      "flags": [
+        "word-count:112 (allowed 150-220)"
+      ]
+    },
+    {
+      "card_id": "happy-0005",
+      "hook_type": "question",
+      "status": "ok",
+      "approved": false,
+      "words": 114,
+      "flags": [
+        "word-count:114 (allowed 150-220)"
+      ]
+    }
+  ],
+  "approved_count": 0,
+  "results": [
+    {
+      "card": {
+        "id": "happy-0001",
+        "book": "How to Win Friends and Influence People",
+        "claim": "Genuine interest in others is more socially effective than trying to be liked by impressing them.",
+        "quote": "You can make more friends in two months by becoming interested in other people than you can in two years by trying to get other people interested in you.",
+        "example": "A man who started asking each new colleague about their work history instead of pitching himself found the room felt warmer within a week.",
+        "lesson": "Lead conversations with curiosity about the other person, not with self-presentation.",
+        "type": "principle",
+        "status": "unused",
+        "picked_date": null,
+        "run_id": null
+      },
+      "test_date": "2026-09-29",
+      "result": {
+        "status": "ok",
+        "hook_type": "stat",
+        "script_farsi": "فکر می‌کنی برقراری ارتباط یعنی خودت رو نشون بدی؟ نه، واقعیت اینه که دو ماه صرفاً با علاقه‌مند شدن به دیگران، معادل دو سال تلاش برای جلب توجه اونا‌ست. این آمار از کتاب دوست‌یابی‌ه و پیامش ساده‌ه: تمرکز رو از «من چه می‌دونم» بیاور رو «تو کی هستی». یه نفر شروع کرد به پرسیدن از همکارهای جدیدش درباره‌ی مسیر کاریشون، به جای اینکه مدام از خودش غرور کنه. فقط یه هفته طول کشید تا فضای تیم گرم‌تر شد و اعتماد شکل گرفت. نکته‌ی اصلی اینه که وقتی واقعاً کنجکاوی، دیگه از تأیید نیاز نداری و این باعث می‌شه طبیعی‌تر و راحت‌تر صحبت کنی. بعدا‌ها هم راحت‌تره، چون اونا خودشان به سمتت میان. پس دفعه‌ی بعد که توی جمع بودی، به جای فکر کردن به اینکه چه جمله‌ای بگی، بپرس یه سوال عمیق درباره‌ی زندگیشون. این تغییر کوچک، روابط رو از سطحی به عمیق می‌رسونه. برای یادگیری مهارت‌های روزانه‌ی ارتباط، همینا رو باهاشون تمرین کن. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "target_seconds": 88,
+        "caption": "علاقه‌ی واقعی کفایت می‌کنه؛ نیازی به نمایش نیست.",
+        "hashtags": [
+          "#مکتب_جاذبه",
+          "#مهارت_ارتباطی",
+          "#دوستی_واقعی",
+          "#رشد_شخصی"
+        ],
+        "opening_line": "فکر می‌کنی برقراری ارتباط یعنی خودت رو نشون بدی؟ نه، واقعیت اینه که دو ماه صرفاً با علاقه‌مند شدن به دیگران، معادل دو سال تلاش برای جلب توجه اونا‌ست. این آمار از کتاب دوست‌یابی‌ه و پیامش ساده‌ه: تمرکز رو از «من چه می‌دونم» بیاور رو «تو کی هستی». یه نفر شروع کرد به پرسیدن از همکارهای جدیدش درباره‌ی مسیر کاریشون، به جای اینکه مدام از خودش غرور کنه. فقط یه هفته طول کشید تا فضای تیم گرم‌تر شد و اعتماد شکل گرفت. نکته‌ی اصلی اینه که وقتی واقعاً کنجکاوی، دیگه از تأیید نیاز نداری و این باعث می‌شه طبیعی‌تر و راحت‌تر صحبت کنی. بعدا‌ها هم راحت‌تره، چون اونا خودشان به سمتت میان. پس دفعه‌ی بعد که توی جمع بودی، به جای فکر کردن به اینکه چه جمله‌ای بگی، بپرس یه سوال عمیق درباره‌ی زندگیشون. این تغییر کوچک، روابط رو از سطحی به عمیق می‌رسونه. برای یادگیری مهارت‌های روزانه‌ی ارتباط، همینا رو باهاشون تمرین کن. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "flags": [
+          "punctuation-density-out-of-range:0.068 (allowed 0.040-0.067)"
+        ]
+      },
+      "approved": false,
+      "word_count": 162
+    },
+    {
+      "card": {
+        "id": "happy-0002",
+        "book": "Nonviolent Communication",
+        "claim": "Listening to understand, not to reply, is a trainable skill that lowers social anxiety over time.",
+        "quote": "Most people listen not to understand, but to reply.",
+        "example": "Someone who practiced a silent self-check after a stressful conversation (what did I actually hear, what do I think?) reported the tension dropping.",
+        "lesson": "Pause before replying; reflect back what you heard first.",
+        "type": "tip",
+        "status": "unused",
+        "picked_date": null,
+        "run_id": null
+      },
+      "test_date": "2026-09-30",
+      "result": {
+        "status": "ok",
+        "hook_type": "story",
+        "script_farsi": "یه بچه به من گفت: «پس از یه قرار استرس‌آور، ذهنت از چرخش خارج می‌شود، ولی نمی‌دونی دقیقاً چه شنیدی.» منم بهش گفتم که این مشکلِ خیلی از ماست. فکر می‌کنی مشکل اینه که کم‌حرفی؟ نه. واقعیت اینه که وقتی استرس داری، گوش‌دادن برای جواب دادن از گوش‌دادن برای فهمیدن پرزیرتره. یه تمرین ساده رو امتحان کن. بعد از یه مکالمه‌ی سنگین، چند ثانیه سکوت کن. از خودت بپرس: «واقعاً چه شنیدم؟ و حالا من چی فکر می‌کنم؟» این چکِ خودِ بی‌صدا، فشارِ درون رو کم می‌کند. وقتی یاد می‌گیری که فقط برای واکنش نشان دادن گوش ندهی، اضطرابِ اجتماعی‌ات کم‌کم می‌شود. رابطه‌ات هم عمیق‌تر می‌شود، چون طرف مقابل حس می‌کند واقعاً دیده شده. این مهارتیه که با تمرین ساخته می‌شود، نه شانس. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "target_seconds": 85,
+        "caption": "گوش‌دادنِ باطنی، راهِ آرامش در روابط است.",
+        "hashtags": [
+          "#مکتب_جاذبه",
+          "#مهارت‌های_اجتماعی",
+          "#رابطه_سالم",
+          "#هوش_هیجانی"
+        ],
+        "opening_line": "یه بچه به من گفت: «پس از یه قرار استرس‌آور، ذهنت از چرخش خارج می‌شود، ولی نمی‌دونی دقیقاً چه شنیدی.» منم بهش گفتم که این مشکلِ خیلی از ماست. فکر می‌کنی مشکل اینه که کم‌حرفی؟ نه. واقعیت اینه که وقتی استرس داری، گوش‌دادن برای جواب دادن از گوش‌دادن برای فهمیدن پرزیرتره. یه تمرین ساده رو امتحان کن. بعد از یه مکالمه‌ی سنگین، چند ثانیه سکوت کن. از خودت بپرس: «واقعاً چه شنیدم؟ و حالا من چی فکر می‌کنم؟» این چکِ خودِ بی‌صدا، فشارِ درون رو کم می‌کند. وقتی یاد می‌گیری که فقط برای واکنش نشان دادن گوش ندهی، اضطرابِ اجتماعی‌ات کم‌کم می‌شود. رابطه‌ات هم عمیق‌تر می‌شود، چون طرف مقابل حس می‌کند واقعاً دیده شده. این مهارتیه که با تمرین ساخته می‌شود، نه شانس. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "flags": [
+          "word-count:131 (allowed 150-220)",
+          "punctuation-density-out-of-range:0.092 (allowed 0.040-0.067)"
+        ]
+      },
+      "approved": false,
+      "word_count": 131
+    },
+    {
+      "card": {
+        "id": "happy-0003",
+        "book": "Deep Conversations",
+        "claim": "Small, consistent social acts compound into general comfort with strangers.",
+        "quote": "Comfort with strangers is built by reps, not by personality.",
+        "example": "A quiet guy who greeted his barista by name for three months could later hold a five-minute chat at a coffee shop without thinking about it.",
+        "lesson": "Pick one small daily social rep and do it until it feels normal.",
+        "type": "principle",
+        "status": "unused",
+        "picked_date": null,
+        "run_id": null
+      },
+      "test_date": "2026-10-01",
+      "result": {
+        "status": "needs_review",
+        "hook_type": null,
+        "script_farsi": "",
+        "target_seconds": null,
+        "caption": "",
+        "hashtags": [],
+        "opening_line": "",
+        "flags": [
+          "json-unparseable:no JSON object in LLM response"
+        ]
+      },
+      "approved": false,
+      "word_count": 0
+    },
+    {
+      "card": {
+        "id": "happy-0004",
+        "book": "The Courage to Be Disliked",
+        "claim": "Naming an emotion in the moment lowers its intensity (affect labeling).",
+        "quote": "Putting a feeling into words calms the limbic system.",
+        "example": "Saying to yourself 'I am nervous' before a meeting makes the nerves easier to work with than fighting them.",
+        "lesson": "Label the emotion instead of fighting it.",
+        "type": "insight",
+        "status": "unused",
+        "picked_date": null,
+        "run_id": null
+      },
+      "test_date": "2026-10-02",
+      "result": {
+        "status": "ok",
+        "hook_type": "stat",
+        "script_farsi": "آیا می‌دونی چطور یک احساس را از کنترل بیرون بیاوری؟ آمار ساده‌ای وجود دارد؛ وقتی یک احساس را فقط با کلمه مشخص کنی، شدت آن کم می‌شود. به این می‌گویند برچسب‌گذاری احساسی. فرض کن قرار جلسه مهمی داری و قلبت تند می‌زند. به جای اینکه با اضطراب بجنگی، برای خودت بگو من الان نگرانم. همین دو کلمه سیستم احساسی مغز را آرام می‌کند و تو می‌توانی منطقی‌تر فکر کنی. این مهارت باعث نمی‌شود احساساتت ناپدید شوند، بلکه به تو کمک می‌کند با آن‌ها همراه شوی به جای آنکه قربانی آن‌ها باشی. وقتی خودت را بهتر بشناسی، ارتباط‌هایت با دیگران هم صادق‌تر و عمیق‌تر می‌شود. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "target_seconds": 75,
+        "caption": "با نامیدنِ احساسات، قدرتِ مدیریتِ آن‌ها را به دست می‌آوری.",
+        "hashtags": [
+          "#مهارت‌های_اجتماعی",
+          "#رابطه_سلامت",
+          "#مکتب_جاذبه",
+          "#هوش_هیجانی"
+        ],
+        "opening_line": "آیا می‌دونی چطور یک احساس را از کنترل بیرون بیاوری؟ آمار ساده‌ای وجود دارد؛ وقتی یک احساس را فقط با کلمه مشخص کنی، شدت آن کم می‌شود. به این می‌گویند برچسب‌گذاری احساسی. فرض کن قرار جلسه مهمی داری و قلبت تند می‌زند. به جای اینکه با اضطراب بجنگی، برای خودت بگو من الان نگرانم. همین دو کلمه سیستم احساسی مغز را آرام می‌کند و تو می‌توانی منطقی‌تر فکر کنی. این مهارت باعث نمی‌شود احساساتت ناپدید شوند، بلکه به تو کمک می‌کند با آن‌ها همراه شوی به جای آنکه قربانی آن‌ها باشی. وقتی خودت را بهتر بشناسی، ارتباط‌هایت با دیگران هم صادق‌تر و عمیق‌تر می‌شود. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "flags": [
+          "word-count:112 (allowed 150-220)"
+        ]
+      },
+      "approved": false,
+      "word_count": 112
+    },
+    {
+      "card": {
+        "id": "happy-0005",
+        "book": "Atomic Habits",
+        "claim": "Scheduling social time as an appointment makes it actually happen.",
+        "quote": "You do not rise to the level of your goals; you fall to the level of your systems.",
+        "example": "A guy who put 'walk with a friend' in his calendar on Thursday ended up going more often than when it was just a vague 'I should hang out'.",
+        "lesson": "Put social time in the calendar, not in your thoughts.",
+        "type": "tip",
+        "status": "unused",
+        "picked_date": null,
+        "run_id": null
+      },
+      "test_date": "2026-10-03",
+      "result": {
+        "status": "ok",
+        "hook_type": "question",
+        "script_farsi": "چرا وقتی قرار می‌ذاری با دوستت، معمولاً به تعویق می‌اندازی؟ مشکل این نیست که انرژی نداری؛ مسئله اینه که اون قرار تو تو افضایت ذهنی یه حبابِ مهه‌فگرمیِ «یه وقتا» است. جیمز کلیر در کتاب عادت‌های اتمیک می‌گه: به سطحِ اهدافت نمی‌رسی، بلکه به سطحِ سیستمات سقوط می‌کنی. سیستم یعنی ساختنِ روال‌های مشخص. به جای اینکه بگی «باید بیایم دور هم»، وقت‌شو تو تقویمت لود کن. مثلاً پنج‌شنبه ساعت ۵ رو برای یه پیاده‌روی ساده با یه دوست تعیین کن. وقتی اون رو مثل قرارِ کاری می‌بینی، دیگه بهونه‌ای نداری که پشت لپ‌تاپ قفل شی. این کار، رابطه‌ات رو از حالت ایده‌آل‌سازی‌شده می‌بره سر واقعیتِ قابل‌مذاکره. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "target_seconds": 72,
+        "caption": "سازوکار مهم‌تر از آرزوست. سیستم‌سازیِ اجتماع رو یاد بگیر.",
+        "hashtags": [
+          "#عادت‌های_اتمیک",
+          "#مهارت_اجتماعی",
+          "#مکتب_جاذبه",
+          "#رابطه_سازی"
+        ],
+        "opening_line": "چرا وقتی قرار می‌ذاری با دوستت، معمولاً به تعویق می‌اندازی؟ مشکل این نیست که انرژی نداری؛ مسئله اینه که اون قرار تو تو افضایت ذهنی یه حبابِ مهه‌فگرمیِ «یه وقتا» است. جیمز کلیر در کتاب عادت‌های اتمیک می‌گه: به سطحِ اهدافت نمی‌رسی، بلکه به سطحِ سیستمات سقوط می‌کنی. سیستم یعنی ساختنِ روال‌های مشخص. به جای اینکه بگی «باید بیایم دور هم»، وقت‌شو تو تقویمت لود کن. مثلاً پنج‌شنبه ساعت ۵ رو برای یه پیاده‌روی ساده با یه دوست تعیین کن. وقتی اون رو مثل قرارِ کاری می‌بینی، دیگه بهونه‌ای نداری که پشت لپ‌تاپ قفل شی. این کار، رابطه‌ات رو از حالت ایده‌آل‌سازی‌شده می‌بره سر واقعیتِ قابل‌مذاکره. برای درس‌های روزانه فالو کن، لینک در پروفایل.",
+        "flags": [
+          "word-count:114 (allowed 150-220)"
+        ]
+      },
+      "approved": false,
+      "word_count": 114
+    }
+  ]
+}

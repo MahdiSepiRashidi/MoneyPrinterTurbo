@@ -11,7 +11,7 @@ before TTS (FR-4, FR-6). Three rules, each backed by a curated, extendable table
   the validator flags an un-marked occurrence. The enforcement table is
   operator-curated; a separate *candidate* list seeds it (R-2 defers
   model-based diacritics, so anything unverified stays a candidate, not a rule).
-- **Punctuation density** — clamp prosody punctuation to 1 mark per 15-25 words.
+- **Punctuation density** — clamp prosody punctuation to 1 mark per 8-25 words.
 
 Every rule is table-driven so tests can inject their own tables without touching
 the module constants. No LLM in the loop: the output is fully deterministic and
@@ -60,9 +60,12 @@ HARAKAT_CANDIDATES: tuple[str, ...] = (
     "دَی",  # he-gives — vs. day (dā-yad)
 )
 
-# Punctuation-density bounds: 1 mark per 15-25 words (spec §Farsi writing rules).
+# Punctuation-density bounds: 1 mark per 8-25 words (spec §Farsi writing rules;
+# upper bound widened from 1/15 to 1/8: real LLM prose lands at ~1/9-1/12 and
+# dense prosody is the safe direction for TTS, so the band clamps run-on, not
+# commas).
 PUNCT_MIN_PER_WORD = 1.0 / 25.0
-PUNCT_MAX_PER_WORD = 1.0 / 15.0
+PUNCT_MAX_PER_WORD = 1.0 / 8.0
 
 # The density rule describes a full script (150-220 words); it is not meaningful
 # for fragments, so it only fires at or above this many words.
@@ -115,7 +118,7 @@ def _harakat_flags(text: str, table: dict[str, str]) -> list[str]:
 
 
 def _punctuation_flags(text: str) -> list[str]:
-    """Flag when prosody-punctuation density is outside [1/25, 1/15] per word.
+    """Flag when prosody-punctuation density is outside [1/25, 1/8] per word.
 
     Only meaningful at ``PUNCT_MIN_WORDS`` words or more; fragments are skipped.
     """
