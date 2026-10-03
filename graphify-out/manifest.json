@@ -1386,9 +1386,9 @@
     "semantic_hash": ""
   },
   "supervisor/daily.py": {
-    "mtime": 1791029590.281781,
-    "seen": 1791029942.5546052,
-    "ast_hash": "6d29ba215e3fc9369071799f1c0cd61b",
+    "mtime": 1791033916.230383,
+    "seen": 1791034569.3574255,
+    "ast_hash": "bb8612b27842d3986c31f14ab3366308",
     "semantic_hash": ""
   },
   "supervisor/llm.py": {
@@ -1404,9 +1404,9 @@
     "semantic_hash": ""
   },
   "supervisor/store.py": {
-    "mtime": 1791015888.9313102,
-    "seen": 1791029942.5546353,
-    "ast_hash": "ddefc527f9b192c1bb74896b20ae7af7",
+    "mtime": 1791033784.2614613,
+    "seen": 1791034569.3574407,
+    "ast_hash": "bce3c94c55459f2b6f1c4a574ad2cb99",
     "semantic_hash": ""
   },
   "supervisor/flow.py": {
@@ -1527,6 +1527,282 @@
     "mtime": 1791021617.757328,
     "seen": 1791029942.5554838,
     "ast_hash": "29a3d7d13f3498c910f186072962239d",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/hooks/post_tool_use.py": {
+    "mtime": 1791033760.7846878,
+    "seen": 1791034569.3572845,
+    "ast_hash": "ebe3ab1aec94bb26a45b511335c4ca99",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/hooks/pre_tool_use.py": {
+    "mtime": 1791033760.7886899,
+    "seen": 1791034569.3572876,
+    "ast_hash": "fdd69cee37c051dffb84745b267b8857",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.mcp.json": {
+    "mtime": 1791033761.015362,
+    "seen": 1791034569.3572896,
+    "ast_hash": "50a5f5e8e5a46fa33384932ea42a0d91",
+    "semantic_hash": ""
+  },
+  "supervisor/farsi_norm.py": {
+    "mtime": 1791033759.2971425,
+    "seen": 1791034569.3574271,
+    "ast_hash": "ff440d4191628c9a84dbcfccd9664e18",
+    "semantic_hash": ""
+  },
+  "supervisor/scriptgen.py": {
+    "mtime": 1791033854.9060433,
+    "seen": 1791034569.357439,
+    "ast_hash": "0f419f856baa4ea4cd0800637e05acc3",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/agents/code-reviewer.md": {
+    "mtime": 1791033760.7586908,
+    "seen": 1791034569.3576238,
+    "ast_hash": "286953bc39dff5279a83b8e2dbedbc0d",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/agents/research-agent.md": {
+    "mtime": 1791033760.7636943,
+    "seen": 1791034569.3576252,
+    "ast_hash": "f73a167c35c7fba5532293be6f899138",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/agents/system-reviewer.md": {
+    "mtime": 1791033760.7756908,
+    "seen": 1791034569.3576267,
+    "ast_hash": "fa37b541526723154d186fdb43e645ae",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/hooks/README.md": {
+    "mtime": 1791033760.7806928,
+    "seen": 1791034569.3576279,
+    "ast_hash": "3851f672abf2e4ab8f819c8fe48505a5",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/references/architecture-patterns.md": {
+    "mtime": 1791033760.7926903,
+    "seen": 1791034569.3576295,
+    "ast_hash": "e10740bb99f808c49582a568083d11a9",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/references/backend-api-best-practices.md": {
+    "mtime": 1791033760.8017268,
+    "seen": 1791034569.357631,
+    "ast_hash": "066c67c6ccaf22b4d16ac6d16f2e43f3",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/references/frontend-component-best-practices.md": {
+    "mtime": 1791033760.816259,
+    "seen": 1791034569.3576324,
+    "ast_hash": "fd8a2fff1d5df39952390774e9d6415e",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/references/vertical-slice-architecture.md": {
+    "mtime": 1791033760.8212636,
+    "seen": 1791034569.3576338,
+    "ast_hash": "cfce7f72fa00fd4ae5b1a9a2c95978f5",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/agent-browser/SKILL.md": {
+    "mtime": 1791033760.8342738,
+    "seen": 1791034569.357635,
+    "ast_hash": "56938a095100010234a7cf4f6ef16e2c",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/ast-grep/SKILL.md": {
+    "mtime": 1791033760.851262,
+    "seen": 1791034569.3576365,
+    "ast_hash": "91de2f080278c3e79863d0477ef113b0",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/ast-grep/references/rule_reference.md": {
+    "mtime": 1791033760.8582635,
+    "seen": 1791034569.3576376,
+    "ast_hash": "345ace128d70e6f25f604d34286323f5",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/code-review-fix/SKILL.md": {
+    "mtime": 1791033760.8652616,
+    "seen": 1791034569.357639,
+    "ast_hash": "1d05716bd8966d38ea16f3f4a6111fb7",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/code-review/SKILL.md": {
+    "mtime": 1791033760.86926,
+    "seen": 1791034569.3576405,
+    "ast_hash": "5fba6a946d2d51508838e0d99210c06b",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/commit/SKILL.md": {
+    "mtime": 1791033760.875259,
+    "seen": 1791034569.357642,
+    "ast_hash": "6b70937158fef7341e41f88b2306b536",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/create-prd/SKILL.md": {
+    "mtime": 1791033760.8812582,
+    "seen": 1791034569.3576436,
+    "ast_hash": "5ab0137c21e0463625f763b89120214f",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/create-rules/SKILL.md": {
+    "mtime": 1791033760.8882585,
+    "seen": 1791034569.3576448,
+    "ast_hash": "7e93579a941d7abd7baa6b53db3e0277",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/end-to-end-feature/SKILL.md": {
+    "mtime": 1791033760.8952599,
+    "seen": 1791034569.357646,
+    "ast_hash": "b6065c1b8f6f9befd13942911960408d",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/execute/SKILL.md": {
+    "mtime": 1791033760.9002774,
+    "seen": 1791034569.3576474,
+    "ast_hash": "b97976e8fa5fede0036826d146a36672",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/execution-report/SKILL.md": {
+    "mtime": 1791033760.9062748,
+    "seen": 1791034569.3576486,
+    "ast_hash": "a7d1ab05e88e7e8d13e486574f834acf",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/implement-fix/SKILL.md": {
+    "mtime": 1791033760.9112744,
+    "seen": 1791034569.3576503,
+    "ast_hash": "ed403c038bf5850a207b1e54e55c5d2f",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/init-project/SKILL.md": {
+    "mtime": 1791033760.9198103,
+    "seen": 1791034569.3576512,
+    "ast_hash": "106c73cb0414a601ea8f81fc89a376d6",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/merge-worktrees/SKILL.md": {
+    "mtime": 1791033760.9268115,
+    "seen": 1791034569.3576524,
+    "ast_hash": "26273cca509d8c98fd1a4486878b25a7",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/new-worktrees/SKILL.md": {
+    "mtime": 1791033760.9328134,
+    "seen": 1791034569.357654,
+    "ast_hash": "ae5b42b5a65374915be4cbfb073d6b5a",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/plan-feature/SKILL.md": {
+    "mtime": 1791033760.9378114,
+    "seen": 1791034569.3576553,
+    "ast_hash": "863e0003e7d7d525a22672f553150cba",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/prime-backend/SKILL.md": {
+    "mtime": 1791033760.9468105,
+    "seen": 1791034569.3576565,
+    "ast_hash": "73ba7357d566e5c53939cb6e0a208018",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/prime-frontend/SKILL.md": {
+    "mtime": 1791033760.9628081,
+    "seen": 1791034569.357658,
+    "ast_hash": "61d0c7e4071a811ff03e2dcf3c122ebf",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/prime/SKILL.md": {
+    "mtime": 1791033760.975814,
+    "seen": 1791034569.3576589,
+    "ast_hash": "2977ed72f395b3b1b5bc7435b8f89fba",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/rca/SKILL.md": {
+    "mtime": 1791033760.9818103,
+    "seen": 1791034569.3576608,
+    "ast_hash": "265ffc7722f384179a051e827cfdc655",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/spec/SKILL.md": {
+    "mtime": 1791033760.9868095,
+    "seen": 1791034569.357662,
+    "ast_hash": "9b2e2a459f0f459cb8922835120eaf70",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/system-review/SKILL.md": {
+    "mtime": 1791033760.991813,
+    "seen": 1791034569.357663,
+    "ast_hash": "28d523635f3dd62319e49c6f28f7835f",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.claude/skills/validate/SKILL.md": {
+    "mtime": 1791033760.9968112,
+    "seen": 1791034569.3576648,
+    "ast_hash": "1864a2054ec445aeb24a5b3c19d72d2f",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/.github/workflows/claude-review.yml": {
+    "mtime": 1791033761.0068288,
+    "seen": 1791034569.3576658,
+    "ast_hash": "f4f1974f9864bc7de97b42a0c1edaa26",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/README.md": {
+    "mtime": 1791033761.0193615,
+    "seen": 1791034569.357667,
+    "ast_hash": "3c68bdc3c06d471cd0e0c80d31ad2322",
+    "semantic_hash": ""
+  },
+  "test/resources/farsi/broken_zwnj.txt": {
+    "mtime": 1791033407.2926035,
+    "seen": 1791034569.357697,
+    "ast_hash": "3942e5661307d0e14907e7219ad997e7",
+    "semantic_hash": ""
+  },
+  "test/resources/farsi/correct_zwnj.txt": {
+    "mtime": 1791033381.8030727,
+    "seen": 1791034569.3576987,
+    "ast_hash": "c6557836e1c9d0f92f53a5f6a0c92af2",
+    "semantic_hash": ""
+  },
+  "test/resources/farsi/dense_punct.txt": {
+    "mtime": 1791033605.125615,
+    "seen": 1791034569.3577,
+    "ast_hash": "10167911606f58378814523dac9037e0",
+    "semantic_hash": ""
+  },
+  "test/resources/farsi/punct_ok.txt": {
+    "mtime": 1791033487.7822318,
+    "seen": 1791034569.3577013,
+    "ast_hash": "8809af889f5221489945ceb9c8b73ccf",
+    "semantic_hash": ""
+  },
+  "test/resources/farsi/sparse_punct.txt": {
+    "mtime": 1791033436.4508495,
+    "seen": 1791034569.357703,
+    "ast_hash": "0060cea7d82e7e5081d4eb90914bf864",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/diagrams/ai-layer-at-a-glance.png": {
+    "mtime": 1791033761.041362,
+    "seen": 1791034569.3577063,
+    "ast_hash": "30c6287076533099f4792ae5a86f85a4",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/diagrams/ai-native-sdlc-detailed.png": {
+    "mtime": 1791033761.0623734,
+    "seen": 1791034569.3577077,
+    "ast_hash": "3f4bcae6d7d46da75b68f99f25f68987",
+    "semantic_hash": ""
+  },
+  "ai-native-starter-pack/diagrams/two-lane-sdlc.png": {
+    "mtime": 1791033761.073363,
+    "seen": 1791034569.3577094,
+    "ast_hash": "88ee94fc8e1934ed2932fa56e24d2663",
     "semantic_hash": ""
   }
 }

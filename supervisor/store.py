@@ -145,6 +145,7 @@ class DailyRun:
     picked_by: Optional[str] = None
     hook_type: Optional[str] = None
     script_status: str = "pending"
+    script_farsi: Optional[str] = None
     narration_file: Optional[str] = None
     video_file: Optional[str] = None
     caption: Optional[str] = None

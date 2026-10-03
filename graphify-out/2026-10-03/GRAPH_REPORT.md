@@ -1,25 +1,25 @@
-# Graph Report - MoneyPrinterTurbo  (2026-10-02)
+# Graph Report - MoneyPrinterTurbo  (2026-10-03)
 
 ## Corpus Check
-- 172 files · ~309,551 words
+- 176 files · ~333,875 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 25 file(s) not represented in the graph (top: .ttf 7, (none) 6, .ttc 4)
+- Unclassified: 31 file(s) not represented in the graph (top: .ttf 7, (none) 6, .ttc 4)
 
 ## Summary
-- 4969 nodes · 9586 edges · 410 communities (115 shown, 295 thin omitted)
-- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 442 edges (avg confidence: 0.89)
+- 5004 nodes · 9685 edges · 379 communities (120 shown, 259 thin omitted)
+- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 461 edges (avg confidence: 0.9)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f3f274a7`
+- Built from commit: `47d14404`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - BufferClient
-- storage_dir
-- get_task_logs
-- UploadPostService
+- _search_videos_with_cache
+- _render_generation_controls
+- patch
 - pathlib
 - TestCli
 - TestTaskService
@@ -29,7 +29,7 @@
 - InMemoryTaskManager
 - cli.py
 - TestVoiceService
-- __main__.py
+- daily.py
 - _render_settings_dialog
 - TestWaveSpeedProvider
 - metaso_minimax.py
@@ -37,46 +37,46 @@
 - TestMaterialSearchCache
 - TestSoniloService
 - _video_params
-- JsonStore
+- store.py
 - muapi.py
 - TestSubtitleService
 - TestVideoService
 - TestLLMFallbackProvider
-- asgi.py
+- v1/video.py
 - MoneyPrinterTurbo + IG Reel Agent — Operator Runbook
-- _DownloadResponse
-- Scheduler
+- _render_voice_preview
+- load_supervisor_config
 - voice.py
 - TestWebuiBackgroundMusic
-- test_voxcpm.py
+- voxcpm_tts
 - TestElevenLabsMusicService
-- task_dir
-- preprocess_video
+- _run_pipeline
+- services/video.py
 - TestWebuiI18n
 - TestOFoxService
 - _render_loomloom_video_settings
 - LLMProviderSpec
 - ofox.py
 - TestScriptPromptOptions
-- SubMaker
+- _single_tts
 - TestVolcEngineSeedanceService
 - test_webui_settings_transfer.py
 - TestASGICORS
 - task.py
 - TestBackgroundMusicService
 - get_ffmpeg_binary
-- LoomLoomQuote
+- test_webui_loomloom.py
 - TestLiteLLMProvider
 - LoomLoomAPIError
-- controllers/base.py
+- ._request
 - sonilo.py
 - volcengine_seedance.py
 - TestMptAgentSkill
-- _render_key_backup_settings
+- Main.py
 - test_webui_tts_settings.py
-- _render_audio_settings
+- is_azure_v1_voice
 - TestMaterialUploadService
-- _render_video_settings
+- _render_audio_settings
 - TestMaterialTlsVerification
 - TestLoomLoomSettings
 - subtitle.py
@@ -85,45 +85,45 @@
 - TestSocialMetadata
 - TestControllerAuthentication
 - test_webui_task_history.py
-- ._request
+- TestVideoControllerTasks
 - VideoParams
 - generate_video
-- ._call_with_capture
+- TestFishAudioErrorHandling
 - TestElevenLabsVoice
 - config/config.py
-- schema.py
+- v1/llm.py
 - _button_by_key
 - test_kokoro.py
 - Path
 - _request_bgm
-- ingest.py
+- IdeaCardStore
 - TestRedisTaskManager
 - Spec: Farsi Instagram Reel Generation Agent (MoneyPrinterTurbo)
-- cache_manager.py
+- clean_video_cache
 - MoneyPrinterTurbo Project
-- daily.py
+- test_llm.py
 - TestCoverrProvider
 - video_effects.py
 - ._capture_source_ranges_for_clip_speed
 - _generate_response
-- _set_runtime_config
-- create_subtitle
+- _synthesize_voice_preview
+- _build_subtitle_formatter
 - TestVideoCacheManager
 - _image_response
 - _png_bytes
-- Main.py
-- VideoAspect
+- tr
+- MaterialInfo
 - mpt_agent.py
 - _FakeVideoDownloadResponse
 - .test_download_videos_openai_image_skips_rejected_segment
 - _FakeMoviePyClip
-- _write_videofile_with_codec_fallback
-- LoomLoomConfigurationError
+- concat_video_clips_with_ffmpeg
+- generate_audio
 - .test_script_order_does_not_skip_unattempted_candidates
 - TestAsyncUpdateChecker
 - .test_combine_videos_cleans_failed_encoded_clip_and_reader
 - _GroupedSelectHarness
-- test_webui_local_material_upload.py
+- _run_webui_upload_block
 - RedisTaskManager
 - missing_config
 - TestAPIAuthenticationHTTP
@@ -131,30 +131,30 @@
 - TestTwelveLabsService
 - test_webui_custom_audio_upload.py
 - test_batch_material_allocation.py
-- v1/llm.py
+- schema.py
 - .test_gemini_tts_uses_google_genai_and_compatible_submaker_fields
 - TestOFoxMaterialIntegration
 - test_webui_generation_defaults.py
-- services/llm.py
+- generate_social_metadata
 - RedisState
 - TestConfigPersistence
 - TestOpenAIImageProvider
 - TestVersionChecker
 - .test_pause_leading_and_trailing
-- test_webui_loomloom.py
-- _record_cross_post_failure
+- UploadPostService
+- _schedule_cross_post
 - Workflow
 - TestTaskStaticFiles
 - TestFishAudioVoiceHelpers
 - TestTaskArtifacts
-- Any
+- _run_generation
 - AsyncUpdateChecker
 - Docker API Service
 - TestVideoControllerDeleteHTTP
 - _download_response
 - TestRedisState
 - test_webui_kokoro.py
-- test_webui_task.py
+- test_controller_video.py
 - BaseState
 - _SynchronizedConfig
 - Plan: Farsi Instagram Reel Agent (from intent.md 2026-09-29)
@@ -165,7 +165,7 @@
 - .test_concat_video_clips_does_not_disable_codec_when_fallback_also_fails
 - .test_minimax_tts_reuses_cn_llm_key_and_endpoint
 - .test_tts_with_pauses_decode_timeout_returns_failure
-- _render_top_bar
+- _render_application
 - validate_pexels_config
 - Farsi Instagram Reel Agent Intent
 - .test_save_video_streams_chunks_without_materializing_response_content
@@ -184,12 +184,12 @@
 - .test_generate_subtitle_uses_whisper_word_timing_without_correction
 - TestCheckFfmpegReady
 - TestMaterialResolutionTolerance
-- FakeClip
+- ._call_with_capture
 - buffer_poc.py
 - TestAgnesProvider
 - generate_images_openai
-- test_webui_metaso_minimax.py
-- azure_tts_v2
+- create_subtitle
+- test_webui_loomloom_regressions.py
 - CI Python Tests Job
 - TestVideoControllerCreateHTTP
 - TestFishAudioTaskRestore
@@ -199,26 +199,30 @@
 - FakeHttpResponse
 - webui.sh
 - trello
-- SubClippedVideoClip
+- _render_subtitle_settings
 - _Response
+- _estimate_voiceover_duration_range
 - TestFishAudioDispatch
+- TelegramClient
 - twelvelabs.py
 - r1_tts_azure_test.py
 - .test_real_multi_segment_concatenation_no_drift
 - WebUI Screenshot (Chinese)
 - flow.py
-- Path
+- _FakeClip
 - build_claude_code_env
+- TestSubtitleBackgroundSettings
 - .test_cross_post_state_update_retries_transient_backend_failure
 - DailyRun
 - AGENTS.md
 - TestProjectVersionMetadata
-- create_text_clip
-- material_upload.py
+- _apply_subtitle_spring_animation
+- save_material_upload
 - test_completed_task_renders_subject_named_video_download
-- ping.py
-- test_webui_upload_post_settings.py
-- _wavespeed_duration_bounds
+- submit_generation
+- test_upload_post.py
+- test_real_http_multipart_audience
+- _save_openai_image_file
 - APIMart Sponsor Logo
 - AstraFlow Sponsor Logo
 - BytePlus Sponsor Logo
@@ -234,9 +238,13 @@
 - moneyprinterturbo
 - moviepy (Video Editing)
 - generate_script
-- concat_video_clips_with_ffmpeg
-- v1/video.py
-- .test_generate_audio_falls_back_to_sub_maker_when_file_duration_is_zero
+- subtitle_font_supports_text
+- subtitle_colors_are_indistinguishable
+- create_task
+- parse_script_with_pauses
+- _CliHelpFormatter
+- _force_utf8_console
+- WaveSpeedDownloadError
 
 ## God Nodes (most connected - your core abstractions)
 1. `VideoParams` - 157 edges
@@ -253,13 +261,13 @@
 ## Surprising Connections (you probably didn't know these)
 - `3. Data Model` --references--> `VideoParams`  [INFERRED]
   intent/2026-09-29-ig-reel-agent/spec.md → app/models/schema.py
-- `3.3 Resume a stuck daily run (FR-13) [LIVE]` --references--> `DailyRun`  [INFERRED]
-  docs/ops/RUNBOOK.md → supervisor/store.py
 - `Epic C — Media` --references--> `MaterialInfo`  [INFERRED]
   plan/2026-09-29-ig-reel-agent/plan.md → app/models/schema.py
 - `Epic C — Media` --references--> `VideoParams`  [INFERRED]
   plan/2026-09-29-ig-reel-agent/plan.md → app/models/schema.py
 - `Epic A — Foundation` --references--> `_generate_response()`  [INFERRED]
+  plan/2026-09-29-ig-reel-agent/plan.md → app/services/llm.py
+- `Proof` --references--> `_generate_response()`  [INFERRED]
   plan/2026-09-29-ig-reel-agent/plan.md → app/services/llm.py
 
 ## Import Cycles
@@ -270,39 +278,51 @@
 - **Docker Deployment Variants** — docker_compose_webui, docker_compose_api, docker_compose_release, docker_compose_gpu, docker_compose_claude [EXTRACTED 1.00]
 - **Farsi Reel Generation Pipeline** — intent_2026_09_29_ig_reel_agent_intent, skills_meta_safe_farsi_reel_script_skill, intent_2026_09_29_ig_reel_agent_intent_2026_09_29_ig_reel_agent_meta_graph_api, intent_2026_09_29_ig_reel_agent_intent_2026_09_29_ig_reel_agent_idea_cards [EXTRACTED 1.00]
 
-## Communities (410 total, 295 thin omitted)
+## Communities (379 total, 259 thin omitted)
 
-### Community 1 - "storage_dir"
-Cohesion: 0.08
-Nodes (17): _cache_dir(), _cache_key(), _cache_path(), _cached_source_info(), cleanup_expired_material_search_cache(), get_material_search_cache_lock(), load_material_search_cache(), _remove_invalid_cache() (+9 more)
+### Community 0 - "BufferClient"
+Cohesion: 0.13
+Nodes (3): Proof, BufferClient, _gql_str()
 
-### Community 3 - "UploadPostService"
-Cohesion: 0.06
-Nodes (11): UploadPostService, _get_all(), _has_key(), _mock_response(), TestUploadPostService, TestUploadPostServiceDynamicConfig, TestUploadPostYouTubePayload, test_audience_payload_and_snapshot_override() (+3 more)
+### Community 1 - "_search_videos_with_cache"
+Cohesion: 0.09
+Nodes (14): _cache_dir(), _cache_key(), _cache_path(), _cached_source_info(), cleanup_expired_material_search_cache(), get_material_search_cache_lock(), load_material_search_cache(), _remove_invalid_cache() (+6 more)
+
+### Community 2 - "_render_generation_controls"
+Cohesion: 0.10
+Nodes (18): is_enabled(), to_json(), serialize(), _active_generation_tasks(), _add_active_generation_task(), _build_uploaded_file_path(), _build_video_download_name(), _get_unmet_restore_upload_requirements() (+10 more)
+
+### Community 4 - "pathlib"
+Cohesion: 0.11
+Nodes (3): voxcpm_config(), TestWebuiStartup, test_main_starts_uvicorn_with_runtime_config()
 
 ### Community 7 - "test_webui_voice_preview.py"
-Cohesion: 0.16
+Cohesion: 0.15
 Nodes (12): _FakeAudioUpload, _load_duration_estimator(), _load_provider_signature(), _load_voxcpm_state_helpers(), _session_audio(), test_duration_estimator_is_local_and_respects_voice_rate(), test_invalid_reference_upload_blocks_voxcpm_preview_only(), test_provider_signature_changes_when_api_key_changes() (+4 more)
+
+### Community 8 - "MemoryState"
+Cohesion: 0.03
+Nodes (3): MemoryState, TestMemoryState, test_queued_audience_survives_config_change()
 
 ### Community 9 - "material.py"
 Cohesion: 0.07
-Nodes (38): MaterialInfo, _creator_info(), _download_materials_in_parallel(), download_videos(), _download_videos_by_script_order(), _download_videos_ofox_on_demand(), _download_videos_openai_image_on_demand(), _download_videos_seedance_on_demand() (+30 more)
+Nodes (32): _creator_info(), _download_materials_in_parallel(), _download_videos_by_script_order(), generate_videos_wavespeed(), get_api_key(), _get_material_concurrency(), _get_tls_verify(), _is_cloudflare_challenge() (+24 more)
 
 ### Community 10 - "InMemoryTaskManager"
 Cohesion: 0.05
 Nodes (4): _coerce_task_limit(), TaskManager, InMemoryTaskManager, TestInMemoryTaskManager
 
 ### Community 11 - "cli.py"
-Cohesion: 0.07
-Nodes (36): get_uuid(), _bgm_type(), _build_batch_tasks(), build_video_params(), _CliHelpFormatter, _clip_speed(), _hex_color(), _load_batch_manifest() (+28 more)
+Cohesion: 0.08
+Nodes (35): get_uuid(), _bgm_type(), _build_batch_tasks(), build_video_params(), _clip_speed(), _hex_color(), _load_batch_manifest(), _manifest_relative_path() (+27 more)
 
-### Community 13 - "__main__.py"
-Cohesion: 0.18
-Nodes (6): load_supervisor_config(), SupervisorConfig, cmd_ingest_books(), cmd_resume(), cmd_serve(), main()
+### Community 13 - "daily.py"
+Cohesion: 0.12
+Nodes (14): create_daily_run(), _mark_cards_picked(), now_tehran(), register_deadline_job(), register_pick_job(), run_deadline_job(), run_pick_job(), cmd_ingest_books() (+6 more)
 
 ### Community 14 - "_render_settings_dialog"
-Cohesion: 0.08
-Nodes (16): try_runtime_config_lock(), _format_file_size(), format_llm_connection_error(), get_all_songs(), get_groq_model_ids(), get_llm_provider_label(), get_llm_provider_tips(), _get_material_api_keys() (+8 more)
+Cohesion: 0.09
+Nodes (14): _format_file_size(), format_llm_connection_error(), get_all_songs(), get_groq_model_ids(), get_llm_provider_label(), get_llm_provider_tips(), _get_material_api_keys(), _get_video_cache_stats() (+6 more)
 
 ### Community 16 - "metaso_minimax.py"
 Cohesion: 0.08
@@ -316,41 +336,49 @@ Nodes (3): TestMaterialSearchCache, remote_search(), run_search()
 Cohesion: 0.05
 Nodes (4): _event(), _StreamingResponse, TestSoniloService, create_proxy()
 
-### Community 21 - "JsonStore"
-Cohesion: 0.09
-Nodes (6): ClipUsageStore, _FileLock, HookRotationStore, IdeaCardStore, JsonStore, MusicUsageStore
+### Community 21 - "store.py"
+Cohesion: 0.06
+Nodes (8): _atomic_write_json(), ClipUsageStore, _FileLock, HookRotationStore, IngestProgressStore, JsonStore, MusicUsageStore, StorageDir
 
 ### Community 22 - "muapi.py"
 Cohesion: 0.09
-Nodes (32): _base_url(), _bounded_float(), _config_bool(), _duration_bounds(), _endpoint(), generate_videos(), get_api_key(), is_enabled() (+24 more)
+Nodes (33): _base_url(), _bounded_float(), _config_bool(), _duration_bounds(), _endpoint(), generate_videos(), get_api_key(), is_enabled() (+25 more)
 
-### Community 26 - "asgi.py"
-Cohesion: 0.08
-Nodes (14): application_lifespan(), configure_browser_access(), reject_untrusted_browser_origin(), configure_cors(), exception_handler(), get_application(), is_browser_origin_allowed(), _normalize_allowed_origin() (+6 more)
+### Community 26 - "v1/video.py"
+Cohesion: 0.05
+Nodes (25): application_lifespan(), configure_browser_access(), reject_untrusted_browser_origin(), configure_cors(), exception_handler(), get_application(), is_browser_origin_allowed(), _normalize_allowed_origin() (+17 more)
 
 ### Community 27 - "MoneyPrinterTurbo + IG Reel Agent — Operator Runbook"
-Cohesion: 0.08
-Nodes (24): _force_utf8_console(), 0. System map, 10. Troubleshooting & recovery, 11. TL;DR operator loop (today), 1. Environment setup, 2.1 WebUI [LIVE], 2.2 API service [LIVE], 2.3 Pure CLI [LIVE] (+16 more)
+Cohesion: 0.11
+Nodes (18): 0. System map, 10. Troubleshooting & recovery, 11. TL;DR operator loop (today), 2.1 WebUI [LIVE], 2.2 API service [LIVE], 2.3 Pure CLI [LIVE], 2. Base MPT — generate a video three ways, 4. Operator surface (Telegram) [PARTIAL — outbound live, reply loop BUILD] (+10 more)
+
+### Community 28 - "_render_voice_preview"
+Cohesion: 0.10
+Nodes (18): _clear_voxcpm_prompt_state(), _clear_voxcpm_prompt_transcript(), _clear_voxcpm_separate_prompt_audio(), _get_reusable_full_voice_preview(), _get_voice_preview_provider_signature(), _get_voxcpm_effective_prompt_audio(), _get_voxcpm_effective_prompt_audio_digest(), _get_voxcpm_prompt_audio() (+10 more)
+
+### Community 29 - "load_supervisor_config"
+Cohesion: 0.12
+Nodes (6): load_supervisor_config(), SupervisorConfig, get_scheduler(), now_tehran(), Scheduler, start_scheduler()
 
 ### Community 30 - "voice.py"
 Cohesion: 0.06
-Nodes (19): get_all_azure_voices(), _get_audio_duration_from_file(), get_chatterbox_voices(), get_elevenlabs_voices(), get_fish_audio_api_key(), get_fish_audio_voices(), get_gemini_voices(), get_mimo_voices() (+11 more)
+Nodes (18): _build_azure_v2_ssml(), get_all_azure_voices(), get_chatterbox_voices(), get_elevenlabs_api_key(), get_elevenlabs_voices(), get_fish_audio_api_key(), get_fish_audio_voices(), get_gemini_voices() (+10 more)
 
-### Community 32 - "test_voxcpm.py"
+### Community 32 - "voxcpm_tts"
 Cohesion: 0.09
-Nodes (24): _encode_voxcpm_audio_data_uri(), _iter_voxcpm_sse_events(), prepare_voxcpm_reference_audio(), voxcpm_tts(), _FakeSegment, _sse_event(), _sse_lines(), test_prepare_voxcpm_reference_audio_bounds_conversion_and_cleans_temps() (+16 more)
+Nodes (20): _encode_voxcpm_audio_data_uri(), _iter_voxcpm_sse_events(), voxcpm_tts(), parse_extension(), _FakeSegment, _sse_event(), _sse_lines(), test_voxcpm_auth_and_invalid_parameter_errors_fail_without_retry() (+12 more)
 
 ### Community 33 - "TestElevenLabsMusicService"
 Cohesion: 0.06
 Nodes (3): _StreamingResponse, TestElevenLabsMusicService, __init__()
 
-### Community 34 - "task_dir"
-Cohesion: 0.07
-Nodes (30): should_use_bgm(), LoomLoomConfirmedVideoRequest, is_openai_image_enabled(), generate_audio(), generate_final_videos(), generate_script(), _get_material_source_groups(), get_video_materials() (+22 more)
+### Community 34 - "_run_pipeline"
+Cohesion: 0.08
+Nodes (20): should_use_bgm(), LoomLoomConfirmedVideoRequest, is_openai_image_enabled(), generate_final_videos(), generate_script(), generate_subtitle(), _get_material_source_groups(), get_video_materials() (+12 more)
 
-### Community 35 - "preprocess_video"
-Cohesion: 0.18
-Nodes (9): close_clip(), process_one_clip(), delete_files(), _fit_clip_to_canvas(), is_material_resolution_acceptable(), _open_video_clip_quietly(), preprocess_video(), render_image_zoom_video() (+1 more)
+### Community 35 - "services/video.py"
+Cohesion: 0.08
+Nodes (22): VideoConcatMode, VideoFitMode, VideoTransitionMode, close_clip(), combine_videos(), process_one_clip(), delete_files(), _fit_clip_to_canvas() (+14 more)
 
 ### Community 36 - "TestWebuiI18n"
 Cohesion: 0.08
@@ -364,9 +392,9 @@ Nodes (17): snapshot_config_with_pending(), _create_loomloom_video_backend(), _c
 Cohesion: 0.12
 Nodes (19): _base_url(), _bounded_float(), _config_bool(), _duration_bounds(), generate_videos(), get_api_key(), is_enabled(), _is_retryable_error() (+11 more)
 
-### Community 42 - "SubMaker"
-Cohesion: 0.11
-Nodes (17): chatterbox_tts(), _configure_pydub_ffmpeg(), elevenlabs_tts(), ensure_file_path_exists(), ensure_legacy_submaker_fields(), fish_audio_tts(), gemini_tts(), get_audio_duration() (+9 more)
+### Community 42 - "_single_tts"
+Cohesion: 0.14
+Nodes (18): azure_tts_v2(), _format_duration_to_offset(), speech_synthesizer_word_boundary_cb(), chatterbox_tts(), elevenlabs_tts(), ensure_file_path_exists(), ensure_legacy_submaker_fields(), fish_audio_tts() (+10 more)
 
 ### Community 44 - "test_webui_settings_transfer.py"
 Cohesion: 0.10
@@ -374,27 +402,23 @@ Nodes (20): _encode(), _FakeStreamlit, _load_settings_transfer_helpers(), _recor
 
 ### Community 46 - "task.py"
 Cohesion: 0.10
-Nodes (13): TaskQueueFullError, _is_cross_post_active_in_process(), _is_cross_post_owner_alive(), _is_windows_process_alive(), recover_interrupted_cross_posts(), _open_image_clip_with_fallback(), _sanitize_image_file(), _subtitle_font_supports_sample() (+5 more)
+Nodes (8): LoomLoomRunError, _is_cross_post_active_in_process(), _is_cross_post_owner_alive(), _is_windows_process_alive(), recover_interrupted_cross_posts(), run_in_background(), text_to_srt(), time_convert_seconds_to_hmsm()
 
 ### Community 47 - "TestBackgroundMusicService"
 Cohesion: 0.07
 Nodes (4): _FakeRequest, TestBackgroundMusicService, _TextUpload, _UnseekableUpload
 
 ### Community 48 - "get_ffmpeg_binary"
-Cohesion: 0.15
-Nodes (7): get_ffmpeg_binary(), _concat_audio_files(), generate_silent_audio(), _publish_tts_ffmpeg_output(), _run_tts_ffmpeg(), check_ffmpeg_ready(), get_ffmpeg_binary()
+Cohesion: 0.12
+Nodes (10): _concat_audio_files(), _configure_pydub_ffmpeg(), generate_silent_audio(), prepare_voxcpm_reference_audio(), _publish_tts_ffmpeg_output(), _run_tts_ffmpeg(), get_ffmpeg_binary(), test_prepare_voxcpm_reference_audio_bounds_conversion_and_cleans_temps() (+2 more)
 
-### Community 49 - "LoomLoomQuote"
-Cohesion: 0.09
-Nodes (25): LoomLoomExecution, LoomLoomQuote, LoomLoomVideoCapability, LoomLoomVideoModel, helpers(), quote_page(), test_batch_candidate_autofill_once_preserves_manual_count(), test_batch_script_and_video_use_settings_key_without_local_llm() (+17 more)
+### Community 49 - "test_webui_loomloom.py"
+Cohesion: 0.12
+Nodes (20): LoomLoomExecution, LoomLoomQuote, LoomLoomVideoCapability, LoomLoomVideoModel, _function(), quote_page(), test_batch_script_and_video_use_settings_key_without_local_llm(), test_generated_long_script_autofills_video_count_once_and_shows_shortfall() (+12 more)
 
 ### Community 51 - "LoomLoomAPIError"
-Cohesion: 0.14
-Nodes (9): LoomLoomAPIError, LoomLoomCandidateError, LoomLoomScriptBackend, LoomLoomScriptBatch, LoomLoomScriptBatchResult, LoomLoomScriptCandidate, LoomLoomVideoBackend, LoomLoomVideoBatch (+1 more)
-
-### Community 52 - "controllers/base.py"
-Cohesion: 0.24
-Nodes (5): get_api_key(), get_api_key_values(), get_task_id(), normalize_task_id(), verify_token()
+Cohesion: 0.15
+Nodes (8): LoomLoomAPIError, LoomLoomCandidateError, LoomLoomScriptBackend, LoomLoomScriptBatch, LoomLoomScriptBatchResult, LoomLoomScriptCandidate, LoomLoomVideoBackend, LoomLoomVideoBatch
 
 ### Community 53 - "sonilo.py"
 Cohesion: 0.12
@@ -404,61 +428,61 @@ Nodes (14): _base_url(), _create_video_proxy(), generate_bgm(), get_api_key(), i
 Cohesion: 0.14
 Nodes (19): _base_url(), _bounded_float(), _config_bool(), _duration_bounds(), generate_videos(), get_api_key(), is_enabled(), _is_retryable_error() (+11 more)
 
-### Community 56 - "_render_key_backup_settings"
-Cohesion: 0.08
-Nodes (15): resolve_builtin_bgm_file(), _apply_key_backup(), _build_key_backup_payload(), _build_settings_preset_payload(), _collect_key_backup(), _count_backup_keys(), _credential_widget_state_keys(), _is_backup_config_key() (+7 more)
+### Community 56 - "Main.py"
+Cohesion: 0.07
+Nodes (19): _apply_key_backup(), _build_key_backup_payload(), _build_settings_preset_payload(), _cache_minimax_voices(), _collect_key_backup(), _count_backup_keys(), _credential_signature(), _credential_widget_state_keys() (+11 more)
 
 ### Community 57 - "test_webui_tts_settings.py"
 Cohesion: 0.11
 Nodes (13): _load_translation(), test_all_tts_api_key_labels_include_an_official_configuration_link(), test_elevenlabs_environment_key_is_used_without_persisting_it(), test_elevenlabs_reconnect_restores_saved_key_before_loading_voices(), test_minimax_reconnect_restores_saved_tts_key(), test_minimax_shared_llm_key_is_not_duplicated_in_tts_config(), test_minimax_voice_selector_accepts_a_custom_voice_id(), test_minimax_voices_load_only_on_demand_and_sync_the_selected_voice() (+5 more)
 
-### Community 58 - "_render_audio_settings"
-Cohesion: 0.14
-Nodes (24): get_voxcpm_voices(), is_azure_v1_voice(), is_azure_v2_voice(), is_chatterbox_voice(), is_elevenlabs_voice(), is_fish_audio_voice(), is_gemini_voice(), is_kokoro_voice() (+16 more)
+### Community 58 - "is_azure_v1_voice"
+Cohesion: 0.11
+Nodes (18): get_voxcpm_voices(), is_azure_v1_voice(), is_chatterbox_voice(), is_elevenlabs_voice(), is_fish_audio_voice(), is_gemini_voice(), is_kokoro_voice(), is_mimo_voice() (+10 more)
 
 ### Community 59 - "TestMaterialUploadService"
 Cohesion: 0.09
 Nodes (4): _image_bytes(), TestMaterialUploadService, _TextUpload, _UnseekableUpload
 
-### Community 60 - "_render_video_settings"
-Cohesion: 0.05
-Nodes (34): VideoConcatMode, VideoFitMode, VideoTransitionMode, combine_videos(), _get_clip_processing_concurrency(), _get_required_video_duration(), normalize_clip_speed(), _apply_pending_settings_preset() (+26 more)
+### Community 60 - "_render_audio_settings"
+Cohesion: 0.09
+Nodes (22): _delete_runtime_config(), grouped_selectbox(), localized_widget_key(), _parse_chatterbox_voices(), _render_audio_settings(), _render_background_music_settings(), _render_elevenlabs_api_key_input(), _render_metaso_minimax_video_settings() (+14 more)
 
 ### Community 62 - "TestLoomLoomSettings"
-Cohesion: 0.16
-Nodes (4): _coerce_seconds_setting(), resolve_api_token(), video_settings_from_mapping(), TestLoomLoomSettings
+Cohesion: 0.09
+Nodes (7): _coerce_seconds_setting(), LoomLoomConfigurationError, LoomLoomError, LoomLoomSettings, resolve_api_token(), video_settings_from_mapping(), TestLoomLoomSettings
 
 ### Community 63 - "subtitle.py"
-Cohesion: 0.18
-Nodes (9): correct(), create(), _ensure_model_loaded(), file_to_subtitles(), levenshtein_distance(), similarity(), transcribe_audio_bytes(), generate_subtitle() (+1 more)
+Cohesion: 0.19
+Nodes (7): create(), _ensure_model_loaded(), file_to_subtitles(), levenshtein_distance(), similarity(), transcribe_audio_bytes(), str_contains_punctuation()
 
 ### Community 65 - "_flush_pending_config_locked"
 Cohesion: 0.11
 Nodes (11): _apply_pending_config_updates_locked(), delete_config_nonblocking(), _flush_pending_config_locked(), _pending_update_key(), _run_deferred_config_flush(), runtime_config_lock(), save_config(), _schedule_deferred_config_flush() (+3 more)
 
 ### Community 68 - "test_webui_task_history.py"
-Cohesion: 0.10
-Nodes (7): _load_task_history_helpers(), test_build_video_download_name_does_not_overmatch_similar_names(), test_find_final_task_video_ignores_intermediate_files(), test_find_final_task_video_returns_first_numbered_output(), test_history_scan_skips_non_object_script_payload(), test_restore_requirements_allow_replacing_upload_with_other_voice_modes(), test_restore_requirements_require_file_in_upload_voice_mode()
+Cohesion: 0.07
+Nodes (9): get_available_update(), _parse_version(), _load_task_history_helpers(), test_build_video_download_name_does_not_overmatch_similar_names(), test_find_final_task_video_ignores_intermediate_files(), test_find_final_task_video_returns_first_numbered_output(), test_history_scan_skips_non_object_script_payload(), test_restore_requirements_allow_replacing_upload_with_other_voice_modes() (+1 more)
 
 ### Community 70 - "VideoParams"
-Cohesion: 0.04
-Nodes (20): VideoParams, _schedule_cross_post(), start(), _append_task_log(), _run_generation(), submit_generation(), TestClipSpeed, test_task_preflight_rejects_missing_key_before_script_generation() (+12 more)
+Cohesion: 0.06
+Nodes (6): SubtitleRequest, VideoParams, TestClipSpeed, TestVideoParams, fake_duration(), TestVolcEngineSeedanceMaterialIntegration
 
 ### Community 71 - "generate_video"
-Cohesion: 0.06
-Nodes (26): list_bgm_files(), _list_bgm_files(), list_builtin_bgm_files(), resolve_bgm_file(), uploaded_bgm_dir(), resolve_custom_audio_file(), generate_video(), get_bgm_file() (+18 more)
+Cohesion: 0.08
+Nodes (24): list_bgm_files(), _list_bgm_files(), list_builtin_bgm_files(), resolve_bgm_file(), resolve_builtin_bgm_file(), uploaded_bgm_dir(), uploaded_material_dir(), resolve_custom_audio_file() (+16 more)
 
-### Community 72 - "._call_with_capture"
-Cohesion: 0.05
-Nodes (7): _FakeClip, _FakeResponse, TestFishAudioErrorHandling, validate(), TestFishAudioTTSRequest, _fake_post(), _fake_post()
+### Community 72 - "TestFishAudioErrorHandling"
+Cohesion: 0.14
+Nodes (4): _FakeResponse, TestFishAudioErrorHandling, validate(), _fake_post()
 
 ### Community 74 - "config/config.py"
 Cohesion: 0.04
-Nodes (23): _can_resolve_hostname(), _decode_linux_route_gateway(), get_container_default_gateway_ip(), get_default_ollama_base_url(), is_running_in_container(), load_config(), _load_toml_config(), live_config() (+15 more)
+Nodes (34): _can_resolve_hostname(), _decode_linux_route_gateway(), get_container_default_gateway_ip(), get_default_ollama_base_url(), is_running_in_container(), load_config(), _load_toml_config(), __init_logger() (+26 more)
 
-### Community 75 - "schema.py"
-Cohesion: 0.06
-Nodes (24): AudioRequest, BgmRetrieveData, BgmUploadData, FileData, _get_valid_ui_choice(), SubtitleRequest, TaskListData, TaskQueryRequest (+16 more)
+### Community 75 - "v1/llm.py"
+Cohesion: 0.14
+Nodes (10): generate_video_script(), generate_video_social_metadata(), generate_video_terms(), VideoScriptParams, VideoScriptRequest, VideoSocialMetadataParams, VideoSocialMetadataRequest, VideoTermsParams (+2 more)
 
 ### Community 76 - "_button_by_key"
 Cohesion: 0.12
@@ -476,25 +500,25 @@ Nodes (8): apply_environment_config(), ensure_config(), ensure_project(), genera
 Cohesion: 0.05
 Nodes (24): BgmServiceError, BgmUploadError, _remove_staged_file(), sanitize_upload_filename(), save_bgm_upload(), _stage_bgm_upload(), _validate_audio(), validate_audio_file() (+16 more)
 
-### Community 80 - "ingest.py"
-Cohesion: 0.12
-Nodes (8): chunk_text(), ingest_book(), IngestResult, _parse_llm_response(), read_book_text(), _read_pdf(), IdeaCard, IngestProgressStore
+### Community 80 - "IdeaCardStore"
+Cohesion: 0.11
+Nodes (13): _find_card(), pick_candidate_cards(), _pick_cards_llm_ranking(), chunk_text(), ingest_book(), IngestResult, _parse_llm_response(), read_book_text() (+5 more)
 
 ### Community 82 - "Spec: Farsi Instagram Reel Generation Agent (MoneyPrinterTurbo)"
 Cohesion: 0.14
 Nodes (13): 10. Out of Scope, 1. Problem Summary, 2.1 Functional, 2.2 Non-Functional, 2. Requirements, 3. Data Model, 4. API Contracts, 5. UX / UI Design (+5 more)
 
-### Community 83 - "cache_manager.py"
-Cohesion: 0.19
+### Community 83 - "clean_video_cache"
+Cohesion: 0.16
 Nodes (9): clean_video_cache(), get_video_cache_stats(), _is_cleanup_candidate(), _iter_video_cache_entries(), _validate_max_age_days(), video_cache_dir(), VideoCacheCleanupResult, _VideoCacheEntry (+1 more)
 
 ### Community 84 - "MoneyPrinterTurbo Project"
 Cohesion: 0.12
 Nodes (18): Edge TTS Voice List, Bug Report Issue Template, Issue Template Config, Feature Request Issue Template, Vulnerability Reporting Process, API Service, CLI Mode, Docker Deployment (+10 more)
 
-### Community 85 - "daily.py"
-Cohesion: 0.18
-Nodes (6): create_daily_run(), now_tehran(), pick_candidate_cards(), _pick_cards_llm_ranking(), complete(), _is_failed_response()
+### Community 85 - "test_llm.py"
+Cohesion: 0.11
+Nodes (5): get_llm_provider(), LLMProviderField, normalize_provider_override(), test_fluxionai_registry_metadata(), upload_config()
 
 ### Community 87 - "video_effects.py"
 Cohesion: 0.08
@@ -504,33 +528,33 @@ Nodes (14): fadein_transition(), fadeout_transition(), slidein_transition(), pos
 Cohesion: 0.13
 Nodes (10): coerce_claude_code_timeout(), _extract_chat_completion_text(), _extract_qwen_generation_text(), _generate_response(), _get_response_field(), _normalize_text_response(), _resolve_provider_field_value(), _sanitize_error_message() (+2 more)
 
-### Community 90 - "_set_runtime_config"
+### Community 90 - "_synthesize_voice_preview"
+Cohesion: 0.20
+Nodes (5): try_runtime_config_lock(), _detect_audio_mime(), _render_local_script_generation(), _run_llm_read_operation(), _synthesize_voice_preview()
+
+### Community 91 - "_build_subtitle_formatter"
+Cohesion: 0.15
+Nodes (9): _build_subtitle_formatter(), formatter(), _build_subtitle_items_from_edge_cues(), _build_subtitle_items_from_edge_cues_words(), _build_subtitle_items_from_legacy_submaker(), _build_subtitle_items_from_legacy_submaker_words(), _match_script_line(), mktimestamp() (+1 more)
+
+### Community 95 - "tr"
+Cohesion: 0.09
+Nodes (33): delete_video(), is_task_busy(), task_dir(), _collect_task_summaries(), _count_processing_tasks(), _create_loomloom_script_backend(), _delete_task(), _find_final_task_video() (+25 more)
+
+### Community 96 - "MaterialInfo"
 Cohesion: 0.10
-Nodes (14): _cache_minimax_voices(), _credential_signature(), _detect_audio_mime(), _get_cached_minimax_voices(), _parse_chatterbox_voices(), _render_elevenlabs_api_key_input(), _render_minimax_tts_settings(), _save_material_api_keys() (+6 more)
-
-### Community 91 - "create_subtitle"
-Cohesion: 0.08
-Nodes (20): generate_terms(), generate_terms(), _build_subtitle_formatter(), formatter(), _build_subtitle_items_from_edge_cues(), _build_subtitle_items_from_edge_cues_words(), _build_subtitle_items_from_legacy_submaker(), _build_subtitle_items_from_legacy_submaker_words() (+12 more)
-
-### Community 95 - "Main.py"
-Cohesion: 0.05
-Nodes (63): is_enabled(), is_task_busy(), _active_generation_tasks(), _add_active_generation_task(), _build_uploaded_file_path(), _build_video_download_name(), _clear_voxcpm_prompt_state(), _clear_voxcpm_prompt_transcript() (+55 more)
-
-### Community 96 - "VideoAspect"
-Cohesion: 0.19
-Nodes (8): VideoAspect, _download_videos_metaso_minimax_on_demand(), _download_videos_muapi_on_demand(), _get_downloaded_video_duration(), test_on_demand_generation_stops_after_required_duration(), test_on_demand_counts_actual_downloaded_duration_before_next_paid_submission(), test_on_demand_generation_stops_after_required_duration(), TestVideoAspect
+Nodes (21): MaterialInfo, VideoAspect, download_videos(), _download_videos_metaso_minimax_on_demand(), _download_videos_muapi_on_demand(), _download_videos_ofox_on_demand(), _download_videos_openai_image_on_demand(), search_videos() (+13 more)
 
 ### Community 97 - "mpt_agent.py"
 Cohesion: 0.20
 Nodes (6): main(), parse_args(), report_invalid_pexels_config(), report_missing_config(), result_manifest_path(), write_result_manifest()
 
-### Community 101 - "_write_videofile_with_codec_fallback"
-Cohesion: 0.18
-Nodes (6): _disable_runtime_video_codec(), _fallback_write_videofile(), _ffmpeg_encoder_exists(), _get_configured_video_codec(), _get_effective_video_codec(), _write_videofile_with_codec_fallback()
+### Community 101 - "concat_video_clips_with_ffmpeg"
+Cohesion: 0.10
+Nodes (14): concat_video_clips_with_ffmpeg(), build_command(), run_concat(), _describe_concat_output_progress(), _disable_runtime_video_codec(), _escape_ffmpeg_concat_path(), _fallback_write_videofile(), _ffmpeg_encoder_exists() (+6 more)
 
-### Community 102 - "LoomLoomConfigurationError"
-Cohesion: 0.22
-Nodes (3): LoomLoomConfigurationError, LoomLoomError, LoomLoomRunError
+### Community 102 - "generate_audio"
+Cohesion: 0.09
+Nodes (14): generate_audio(), _resolve_reusable_voice_preview(), get_audio_duration(), _get_audio_duration_from_file(), _get_audio_duration_from_submaker(), parse_voice_name(), tts(), _tts_with_pauses() (+6 more)
 
 ### Community 104 - "TestAsyncUpdateChecker"
 Cohesion: 0.21
@@ -540,8 +564,8 @@ Nodes (3): TestAsyncUpdateChecker, check(), slow_check()
 Cohesion: 0.16
 Nodes (6): _GroupedSelectHarness, _running_app(), test_grouped_video_source_applies_first_change_and_allows_switching_back(), test_grouped_video_source_ignores_unknown_event_and_repairs_saved_value(), test_grouped_video_source_keeps_groups_and_accessible_label_binding(), test_stock_concurrency_only_appears_for_stock_sources()
 
-### Community 107 - "test_webui_local_material_upload.py"
-Cohesion: 0.23
+### Community 107 - "_run_webui_upload_block"
+Cohesion: 0.18
 Nodes (9): _FakeStreamlit, _image_bytes(), _run_webui_upload_block(), _StoppedUpload, test_webui_enforces_image_size_limit(), test_webui_persists_valid_image_and_session_materials(), test_webui_rejects_invalid_image_before_starting_task(), test_webui_rolls_back_earlier_files_when_later_upload_is_invalid() (+1 more)
 
 ### Community 109 - "missing_config"
@@ -553,44 +577,44 @@ Cohesion: 0.23
 Nodes (6): test_ai_video_settings_prioritize_sponsors_and_own_shengsuan_key(), test_configure_llm_link_opens_settings_on_llm_tab(), test_fluxionai_settings_defaults_and_connection_button(), test_kimi_platform_selection_keeps_endpoint_configuration_consistent(), test_material_settings_target_uses_localized_tab_state_and_is_consumed(), _widget_by_key()
 
 ### Community 113 - "test_webui_custom_audio_upload.py"
-Cohesion: 0.21
+Cohesion: 0.23
 Nodes (8): _FakeStreamlit, _run_webui_audio_block(), _StoppedUpload, test_webui_enforces_custom_audio_size_limit(), test_webui_keeps_valid_voiceover_in_the_current_task_directory(), test_webui_rejects_corrupt_custom_audio_before_task_start(), _upload(), _wav_bytes()
 
 ### Community 114 - "test_batch_material_allocation.py"
-Cohesion: 0.32
-Nodes (9): render_batch(), test_allocation_tracks_actual_duration_and_speed(), test_failed_clip_does_not_count_as_used(), test_matched_batch_rotates_candidates_in_keyword_order(), test_random_batch_uses_new_sources_before_reuse(), test_safety_margin_does_not_consume_trimmed_source(), test_short_sources_and_looping_still_fill_narration(), test_shortage_reuses_only_exhausted_keyword_candidates() (+1 more)
+Cohesion: 0.15
+Nodes (13): FakeClip, render_batch(), run(), test_allocation_tracks_actual_duration_and_speed(), test_failed_clip_does_not_count_as_used(), test_generated_video_sources_do_not_receive_batch_allocation(), test_matched_batch_rotates_candidates_in_keyword_order(), test_random_batch_uses_new_sources_before_reuse() (+5 more)
 
-### Community 115 - "v1/llm.py"
-Cohesion: 0.26
-Nodes (8): new_router(), generate_video_script(), generate_video_social_metadata(), generate_video_terms(), VideoScriptResponse, VideoSocialMetadataResponse, VideoTermsResponse, get_response()
+### Community 115 - "schema.py"
+Cohesion: 0.11
+Nodes (25): BaseResponse, BgmRetrieveData, BgmRetrieveResponse, BgmUploadData, BgmUploadResponse, FileData, _get_valid_ui_choice(), TaskDeletionResponse (+17 more)
 
 ### Community 118 - "test_webui_generation_defaults.py"
 Cohesion: 0.31
 Nodes (8): _new_app(), test_invalid_saved_generation_settings_fall_back_without_breaking_webui(), test_loomloom_tuning_survives_restart_without_persisting_payment_state(), test_ofox_source_shows_unchecked_paid_task_confirmation(), test_reusable_generation_settings_survive_a_new_webui_session(), test_script_order_constraint_does_not_replace_saved_concat_preference(), test_seedance_source_shows_unchecked_paid_task_confirmation(), _widget_by_key()
 
-### Community 119 - "services/llm.py"
-Cohesion: 0.11
-Nodes (17): get_llm_provider(), LLMProviderField, normalize_provider_override(), build_social_metadata_prompt(), _clamp_text(), _fallback_app_config(), _fallback_social_metadata(), generate_social_metadata() (+9 more)
+### Community 119 - "generate_social_metadata"
+Cohesion: 0.16
+Nodes (14): build_social_metadata_prompt(), _clamp_text(), _fallback_app_config(), _fallback_social_metadata(), generate_social_metadata(), parse_terms(), _limit_social_text(), _normalize_hashtags() (+6 more)
 
 ### Community 125 - ".test_pause_leading_and_trailing"
 Cohesion: 0.24
 Nodes (6): fake_silence(), fake_single_tts(), fake_silence(), fake_silence(), fake_single_tts(), _write_test_wav()
 
-### Community 126 - "test_webui_loomloom.py"
-Cohesion: 0.39
-Nodes (5): _function(), test_loomloom_execution_requires_confirmation_and_quoted_version(), test_loomloom_model_reference_prices_match_known_models_and_ignore_new_ones(), test_loomloom_path_does_not_fall_back_to_local_llm_calls(), test_loomloom_quote_signature_changes_with_billable_inputs()
-
-### Community 127 - "_record_cross_post_failure"
+### Community 126 - "UploadPostService"
 Cohesion: 0.13
-Nodes (10): _ensure_cross_post_terminal_state(), _finalize_cross_post_future(), _patch_cross_post_state(), _record_cross_post_failure(), _register_cross_post_future(), _run_cross_post(), record_background_request(), _run_cross_post_with_slot() (+2 more)
+Nodes (3): UploadPostService, TestUploadPostServiceDynamicConfig, test_other_platforms_ignore_youtube_audience()
+
+### Community 127 - "_schedule_cross_post"
+Cohesion: 0.13
+Nodes (11): _ensure_cross_post_terminal_state(), _finalize_cross_post_future(), _patch_cross_post_state(), _record_cross_post_failure(), _register_cross_post_future(), _run_cross_post(), record_background_request(), _run_cross_post_with_slot() (+3 more)
 
 ### Community 128 - "Workflow"
 Cohesion: 0.15
 Nodes (12): 1. Ask the user, 2. Create the board, 3. Create lists, 4. Create cards, 5. Ordering within lists, 6. Verify, Backlog, Card count heuristic (+4 more)
 
-### Community 134 - "Any"
-Cohesion: 0.22
-Nodes (6): _openai_image_http_failure(), _openai_image_response_message(), OpenAIImageUnconfirmedError, _parse_openai_image_response(), _request_openai_image(), _response_json_safely()
+### Community 134 - "_run_generation"
+Cohesion: 0.11
+Nodes (11): file_iterator(), start(), _append_task_log(), get_task_logs(), _run_generation(), test_task_preflight_rejects_missing_key_before_script_generation(), test_task_preflight_rejects_missing_key_before_script_generation(), test_webui_worker_forwards_reference_audio_to_pipeline() (+3 more)
 
 ### Community 135 - "AsyncUpdateChecker"
 Cohesion: 0.20
@@ -604,21 +628,21 @@ Nodes (10): Docker API Service, Docker Claude Subscription Variant, Docker GPU O
 Cohesion: 0.27
 Nodes (5): selected_voice(), test_endpoint_or_credential_change_invalidates_cache(), test_first_open_offline_preserves_saved_voice(), test_manual_voices_and_clearing_them(), test_online_offline_recovery_retains_selection()
 
-### Community 142 - "test_webui_task.py"
-Cohesion: 0.05
-Nodes (20): __init_logger(), get_available_update(), _parse_version(), configure_terminal_logger(), format_log_record(), _project_relative_path(), get_scheduler(), start_scheduler() (+12 more)
+### Community 142 - "test_controller_video.py"
+Cohesion: 0.08
+Nodes (15): TaskQueueFullError, format_log_record(), _project_relative_path(), TestVideoControllerListHTTP, _attribute_name(), _log_record(), test_active_task_uses_terminal_state_when_outside_runtime_page(), test_generation_controls_submit_background_task_instead_of_blocking_page() (+7 more)
 
 ### Community 145 - "Plan: Farsi Instagram Reel Agent (from intent.md 2026-09-29)"
-Cohesion: 0.20
-Nodes (9): Config key contract (defines everything below; add to `config.example.toml`, expose in `app/config/config.py`), Data model (store: `supervisor/store.py`, JSON files under `storage/`, created with `mkdir -p` at startup; atomic write = temp+rename; file lock per store), Epic A — Foundation, Epic D — Post, operator surface, ship, Features, Order of work, Plan: Farsi Instagram Reel Agent (from intent.md 2026-09-29), Resolve first (+1 more)
+Cohesion: 0.29
+Nodes (6): Config key contract (defines everything below; add to `config.example.toml`, expose in `app/config/config.py`), Data model (store: `supervisor/store.py`, JSON files under `storage/`, created with `mkdir -p` at startup; atomic write = temp+rename; file lock per store), Order of work, Plan: Farsi Instagram Reel Agent (from intent.md 2026-09-29), Resolve first, Risks
 
 ### Community 146 - "Test Material Image 1"
 Cohesion: 0.22
 Nodes (9): Test Material Image 1, Test Material Image 2, Test Material Image 3, Test Material Image 4, Test Material Image 5, Test Material Image 6, Test Material Image 7, Test Material Image 8 (+1 more)
 
-### Community 154 - "_render_top_bar"
-Cohesion: 0.22
-Nodes (6): poll_available_update(), _open_material_settings_dialog(), _open_settings_dialog(), _render_brand(), _render_pending_version_check(), _render_top_bar()
+### Community 154 - "_render_application"
+Cohesion: 0.09
+Nodes (15): poll_available_update(), normalize_clip_speed(), _apply_pending_settings_preset(), _apply_pending_task_restore(), _apply_restored_params(), _build_restore_upload_requirements(), _open_material_settings_dialog(), _open_settings_dialog() (+7 more)
 
 ### Community 155 - "validate_pexels_config"
 Cohesion: 0.25
@@ -645,28 +669,24 @@ Cohesion: 0.38
 Nodes (5): redirect_servers(), do_GET(), do_POST(), _redirect(), test_paid_video_provider_rejects_redirect_without_replaying_request()
 
 ### Community 172 - "azure_tts_v1"
-Cohesion: 0.13
-Nodes (7): azure_tts_v1(), convert_rate_to_percent(), create_edge_tts_communicate(), get_edge_tts_timeout_seconds(), parse_voice_name(), stream_edge_tts_chunks(), _stream_edge_tts_sync_with_timeout()
-
-### Community 181 - "FakeClip"
-Cohesion: 0.25
-Nodes (3): FakeClip, run(), video()
+Cohesion: 0.14
+Nodes (6): azure_tts_v1(), convert_rate_to_percent(), create_edge_tts_communicate(), get_edge_tts_timeout_seconds(), stream_edge_tts_chunks(), _stream_edge_tts_sync_with_timeout()
 
 ### Community 183 - "buffer_poc.py"
-Cohesion: 0.27
+Cohesion: 0.29
 Nodes (5): BufferError, _banner(), _load_config_toml(), main(), _proxies_from_config()
 
 ### Community 185 - "generate_images_openai"
+Cohesion: 0.25
+Nodes (4): generate_images_openai(), _openai_image_endpoint(), _openai_image_prompt(), _openai_image_size()
+
+### Community 186 - "create_subtitle"
 Cohesion: 0.15
-Nodes (6): generate_images_openai(), _openai_image_endpoint(), _openai_image_prompt(), _openai_image_size(), _OpenAIImageDecodeError, _save_openai_image_file()
+Nodes (11): generate_terms(), correct(), generate_terms(), create_subtitle(), _do(), estimate_no_voice_duration(), _format_text(), _write_subtitle_items() (+3 more)
 
-### Community 186 - "test_webui_metaso_minimax.py"
-Cohesion: 0.32
-Nodes (4): test_invalid_metaso_resolution_requires_an_explicit_replacement(), test_metaso_source_requires_confirmation_and_never_enters_task_params(), test_metaso_upload_voiceover_uses_actual_audio_billing_copy(), _widget_by_key()
-
-### Community 187 - "azure_tts_v2"
-Cohesion: 0.50
-Nodes (4): azure_tts_v2(), _format_duration_to_offset(), speech_synthesizer_word_boundary_cb(), _build_azure_v2_ssml()
+### Community 187 - "test_webui_loomloom_regressions.py"
+Cohesion: 0.21
+Nodes (11): helpers(), test_batch_candidate_autofill_once_preserves_manual_count(), test_capability_cache_isolated_by_endpoint_and_key_and_recovers(), test_changed_billable_inputs_allow_one_new_quote_attempt(), test_failed_quote_pauses_until_manual_retry_and_recovers(), test_incomplete_input_clears_failed_quote_without_network(), test_missing_key_clears_error_and_never_retries(), test_new_quote_failure_disables_old_confirmation() (+3 more)
 
 ### Community 188 - "CI Python Tests Job"
 Cohesion: 0.50
@@ -680,21 +700,25 @@ Nodes (4): find_available_port(), find_port(), PYTHONPATH, webui.sh script
 Cohesion: 0.25
 Nodes (7): mcp, trello, plugin, $schema, enabled, type, url
 
-### Community 198 - "SubClippedVideoClip"
-Cohesion: 0.40
-Nodes (3): _prioritize_unique_source_clips(), SubClippedVideoClip, test_random_allocation_keeps_unique_sources_ahead_of_extra_slices()
+### Community 198 - "_render_subtitle_settings"
+Cohesion: 0.15
+Nodes (9): font_dir(), resolve_ui_language(), get_all_fonts(), _initialize_session_state(), _render_subtitle_settings(), _saved_ui_bool(), _saved_ui_color(), _saved_ui_number() (+1 more)
 
 ### Community 199 - "_Response"
-Cohesion: 0.09
-Nodes (6): LoomLoomRun, LoomLoomSettings, _Response, TestLoomLoomScriptBackend, TestLoomLoomVideoBackend, _video_capability_payload()
+Cohesion: 0.08
+Nodes (6): LoomLoomRun, _DownloadResponse, _Response, TestLoomLoomScriptBackend, TestLoomLoomVideoBackend, _video_capability_payload()
+
+### Community 200 - "_estimate_voiceover_duration_range"
+Cohesion: 0.12
+Nodes (8): _effective_voice_rate_before_audio_panel(), _estimate_voiceover_duration_range(), _loomloom_video_coverage_plan(), _matching_full_voice_preview_duration(), _render_muapi_video_settings(), _render_ofox_video_settings(), _render_seedance_video_settings(), _render_wavespeed_video_settings()
+
+### Community 203 - "TelegramClient"
+Cohesion: 0.15
+Nodes (4): get_client(), _load_proxies(), send_video(), TelegramClient
 
 ### Community 205 - "twelvelabs.py"
 Cohesion: 0.26
 Nodes (7): analyze_clip(), _client(), _cosine(), embed_text(), _embed_text_cached(), is_enabled(), rerank_terms_by_subject()
-
-### Community 206 - "r1_tts_azure_test.py"
-Cohesion: 0.29
-Nodes (3): make_synthesizer(), report(), speak_ssml()
 
 ### Community 209 - "WebUI Screenshot (Chinese)"
 Cohesion: 0.67
@@ -705,47 +729,51 @@ Cohesion: 0.09
 Nodes (20): 3.2 Daily pipeline (FR-2 → FR-12) [BUILD / POC parts], build_drivable_stages(), checkpoint_index(), _default_day_missed_alert(), get_registered_stages(), is_past_post_time(), _load_proxies(), make_post_stage() (+12 more)
 
 ### Community 241 - "DailyRun"
-Cohesion: 0.24
-Nodes (5): 4. Operator surface (Telegram) [BUILD], 7. Data & storage layout, Epic B — Content, DailyRun, DailyRunStore
+Cohesion: 0.15
+Nodes (13): 3.1 Ingest a book into idea cards (FR-1) [LIVE], 3.3 Resume a stuck daily run (FR-13) [LIVE], 3.4 Serve (scheduler + bot) [BUILD], 3.5 Manual daily cycle: pick → send → lock (FR-2 bridge) [LIVE], 3.6 Buffer post POC [POC], 3.7 Media-chain proof (R-10) [POC], 3. Supervisor — the Reel Agent, Epic B — Content (+5 more)
 
-### Community 286 - "create_text_clip"
-Cohesion: 0.11
-Nodes (12): _apply_subtitle_spring_animation(), transform_frame(), create_text_clip(), resolve_subtitle_background_color(), _get_subtitle_spring_scale(), _get_visible_center_position(), _hex_to_rgb(), _rounded_subtitle_background_clip() (+4 more)
+### Community 286 - "_apply_subtitle_spring_animation"
+Cohesion: 0.25
+Nodes (4): _apply_subtitle_spring_animation(), transform_frame(), _get_subtitle_spring_scale(), _scale_subtitle_frame_on_canvas()
 
-### Community 287 - "material_upload.py"
-Cohesion: 0.21
-Nodes (10): _material_kind(), MaterialServiceError, MaterialUploadError, _remove_staged_file(), sanitize_material_filename(), save_material_upload(), _stage_material_upload(), uploaded_material_dir() (+2 more)
+### Community 287 - "save_material_upload"
+Cohesion: 0.20
+Nodes (9): _material_kind(), MaterialServiceError, MaterialUploadError, _remove_staged_file(), sanitize_material_filename(), save_material_upload(), _stage_material_upload(), _validate_image() (+1 more)
 
-### Community 307 - "test_webui_upload_post_settings.py"
-Cohesion: 0.27
-Nodes (5): test_webui_upload_post_checkboxes_stay_decoupled(), test_webui_upload_post_youtube_privacy_fallback_to_public(), test_youtube_audience_hidden_for_other_platforms(), test_youtube_audience_selection_persists_on_first_change(), _widget_by_key()
+### Community 289 - "submit_generation"
+Cohesion: 0.18
+Nodes (5): submit_generation(), test_scheduling_failure_is_saved_as_terminal_task_state(), test_submit_generation_copies_params_before_starting_worker(), test_submit_generation_keeps_voxcpm_reference_audio_out_of_params(), test_submit_generation_returns_while_pipeline_is_still_running()
+
+### Community 307 - "test_upload_post.py"
+Cohesion: 0.33
+Nodes (3): _get_all(), _has_key(), TestUploadPostYouTubePayload
+
+### Community 309 - "test_real_http_multipart_audience"
+Cohesion: 0.22
+Nodes (3): test_audience_payload_and_snapshot_override(), test_invalid_audience_never_uploads(), test_real_http_multipart_audience()
 
 ### Community 365 - "generate_script"
 Cohesion: 0.53
 Nodes (6): build_script_prompt(), generate_script(), format_response(), run_attempt(), _limit_script_text(), _normalize_script_paragraph_number()
 
-### Community 367 - "concat_video_clips_with_ffmpeg"
-Cohesion: 0.20
-Nodes (8): concat_video_clips_with_ffmpeg(), build_command(), run_concat(), _describe_concat_output_progress(), _escape_ffmpeg_concat_path(), _format_ffmpeg_concat_path(), _run_concat_with_heartbeat(), log_heartbeat()
-
-### Community 368 - "v1/video.py"
-Cohesion: 0.09
-Nodes (31): create_audio(), create_subtitle(), create_task(), create_video(), delete_video(), download_video(), get_all_tasks(), get_bgm_list() (+23 more)
+### Community 368 - "create_task"
+Cohesion: 0.17
+Nodes (17): ping(), create_audio(), create_subtitle(), create_task(), create_video(), get_all_tasks(), get_bgm_list(), get_task() (+9 more)
 
 ## Knowledge Gaps
-- **89 isolated node(s):** `$schema`, `plugin`, `type`, `url`, `enabled` (+84 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2267 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **295 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **88 isolated node(s):** `$schema`, `plugin`, `type`, `url`, `enabled` (+83 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2282 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **259 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `TestLiteLLMProvider` connect `TestLiteLLMProvider` to `._assert_ollama_base_url`, `pathlib`, `._patch_dashscope_generation`, `._use_litellm_provider`, `.test_current_default_model_names`, `.test_provider_defaults_are_not_persisted_as_user_overrides`, `.test_provider_registry_preserves_product_group_order`, `.test_registry_replaces_deprecated_provider_models`, `.test_kimi_service_endpoint_selection_preserves_existing_configs`, `.test_service_endpoint_registry_references_valid_stable_ids`, `.test_kimi_fresh_config_uses_interface_region`, `.test_pollinations_requires_api_key_before_request`, `.test_qwen_concurrent_snapshots_keep_their_own_api_keys`, `.test_gemini_uses_google_genai_client`, `.test_openai_provider_error_redacts_embedded_base_url_credentials`, `.test_apimart_provider_uses_unwrapped_openai_compatible_endpoint`, `.test_aihubmix_provider_uses_openai_compatible_client`, `.test_evolink_provider_uses_openai_compatible_client`, `.test_openrouter_provider_uses_openai_compatible_client`, `.test_api_route_provider_uses_openai_compatible_client`, `.test_volcengine_provider_uses_openai_compatible_client`, `.test_mimo_provider_uses_openai_compatible_client`, `.test_azure_provider_uses_azure_client_directly`, `.test_pollinations_uses_unified_openai_compatible_api`, `.test_anthropic_uses_openai_compatible_chat_completions`, `.test_cloudflare_uses_ai_gateway_openai_endpoint`?**
-  _High betweenness centrality (0.079) - this node is a cross-community bridge._
-- **Why does `VideoParams` connect `VideoParams` to `.test_run_pipeline_skips_ffmpeg_check_for_script_stage`, `.test_generated_script_still_rejects_provider_error_prefix`, `pathlib`, `TestTaskArtifacts`, `TestTaskService`, `.test_loomloom_material_failure_keeps_remote_run_id`, `MemoryState`, `.test_paid_openai_image_failure_stops_at_material_stage`, `.test_run_pipeline_proceeds_past_ffmpeg_preflight_when_ready`, `cli.py`, `.test_run_pipeline_skips_ffmpeg_check_for_terms_stage`, `.test_start_does_not_require_sonilo_key_when_volume_is_zero`, `.test_start_rejects_free_elevenlabs_plan_before_pipeline_steps`, `.test_start_rejects_missing_elevenlabs_key_before_pipeline_steps`, `metaso_minimax.py`, `.test_start_rejects_oversized_elevenlabs_prompt_before_account_check`, `.test_start_stops_before_materials_when_term_provider_fails`, `test_webui_task.py`, `_video_params`, `muapi.py`, `task_dir`, `test_webui_voice_preview.py`, `test_webui_settings_transfer.py`, `task.py`, `.test_generate_subtitle_uses_whisper_word_timing_without_correction`, `FakeClip`, `.test_wavespeed_paid_material_failure_keeps_prediction_id`, `_render_key_backup_settings`, `_render_video_settings`, `.test_start_generates_youtube_metadata_for_each_cross_post`, `generate_video`, `.test_real_redis_recovers_interrupted_cross_post_state`, `config/config.py`, `schema.py`, `TestRedisTaskManager`, `Spec: Farsi Instagram Reel Generation Agent (MoneyPrinterTurbo)`, `Main.py`, `test_webui_local_material_upload.py`, `RedisTaskManager`, `.test_start_returns_before_cross_post_worker_runs`, `test_webui_custom_audio_upload.py`, `test_batch_material_allocation.py`, `TestOFoxMaterialIntegration`, `.test_generate_audio_falls_back_to_sub_maker_when_file_duration_is_zero`, `.test_start_marks_pipeline_failures`, `.test_start_returns_cross_post_scheduling_failure`?**
-  _High betweenness centrality (0.063) - this node is a cross-community bridge._
-- **Why does `TestVoiceService` connect `TestVoiceService` to `pathlib`, `.test_script_split_keeps_thousand_separator_comma`, `.test_edge_cue_aggregation_handles_thousand_separator_comma`, `.test_match_script_line_normalizes_arabic_letter_forms`, `.test_get_audio_duration_accepts_non_mp3_files`, `.test_create_subtitle_word_level_preserves_edge_cue_timing`, `.test_create_subtitle_ignores_markdown_underscore_marks`, `.test_no_voice_alias_none_is_supported_temporarily`, `.test_no_voice_duration_estimates_non_ascii_languages`, `.test_generate_silent_audio_rejects_missing_output_file`, `.test_minimax_tts_reuses_cn_llm_key_and_endpoint`, `.test_chatterbox_voice_helpers`, `.test_tts_with_pauses_decode_timeout_returns_failure`, `.test_tts_strips_gemini_style_metadata_before_dispatch`, `.test_gemini_tts_uses_configured_model_name`, `skipUnless`, `.test_azure_tts_v1_supports_legacy_edge_tts_without_boundary`, `.test_azure_tts_v1_rejects_boundary_only_stream`, `.test_azure_tts_v1_times_out_hanging_stream_sync`, `.test_mimo_tts_uses_openai_compatible_audio_response`, `._call_with_capture`, `.test_minimax_tts_does_not_leave_invalid_audio_output`, `.test_get_minimax_voice_catalog_normalizes_all_voice_types`, `.test_gemini_tts_uses_google_genai_and_compatible_submaker_fields`, `.test_get_minimax_voice_catalog_exposes_provider_error`, `._make_broken_clip_class`, `.test_no_voice_tts_generates_silent_audio_and_subtitle_timeline`?**
-  _High betweenness centrality (0.062) - this node is a cross-community bridge._
+- **Why does `MaterialInfo` connect `MaterialInfo` to `_search_videos_with_cache`, `_render_generation_controls`, `pathlib`, `TestCli`, `TestTaskService`, `material.py`, `cli.py`, `.test_local_material_filename_resolved_to_absolute_path`, `metaso_minimax.py`, `TestMaterialSearchCache`, `muapi.py`, `TestVideoService`, `_run_pipeline`, `services/video.py`, `ofox.py`, `task.py`, `volcengine_seedance.py`, `Main.py`, `generate_images_openai`, `VideoParams`, `generate_video`, `_run_webui_upload_block`, `schema.py`, `TestOFoxMaterialIntegration`?**
+  _High betweenness centrality (0.069) - this node is a cross-community bridge._
+- **Why does `VideoParams` connect `VideoParams` to `pathlib`, `TestTaskArtifacts`, `_run_generation`, `TestTaskService`, `MemoryState`, `test_webui_voice_preview.py`, `cli.py`, `test_controller_video.py`, `metaso_minimax.py`, `_video_params`, `muapi.py`, `_render_application`, `submit_generation`, `_run_pipeline`, `services/video.py`, `test_webui_settings_transfer.py`, `task.py`, `.test_generate_subtitle_uses_whisper_word_timing_without_correction`, `Main.py`, `TestVideoControllerTasks`, `generate_video`, `TestRedisTaskManager`, `Spec: Farsi Instagram Reel Generation Agent (MoneyPrinterTurbo)`, `test_llm.py`, `tr`, `generate_audio`, `_run_webui_upload_block`, `RedisTaskManager`, `TestSubtitleBackgroundSettings`, `subtitle_colors_are_indistinguishable`, `test_webui_custom_audio_upload.py`, `test_batch_material_allocation.py`, `schema.py`, `TestOFoxMaterialIntegration`, `_schedule_cross_post`?**
+  _High betweenness centrality (0.068) - this node is a cross-community bridge._
+- **Why does `TestCli` connect `TestCli` to `MaterialInfo`, `services/video.py`, `task.py`, `.test_local_material_filename_resolved_to_absolute_path`, `.test_positive_volume_custom_bgm_requires_file_before_task_start`, `.test_zero_volume_custom_bgm_skips_file_requirement_and_resolution`, `.test_batch_accepts_openai_image_source`, `.test_custom_bgm_reports_service_resolution_failure_before_task_start`, `.test_batch_copy_failure_removes_all_managed_materials`, `.test_custom_bgm_reuses_service_formats_and_managed_path_resolution`, `.test_force_utf8_console_keeps_unicode_result_printable`, `.test_help_does_not_initialize_application_or_write_logs`, `.test_video_clip_speed_is_reachable_from_the_cli`, `.test_video_clip_speed_range_matches_the_runtime_normalizer`, `.test_run_cli_returns_error_for_structured_task_failure`?**
+  _High betweenness centrality (0.066) - this node is a cross-community bridge._
 - **Are the 30 inferred relationships involving `VideoParams` (e.g. with `RedisTaskManager` and `_get_video_music_prompt()`) actually correct?**
   _`VideoParams` has 30 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 2 inferred relationships involving `TestCli` (e.g. with `MaterialInfo` and `VideoTransitionMode`) actually correct?**

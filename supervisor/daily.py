@@ -1,5 +1,5 @@
 import random
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from typing import Optional
 from zoneinfo import ZoneInfo
 
@@ -8,10 +8,12 @@ from loguru import logger
 from supervisor.store import (
     DailyRun,
     DailyRunStore,
+    HookRotationStore,
     IdeaCard,
     IdeaCardStore,
 )
 from supervisor.config import load_supervisor_config
+from supervisor.scriptgen import HOOK_TYPES, apply_to_run, generate_script
 
 TEHRAN_TZ = ZoneInfo("Asia/Tehran")
 
@@ -296,3 +298,89 @@ def register_deadline_job(scheduler) -> None:
         run_deadline_job,
         friday_time=cfg.pick_deadline_friday,
     )
+
+
+# ---------------------------------------------------------------------------
+# FR-4: hook rotation + script generation job
+# ---------------------------------------------------------------------------
+
+
+def _shift_date(iso_date: str, days: int) -> str:
+    return (date.fromisoformat(iso_date) + timedelta(days=days)).isoformat()
+
+
+def choose_hook_type(
+    today: str,
+    hook_store: Optional[HookRotationStore] = None,
+    rng: Optional[random.Random] = None,
+) -> str:
+    """Pick the day's ``hook_type`` (FR-4 step 5 / plan §content).
+
+    Rules: not used in the last-7-day rotation window, and not the same type as the
+    previous 2 days. With <4 days of history the rules apply to whatever exists.
+    Deterministic: the pick among the allowed types is seeded by the Tehran date,
+    so re-running for the same date yields the same hook.
+    """
+    rows = hook_store.load() if hook_store is not None else []
+    by_date = {r.get("date_tehran"): r.get("hook_type") for r in rows}
+
+    last7 = {by_date.get(_shift_date(today, -i)) for i in range(1, 8)}
+    last7.discard(None)
+    prev2 = {by_date.get(_shift_date(today, -1)), by_date.get(_shift_date(today, -2))}
+    prev2.discard(None)
+
+    allowed = [t for t in HOOK_TYPES if t not in last7]
+    if not allowed:  # all 4 types used in the window -> relax to prev-2-days rule
+        allowed = [t for t in HOOK_TYPES if t not in prev2]
+    if not allowed:  # safety net: previous 2 days can hold at most 2 types
+        allowed = list(HOOK_TYPES)
+
+    r = rng if rng is not None else random.Random(today)
+    return r.choice(allowed)
+
+
+def _recent_hooks(hook_store: HookRotationStore, today: str) -> list[str]:
+    """The last-7 ``hook_type`` + opening lines (the ``recent_hooks`` LLM input)."""
+    rows = [r for r in hook_store.load() if str(r.get("date_tehran", "")) < today]
+    return [
+        f"{r.get('hook_type', '?')} | {r.get('opening_line', '')}"
+        for r in rows[-7:]
+    ]
+
+
+def run_scriptgen_job(
+    store: Optional[DailyRunStore] = None,
+    idea_store: Optional[IdeaCardStore] = None,
+    hook_store: Optional[HookRotationStore] = None,
+    send_fn=None,
+    llm_fn=None,
+) -> Optional[DailyRun]:
+    """FR-4 entry point: generate the Farsi script for today's picked card.
+
+    Requires a ``DailyRun`` with ``picked_card_id`` set (operator pick or the FR-3
+    fallback). Chooses the rotated ``hook_type``, generates + validates the script
+    (TTS-ready via FR-17), routes ``needs_review`` to Telegram, and never auto-posts.
+    Returns the updated run, or ``None`` if there is nothing to generate yet.
+    """
+    store = store or DailyRunStore()
+    idea_store = idea_store or CARD_STORE
+    hook_store = hook_store or HookRotationStore()
+
+    today = now_tehran().date().isoformat()
+    run = store.get_by_date(today)
+    if run is None or not run.picked_card_id:
+        logger.warning("FR-4: no picked card for {} — awaiting operator/fallback pick", today)
+        return None
+
+    card = _find_card(run.picked_card_id, idea_store)
+    if card is None:
+        logger.warning("FR-4: picked card {} not found in idea store", run.picked_card_id)
+        return None
+
+    if send_fn is None:
+        from supervisor.telegram_client import send_message as send_fn
+
+    hook_type = choose_hook_type(today, hook_store=hook_store)
+    recent_hooks = _recent_hooks(hook_store, today)
+    result = generate_script(card, hook_type, recent_hooks, llm_fn=llm_fn)
+    return apply_to_run(run, result, card, store=store, send_fn=send_fn, hook_store=hook_store)
