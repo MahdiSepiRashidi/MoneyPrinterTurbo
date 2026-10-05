@@ -30,7 +30,8 @@ from zoneinfo import ZoneInfo
 from loguru import logger
 
 from supervisor.config import load_supervisor_config
-from supervisor.store import DailyRun, DailyRunStore
+from supervisor.farsi_norm import normalize as normalize_farsi
+from supervisor.store import DailyRun, DailyRunStore, HookRotationStore, IdeaCardStore
 
 TEHRAN_TZ = ZoneInfo("Asia/Tehran")
 
@@ -340,6 +341,324 @@ def _default_day_missed_alert(run: DailyRun, error: BaseException, cfg) -> None:
 
 
 # ---------------------------------------------------------------------------
+# FR-6: Farsi TTS narration stage (pluggable provider + 60-90s duration gate)
+# ---------------------------------------------------------------------------
+
+TTS_MIN_SECONDS = 60
+TTS_MAX_SECONDS = 90
+TTS_RATE_MIN = 0.9
+TTS_RATE_MAX = 1.1
+TTS_RATE_STEP = 0.05
+MAX_TTS_RERUNS = 2
+# FR-4 regeneration word-count targets, mirroring scriptgen's band-closing
+# targets (scriptgen._regen_instruction): TTS too short -> longer script,
+# TTS too long -> shorter script (both inside the 150-220 word band).
+TTS_TARGET_WORDS_LONGER = 210
+TTS_TARGET_WORDS_SHORTER = 170
+
+
+class TTSApprovalHeld(RuntimeError):
+    """The TTS stage found the run held behind the FR-5 approval gate.
+
+    After a duration-gate escalation regenerates the script and re-enters the
+    gate (``cards_picked``), the FR-13 backoff retries of the stage fast-fail
+    with this error until the operator re-approves the new script.
+    """
+
+
+def _next_voice_rate(current: float, duration: int) -> float:
+    """Step ``current`` toward the rate that would bring the measured duration
+    into [TTS_MIN_SECONDS, TTS_MAX_SECONDS]: too short -> slow down (longer
+    audio), too long -> speed up (shorter audio). Clamped to [0.9, 1.1]; when
+    already at the relevant bound the current rate is returned unchanged."""
+    if duration < TTS_MIN_SECONDS:
+        return max(TTS_RATE_MIN, current - TTS_RATE_STEP)
+    if duration > TTS_MAX_SECONDS:
+        return min(TTS_RATE_MAX, current + TTS_RATE_STEP)
+    return current
+
+
+def build_tts_params(cfg, run: DailyRun, tts_text: str, voice_rate: float = 1.0):
+    """MPT ``VideoParams`` for the Farsi reel: portrait 9:16 (1080x1920) with
+    ``voice_name = cfg.tts_voice``.
+
+    The provider switch is config-only (R-1): MPT's voice dispatch routes the
+    voice-name prefix to a provider (``gemini:Charon``, ``fa-IR-DilaraNeural``, ...).
+    """
+    from app.models.schema import VideoAspect, VideoParams  # noqa: PLC0415 - keep MPT imports lazy
+
+    return VideoParams(
+        video_subject=f"IG Reel {run.date_tehran}",
+        video_aspect=VideoAspect.portrait.value,
+        video_script=tts_text,
+        video_language="fa",
+        voice_name=cfg.tts_voice,
+        voice_rate=voice_rate,
+        subtitle_enabled=True,
+        bgm_type="",
+        bgm_volume=0.0,
+    )
+
+
+def _primary_tts_model(cfg) -> str:
+    """The primary Gemini TTS model name (``[app] gemini_tts_model_name``).
+
+    Falls back to ``GEMINI_TTS_DEFAULT_MODEL`` when unset, matching MPT's
+    ``voice.gemini_tts`` behaviour.
+    """
+    try:
+        from app.config import config as mpt_config  # noqa: PLC0415
+        model = str(mpt_config.app.get("gemini_tts_model_name", "") or "").strip()
+        if model:
+            return model
+    except Exception:  # noqa: BLE001
+        pass
+    try:
+        from app.services.voice import GEMINI_TTS_DEFAULT_MODEL  # noqa: PLC0415
+        return GEMINI_TTS_DEFAULT_MODEL
+    except Exception:  # noqa: BLE001
+        return "gemini-2.5-flash-preview-tts"
+
+
+def _tts_model_candidates(cfg) -> list[str]:
+    """Ordered TTS model candidates: the primary model first, then the
+    ``cfg.tts_model_fallbacks`` chain (deduped, preserving order). The FR-6 stage
+    walks this list when the primary call fails (quota 429 / 503 / transient
+    disconnect) so a different model with remaining budget can keep the reel
+    moving without waiting for a quota reset."""
+    candidates = [_primary_tts_model(cfg)]
+    for model in getattr(cfg, "tts_model_fallbacks", None) or []:
+        model = str(model or "").strip()
+        if model and model not in candidates:
+            candidates.append(model)
+    return candidates
+
+
+def _default_generate_audio(task_id: str, params, tts_text: str, model: Optional[str] = None):
+    """MPT's module-level TTS seam (R-10: in-process calls, synthetic task id).
+
+    When ``model`` is given, ``config.app["gemini_tts_model_name"]`` is temporarily
+    pointed at it for the duration of the call so the gemini TTS dispatch picks
+    that model; the original value is restored afterwards.
+    """
+    from app.services import task as mpt_task  # noqa: PLC0415
+    if model is None:
+        return mpt_task.generate_audio(task_id, params, tts_text)
+    from app.config import config as mpt_config  # noqa: PLC0415
+    original = mpt_config.app.get("gemini_tts_model_name", "")
+    mpt_config.app["gemini_tts_model_name"] = model
+    try:
+        return mpt_task.generate_audio(task_id, params, tts_text)
+    finally:
+        mpt_config.app["gemini_tts_model_name"] = original
+
+
+def _recent_hook_rows(hook_store: Optional[HookRotationStore], today: str) -> list[str]:
+    """The last-7 ``hook_type | opening_line`` rows before ``today`` for the
+    FR-4 prompt (mirrors ``approval._recent_hooks``)."""
+    if hook_store is None:
+        return []
+    rows = [r for r in hook_store.load() if str(r.get("date_tehran", "")) < today]
+    return [f"{r.get('hook_type', '?')} | {r.get('opening_line', '')}" for r in rows[-7:]]
+
+
+def _regen_script_and_reenter_gate(
+    run: DailyRun,
+    store: DailyRunStore,
+    idea_store: Optional[IdeaCardStore],
+    hook_store: Optional[HookRotationStore],
+    llm_fn,
+    send_fn,
+    max_rewrites: int,
+    last_duration: int,
+) -> None:
+    """FR-6 escalation: regenerate the script at a closer word-count target
+    (FR-4), re-enter the FR-5 approval gate, and fail the stage so FR-13
+    records the outcome (day-missed alert only once post time has passed).
+
+    The new script must be re-approved by the operator: ``checkpoint`` returns
+    to ``cards_picked`` and the stage then raises ``TTSApprovalHeld``. When the
+    day's rewrite budget (FR-5) is exhausted, or the picked card is missing,
+    there is nothing to regenerate: a plain error is raised instead so FR-13
+    escalates straight to the day-missed path.
+    """
+    from supervisor import scriptgen
+    from supervisor.daily import choose_hook_type  # noqa: PLC0415
+
+    card = None
+    if run.picked_card_id and idea_store is not None:
+        card = idea_store.get_card(run.picked_card_id)
+    if card is None:
+        raise RuntimeError(
+            f"run {run.run_id}: TTS duration {last_duration}s outside "
+            f"[{TTS_MIN_SECONDS}, {TTS_MAX_SECONDS}]s after {MAX_TTS_RERUNS} voice-rate "
+            "re-runs; picked card missing - cannot regenerate the script "
+            "(FR-13 day-missed path)"
+        )
+    if run.rewrite_count >= max_rewrites:
+        raise RuntimeError(
+            f"run {run.run_id}: TTS duration {last_duration}s outside "
+            f"[{TTS_MIN_SECONDS}, {TTS_MAX_SECONDS}]s after {MAX_TTS_RERUNS} voice-rate "
+            f"re-runs; rewrite budget exhausted ({run.rewrite_count}/{max_rewrites}) "
+            "(FR-13 day-missed path)"
+        )
+
+    target = TTS_TARGET_WORDS_SHORTER if last_duration > TTS_MAX_SECONDS else TTS_TARGET_WORDS_LONGER
+    hook_type = run.hook_type or choose_hook_type(run.date_tehran, hook_store=hook_store)
+    result = scriptgen.generate_script(
+        card,
+        hook_type,
+        _recent_hook_rows(hook_store, run.date_tehran),
+        llm_fn=llm_fn,
+        target_words=target,
+    )
+    scriptgen.apply_to_run(
+        run, result, card, store=store, send_fn=send_fn, hook_store=hook_store
+    )
+
+    run.rewrite_count += 1
+    run.checkpoint = "cards_picked"
+    run.last_error = None
+    store.upsert_run(run)
+    logger.info(
+        "FR-6: run {} TTS {}s out of range; script regenerated (~{} words) and "
+        "the approval gate was re-entered",
+        run.run_id, last_duration, target,
+    )
+    if send_fn is not None:
+        send_fn(
+            "امروز مدت روایت از محدوده خارج بود؛ اسکریپت دوباره‌نویسی شد. "
+            "لطفاً approve یا reject بفرست."
+        )
+    raise TTSApprovalHeld(
+        f"run {run.run_id}: TTS duration {last_duration}s outside "
+        f"[{TTS_MIN_SECONDS}, {TTS_MAX_SECONDS}]s after {MAX_TTS_RERUNS} voice-rate "
+        f"re-runs; script regenerated (~{target} words) and the FR-5 approval "
+        "gate was re-entered"
+    )
+
+
+def make_tts_stage(
+    cfg,
+    *,
+    store: Optional[DailyRunStore] = None,
+    idea_store: Optional[IdeaCardStore] = None,
+    hook_store: Optional[HookRotationStore] = None,
+    llm_fn=None,
+    send_fn: Optional[Callable[[str], dict]] = None,
+    generate_audio_fn=None,
+    task_id_fn: Optional[Callable[[DailyRun], str]] = None,
+) -> Stage:
+    """FR-6: the Farsi TTS narration stage with a pluggable provider.
+
+    - Builds portrait 9:16 ``VideoParams`` with ``voice_name = cfg.tts_voice``
+      (provider switch is config-only, R-1) and synthesizes through MPT's
+      module-level ``generate_audio`` under the R-10 synthetic task id
+      ``sup-<run_id>``.
+    - Consumes the TTS-ready normalized script: ``farsi_norm.normalize`` (FR-17)
+      runs on ``run.script_farsi`` before TTS.
+    - Gates on the returned measured ``audio_duration`` in [60, 90] s.
+    - Out of range: adjusts ``voice_rate`` within 0.9-1.1 and re-runs TTS up
+      to 2 times. Still out of range -> regenerates the script at a closer
+      word-count target (FR-4) and re-enters the FR-5 approval gate; out of
+      range again -> the FR-13 day-missed alert path.
+    - On a hard TTS failure (provider returns None: 429 quota / 503 / transient
+      disconnect), the stage walks the ordered model fallback chain
+      (``_tts_model_candidates``: primary first, then ``cfg.tts_model_fallbacks``)
+      so a model with remaining daily budget can keep the reel moving.
+    """
+    gen_audio = generate_audio_fn or _default_generate_audio
+
+    def run_stage(run: DailyRun) -> None:
+        from supervisor.approval import MAX_REWRITES  # noqa: PLC0415 - approval imports flow
+
+        if checkpoint_index(run.checkpoint) < APPROVAL_INDEX:
+            raise TTSApprovalHeld(
+                f"run {run.run_id} held at the FR-5 approval gate "
+                f"(checkpoint '{run.checkpoint}')"
+            )
+        script = (run.script_farsi or "").strip()
+        if not script:
+            raise RuntimeError(
+                f"run {run.run_id} has no TTS-ready script (script_farsi is empty)"
+            )
+
+        tts_text = normalize_farsi(script)
+        task_id = task_id_fn(run) if task_id_fn is not None else f"sup-{run.run_id}"
+        active_store = store or DailyRunStore()
+
+        voice_rate = 1.0
+        reruns = 0
+        audio_file: Optional[str] = None
+        audio_duration: Optional[int] = None
+        models_tried: list[str] = []
+        while True:
+            params_for_rate = build_tts_params(cfg, run, tts_text, voice_rate)
+
+            def synthesize(model: Optional[str]) -> tuple[Optional[str], Optional[int], object]:
+                """One TTS call under ``model``. When a ``generate_audio_fn`` seam is
+                injected (tests), it keeps its 3-arg (task_id, params, text) contract
+                and runs under the primary model; the model fallback chain only applies
+                to the default MPT seam."""
+                if generate_audio_fn is not None:
+                    return gen_audio(task_id, params_for_rate, tts_text)
+                return _default_generate_audio(task_id, params_for_rate, tts_text, model)
+
+            candidates = _tts_model_candidates(cfg)
+            audio_file, audio_duration, _sub_maker = None, None, None
+            failed = 0
+            for model in candidates:
+                audio_file, audio_duration, _sub_maker = synthesize(model)
+                models_tried.append(model or _primary_tts_model(cfg))
+                if audio_file is not None and audio_duration is not None:
+                    break
+                failed += 1
+            if failed:
+                logger.warning(
+                    "FR-6: run {} TTS hard-failed on {} model(s) of {} "
+                    "(429 quota / 503 / disconnect); will retry via FR-13 backoff",
+                    run.run_id, failed, len(candidates),
+                )
+            if audio_file is None or audio_duration is None:
+                raise RuntimeError(
+                    f"run {run.run_id}: TTS failed on all models "
+                    f"{models_tried} (task {task_id}, voice '{cfg.tts_voice}')"
+                )
+            if TTS_MIN_SECONDS <= audio_duration <= TTS_MAX_SECONDS:
+                run.narration_file = audio_file
+                run.last_error = None
+                active_store.upsert_run(run)
+                logger.info(
+                    "FR-6: run {} TTS ok (rate {}): {}s -> {}",
+                    run.run_id, voice_rate, audio_duration, audio_file,
+                )
+                return
+            next_rate = _next_voice_rate(voice_rate, audio_duration)
+            if reruns >= MAX_TTS_RERUNS or next_rate == voice_rate:
+                break
+            voice_rate = next_rate
+            reruns += 1
+            logger.info(
+                "FR-6: run {} TTS {}s outside [{}-{}]s; re-run {} at rate {}",
+                run.run_id, audio_duration,
+                TTS_MIN_SECONDS, TTS_MAX_SECONDS, reruns, voice_rate,
+            )
+
+        _regen_script_and_reenter_gate(
+            run,
+            active_store,
+            idea_store,
+            hook_store,
+            llm_fn,
+            send_fn,
+            MAX_REWRITES,
+            last_duration=audio_duration,
+        )
+
+    return Stage(name="tts", checkpoint="video_built", run=run_stage)
+
+
+# ---------------------------------------------------------------------------
 # Concrete post stage (thin Buffer seam; FR-11 owns the sent-confirmation loop)
 # ---------------------------------------------------------------------------
 
@@ -428,11 +747,13 @@ def make_post_stage(cfg) -> Stage:
 def build_drivable_stages(cfg) -> list[Stage]:
     """Assemble the concrete stages available today, ordered by checkpoint boundary.
 
-    The post stage ships now (Buffer client is concrete); content/media stages
-    register themselves via `register_stage` as their cards land. The result is
-    sorted by completion-checkpoint order so `pending_stages` is correct.
+    The TTS (FR-6) and post stages ship now; the remaining media sub-steps
+    (FR-7 BGM, FR-8 clips, FR-9 encode) register themselves via `register_stage`
+    as their cards land, inside the `video_built` boundary the TTS stage owns.
+    The result is sorted by completion-checkpoint order so `pending_stages` is
+    correct.
     """
-    stages: list[Stage] = [make_post_stage(cfg), *get_registered_stages()]
+    stages: list[Stage] = [make_tts_stage(cfg), make_post_stage(cfg), *get_registered_stages()]
     stages.sort(key=lambda s: checkpoint_index(s.checkpoint))
     return stages
 
@@ -442,6 +763,14 @@ __all__ = [
     "TERMINAL_CHECKPOINT",
     "APPROVAL_CHECKPOINT",
     "DEFAULT_BACKOFF_SECONDS",
+    "TTS_MIN_SECONDS",
+    "TTS_MAX_SECONDS",
+    "TTS_RATE_MIN",
+    "TTS_RATE_MAX",
+    "MAX_TTS_RERUNS",
+    "TTS_TARGET_WORDS_LONGER",
+    "TTS_TARGET_WORDS_SHORTER",
+    "TTSApprovalHeld",
     "Stage",
     "register_stage",
     "get_registered_stages",
@@ -455,8 +784,12 @@ __all__ = [
     "run_stage_with_retry",
     "run_pipeline",
     "resume_run",
+    "build_tts_params",
+    "make_tts_stage",
     "make_post_stage",
     "build_drivable_stages",
     "now_tehran",
     "TEHRAN_TZ",
+    "_primary_tts_model",
+    "_tts_model_candidates",
 ]

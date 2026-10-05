@@ -734,9 +734,24 @@ open_task_folder_on_completion = true
 # Default TTS voice for generated reels. R-1 resolution: Gemini 3.8 Flash TTS
 # with the "Charon" prebuilt voice ("gemini:Charon"), selected for Farsi
 # quality. Set app.gemini_tts_model_name to "gemini-3.8-flash-tts" and provide
-# app.gemini_api_key (see [app]) to use it. Fall back to Edge-TTS
-# "fa-IR-DilaraNeural" (free, no key) if Gemini is unavailable.
+# app.gemini_api_key (see [app]) to use it. No Edge-TTS fallback: the key-free
+# "fa-IR-DilaraNeural" floor was rejected for quality (reversed 2026-10-04) —
+# on a Gemini TTS 429 the FR-13 retry/backoff path runs and the operator
+# resumes the run after the daily quota resets.
 tts_voice = "gemini:Charon"
+
+# FR-6: TTS model fallback chain, best→worst quality. The primary model is
+# [app] gemini_tts_model_name; when its call fails (429 quota / 503 / transient
+# disconnect), the stage walks this list in order until one succeeds. Each
+# Gemini TTS free-tier model has its own ~10 req/day quota, so a fallback
+# chain across models keeps the reel moving without waiting for a quota
+# reset. List is ordered best-first.
+# tts_model_fallbacks = [
+#     "gemini-3.8-flash-tts",
+#     "gemini-3.1-flash-tts-preview",
+#     "gemini-2.5-flash-preview-tts",
+#     "gemini-3.8-flash-lite-tts",
+# ]
 
 # R-12: Candidate selection. Default is uniform random pick of 5 unused cards.
 # When true, use LLM ranking (opt-in); on failure, fall back to random.

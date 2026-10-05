@@ -5,8 +5,9 @@
 
 ## Config key contract (defines everything below; add to `config.example.toml`, expose in `app/config/config.py`)
 - New `[supervisor]` section (supervisor-only; never read by MPT pipeline code):
-  `enabled=true`, `telegram_bot_token`, `telegram_chat_id`, `tts_voice="gemini:Charon"` (R-1 resolution:
-  Gemini 3.8 Flash TTS + Charon; Edge-TTS `fa-IR-DilaraNeural` remains the key-free fallback),
+   `enabled=true`, `telegram_bot_token`, `telegram_chat_id`, `tts_voice="gemini:Charon"` (R-1 resolution:
+   Gemini 3.8 Flash TTS + Charon; the Edge-TTS `fa-IR-DilaraNeural` key-free fallback was dropped 2026-10-04 —
+   on a TTS 429 the FR-13 retry/backoff path runs, no fallback),
   `candidates_llm_ranking=false`, `candidates_count=5`, `pick_deadline_weekday="18:00"`,
   `pick_deadline_friday="12:00"`, `post_time_weekday="20:00"`, `post_time_friday="14:00"`,
     POSTING BACKEND (R-5 resolved 2026-10-01, switched Hookpost -> **Buffer** same day):
@@ -147,6 +148,8 @@
 - In-process stage driving (R-10) couples supervisor to `task.py` signatures → they are module-level and stable; F-1 exercises the chain; breakage is caught by `test/services/test_task.py` (existing) + F-1.
 - Demotion risk post-launch (Concern #7/OQ-6) → Insights monitoring 2–4 weeks, no code.
 - Edge-TTS Farsi quality unverified (Concern #4) → **resolved via R-1 (2026-10-01)**: Gemini 3.8 Flash TTS + Charon adopted; `fa-IR-DilaraNeural` kept as key-free fallback via `tts_voice`. New ops note: Gemini TTS egress sends our generated script text to Google (R-7 relay applies; free tier is dev-only, production uses paid Gemini TTS rates).
+- **Reversed 2026-10-04 (operator):** the key-free Edge-TTS `fa-IR-DilaraNeural` fallback (R-1 residual above) is dropped — quality rejected as a floor. There is no *Edge-TTS* fallback: a Gemini TTS `429` (free tier ~10 req/day) runs the FR-13 retry/backoff (30/120/600 s) and day-missed alert; the operator `resume`s the run after the daily quota resets (production: paid Gemini TTS rates).
+- **Superseded 2026-10-05 (operator):** an ordered *Gemini TTS model* fallback chain now replaces the wait-for-reset behaviour — `[supervisor] tts_model_fallbacks` (best→worst: `gemini-3.8-flash-tts` → `gemini-3.1-flash-tts-preview` → `gemini-2.5-flash-preview-tts` → `gemini-3.8-flash-lite-tts`). On a hard TTS failure (429 quota / 503 / transient disconnect) the FR-6 stage walks the chain (primary `[app] gemini_tts_model_name` first, then each fallback) and succeeds on the first model with remaining daily budget; a model switch is config-only, no code change. Verified live 2026-10-05 (`supervisor/fr6_fallback_check.py`: exhausted primary → 3 of 4 models failed → `gemini-3.8-flash-lite-tts` produced a 62s in-band MP3).
 
 ## Proof
 - P-1 (**verified live 2026-10-01** via `uv run python -X utf8 -m supervisor.buffer_poc`, operator's Buffer key): (1) `account.organizations` ok; (2) `channels` lists an **Instagram** channel; (3) `createPost` draft Reel with `metadata: {instagram:{type:reel}}` + a Cloudinary MP4 asset -> post created; (4) `shareNow` publish -> post `status: "sent"`; (5) `deletePost` works on drafts (a sent post can't be API-deleted, as expected). Remaining before FR-11 build: R-9 media-host step (stable public URL for a *generated* reel) + Pexels-Audio POC (`tracks[]` shape + CC0, Concern #8). (a) retired with R-4.

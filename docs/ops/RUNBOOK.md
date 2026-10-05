@@ -330,9 +330,12 @@ are Tehran (`Asia/Tehran`), computed in-process — no cron/APScheduler:
   `gemini_tts_model_name = "gemini-3.8-flash-tts"`.
 - `listen_host` / `listen_port` (API, default 8080). `[ui]` holds WebUI-persisted
   generation settings (voice, subtitle position, etc.).
-- Quota note: Gemini TTS free tier is ~10 req/day and Pro-class LLM 429s; the
-  supervisor keeps the key-free Edge-TTS Farsi voice (`fa-IR-DilaraNeural`) as
-  fallback.
+- Quota note: Gemini TTS free tier is ~10 req/day and Pro-class LLM 429s.
+  When TTS quota is exhausted the run fails through the FR-13 retry
+  (30/120/600 s backoff) and escalates to the day-missed alert; there is
+  **no** Edge-TTS fallback — the key-free `fa-IR-DilaraNeural` floor was
+  rejected for quality (reversed 2026-10-04). `resume <run_id>` after the
+  daily quota resets; production uses paid Gemini TTS rates.
 
 ### `[supervisor]` — the Reel Agent
 Defaults come from `supervisor/config.py`. Set these in `config.toml`:
@@ -422,7 +425,7 @@ touched first, then the suite.
 | Reel day missed | Run `uv run python -X utf8 -m supervisor resume <run_id>`; check `daily_runs.json` `last_error`. |
 | Farsi subtitles tofu-box | Encode with the Vazirmatn font (`resource/fonts/`) — set `params.font_name="Vazirmatn-Regular.ttf"` (R-3). |
 | Outbound egress blocked | Configure `[proxy]` SOCKS5 relay (R-7); verify with `buffer_poc --list`. |
-| Fallback Farsi TTS only | Expected when Gemini TTS quota is exhausted — `fa-IR-DilaraNeural` Edge-TTS is the key-free floor. |
+| Gemini TTS `429` (quota exhausted) | No fallback — the Edge-TTS `fa-IR-DilaraNeural` floor was rejected for quality (reversed 2026-10-04). FR-13 retries (30/120/600 s) then day-missed alert; `resume <run_id>` after the daily quota resets, or move to paid Gemini TTS. |
 
 ---
 

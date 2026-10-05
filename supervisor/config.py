@@ -33,6 +33,16 @@ class SupervisorConfig:
         self.bgm_volume: float = supervisor.get("bgm_volume", 0.2)
         self.retry_backoff_seconds: str = supervisor.get("retry_backoff_seconds", "30,120,600")
         self.poll_interval_seconds: int = supervisor.get("poll_interval_seconds", 30)
+        # FR-6: ordered TTS model fallback chain (best→worst quality). When the
+        # primary `gemini_tts_model_name` (from [app]) fails a TTS call (quota 429,
+        # 503, transient disconnect), the stage tries the next model in this list.
+        # The primary is tried first; this list is the fallback order.
+        self.tts_model_fallbacks: list[str] = list(supervisor.get("tts_model_fallbacks", [
+            "gemini-3.8-flash-tts",
+            "gemini-3.1-flash-tts-preview",
+            "gemini-2.5-flash-preview-tts",
+            "gemini-3.8-flash-lite-tts",
+        ]))
 
     @classmethod
     def load(cls) -> "SupervisorConfig":

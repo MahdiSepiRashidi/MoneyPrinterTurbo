@@ -22,3 +22,4 @@ Rules:
 - Before starting any task work (R-x, FR-x, P-x, F-x), check the Trello card first: find it via `trelloSearch` (search_cards) or list the relevant list with `trelloReadCard` list_by_list, then `trelloReadCard` action=get on the card. Its description (steps + "Done when" checklist) is the source of truth — it can be more detailed or more recent than the in-repo `plan/*.md`.
 - Do task work per the card description; treat the card's "Done when" checklist as acceptance criteria.
 - In-repo `plan/2026-09-29-ig-reel-agent/plan.md` remains the architectural reference; when a card and plan conflict, follow the card and note the discrepancy.
+- do not run full test suite since you are adding some features to money-printer-turbo. only test suites about the features we are adding

@@ -17,7 +17,7 @@ The **IG Reel Agent** project automates the creation and publishing of daily Ins
 
 ### Decisions & Architecture (settled)
 - **Posting platform:** Buffer middleware (not direct Instagram/Meta API). Verified live.
-- **Voice (TTS):** Gemini 3.8 Flash TTS with the "Charon" prebuilt voice (best Farsi delivery & question tone). Edge-TTS kept only as a key-free fallback.
+- **Voice (TTS):** Gemini 3.8 Flash TTS with the "Charon" prebuilt voice (best Farsi delivery & question tone). No Edge-TTS fallback (reversed 2026-10-04 — quality too low as a floor); on quota exhaustion the run retries via the FR-13 backoff path and is resumed after the daily quota resets.
 - **Font:** Vazirmatn (Farsi font) added to the project for subtitles.
 - **Scheduling:** We control publish timing on our side (no reliance on Instagram's native scheduler).
 - **Compute:** Running on free-tier Gemini models; no paid cloud GPU needed.

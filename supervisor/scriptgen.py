@@ -321,6 +321,7 @@ def generate_script(
     hook_type: str,
     recent_hooks: Optional[list[str]] = None,
     llm_fn: Optional[Callable[[str, str], str]] = None,
+    target_words: Optional[int] = None,
 ) -> ScriptResult:
     """Generate + parse + validate the Farsi script for one card.
 
@@ -330,12 +331,22 @@ def generate_script(
     to ``MAX_REGEN_PASSES`` regenerations with close-the-gap instructions are
     attempted; an unparseable or non-ok re-attempt keeps the previous result.
     Refusals (``needs_review``) are never retried.
+
+    ``target_words`` (FR-6 recovery) steers the regeneration toward a closer
+    word-count target (clamped into the 150-220 band) so the TTS duration can
+    land in the 60-90 s band.
     """
     if llm_fn is None:
         from supervisor.llm import complete as llm_fn  # noqa: PLC0415 - injectable seam
 
     system = build_system_prompt()
     user = build_user_prompt(card, hook_type, recent_hooks or [])
+    if target_words is not None:
+        target = max(MIN_WORDS, min(MAX_WORDS, target_words))
+        user += (
+            f"\nنکته: script_farsi را حدود {target} کلمه بنویس "
+            f"(حداقل {MIN_WORDS}، حداکثر {MAX_WORDS})."
+        )
 
     raw = llm_fn(system, user)
 
